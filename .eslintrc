@@ -27,6 +27,7 @@
   "rules": {
     "prettier/prettier": "error",
     "simple-import-sort/sort": "warn",
+    "no-console": "error",
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",
     "jest/no-identical-title": "error",
