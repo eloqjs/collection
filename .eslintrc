@@ -10,7 +10,8 @@
     "prettier/@typescript-eslint",
     "plugin:@typescript-eslint/recommended",
     "plugin:jest/recommended",
-    "plugin:jest/style"
+    "plugin:jest/style",
+    "plugin:jest-formatting/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -21,7 +22,8 @@
     "prettier",
     "@typescript-eslint",
     "simple-import-sort",
-    "jest"
+    "jest",
+    "jest-formatting"
   ],
   "ignorePatterns": "build",
   "rules": {
@@ -30,13 +32,6 @@
 
     /* Typescript */
     "@typescript-eslint/no-explicit-any": "off",
-
-    /* Jest */
-    "jest/no-disabled-tests": "warn",
-    "jest/no-focused-tests": "error",
-    "jest/no-identical-title": "error",
-    "jest/prefer-to-have-length": "warn",
-    "jest/valid-expect": "error",
 
     /* Others */
     "no-console": "error"
