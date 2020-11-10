@@ -27,11 +27,18 @@
   "rules": {
     "prettier/prettier": "error",
     "simple-import-sort/sort": "warn",
-    "no-console": "error",
+
+    /* Typescript */
+    "@typescript-eslint/no-explicit-any": "off",
+
+    /* Jest */
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
-    "jest/valid-expect": "error"
+    "jest/valid-expect": "error",
+
+    /* Others */
+    "no-console": "error"
   }
 }
