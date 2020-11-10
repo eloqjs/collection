@@ -5,13 +5,15 @@
  * @param {string} key
  * @returns {*}
  */
-export function nestedValue(mainObject: never, key: string): any {
-  try {
-    return key.split('.').reduce((obj, property) => obj[property], mainObject)
-  } catch (err) {
-    // If we end up here, we're not working with an object, and @var mainObject is the value itself
-    return mainObject
+export function nestedValue(mainObject: unknown, key: string): any {
+  if (isObject(mainObject)) {
+    return key.split('.').reduce((obj, property) => {
+      return obj[property]
+    }, mainObject)
   }
+
+  // If we end up here, we're not working with an object, and @var mainObject is the value itself
+  return mainObject
 }
 
 /**
