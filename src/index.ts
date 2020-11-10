@@ -1,9 +1,10 @@
 import Collection from './Collection'
+import { variadic } from './utils'
 
-const collect = <T>(...collection: any[]): Collection<T> => {
-  const items: T[] = Array.isArray(collection[0]) ? collection[0] : collection
+const collect = <T>(...collection: T[] | [T[]]): Collection<T> => {
+  const items = variadic(collection)
 
-  return new Collection(items)
+  return new Collection<T>(items)
 }
 
 export default collect
