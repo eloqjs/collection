@@ -2,9 +2,9 @@ import { variadic } from './helpers'
 import type { Constructor } from './types'
 
 export default class Collection<
-  T extends Record<string, any> = Record<string, any>
-> extends Array<T> {
-  constructor(...collection: T[] | [T[]]) {
+  Item extends Record<string, any> = Record<string, any>
+> extends Array<Item> {
+  constructor(...collection: Item[] | [Item[]]) {
     const items = variadic(collection)
 
     super(...items)
@@ -27,7 +27,7 @@ export default class Collection<
   /**
    * Creates a new instance of the Collection.
    */
-  protected newInstance(collection: T[]): this {
+  protected newInstance(collection: Item[]): this {
     const instance = this.constructor as Constructor<this>
     return new instance(collection)
   }
