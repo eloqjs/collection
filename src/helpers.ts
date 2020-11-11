@@ -71,3 +71,10 @@ export function isObject(item: unknown): item is Record<string, any> {
 export function isFunction(item: unknown): item is (...args: any[]) => any {
   return typeof item === 'function'
 }
+
+/**
+ * The isString() method determines whether the passed value is a String.
+ */
+export function isString(item: unknown): item is string {
+  return typeof item === 'string'
+}
