@@ -243,9 +243,11 @@ export default class Collection<
   /**
    * Creates a new instance of the Collection.
    */
-  protected newInstance(collection: Item[]): this {
+  protected newInstance(...collection: Item[] | [Item[]]): this {
+    const items = variadic(collection)
     const instance = this.constructor as Constructor<this>
-    return new instance(collection)
+
+    return new instance(items)
   }
 
   /**
