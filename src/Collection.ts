@@ -260,7 +260,7 @@ export default class Collection<
   /**
    * Get the value of the model's primary key.
    */
-  protected getPrimaryKey(): string {
-    return this[this.primaryKey()]
+  protected getPrimaryKey(item: Item): string | number {
+    return item[this.primaryKey()]
   }
 }
