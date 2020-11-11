@@ -23,4 +23,12 @@ export default class Collection<
   protected set items(collection: this) {
     this.splice(0, this.length, ...collection)
   }
+
+  /**
+   * Creates a new instance of the Collection.
+   */
+  protected newInstance(collection: T[]): this {
+    const instance = this.constructor as Constructor<this>
+    return new instance(collection)
+  }
 }
