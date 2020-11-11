@@ -251,6 +251,13 @@ export default class Collection<
   }
 
   /**
+   * Wrap an array with another collection library.
+   */
+  protected newCollection(array: any[]): any[] {
+    return array
+  }
+
+  /**
    * Get the primary key for the item.
    */
   protected primaryKey(): string {
