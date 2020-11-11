@@ -41,7 +41,7 @@ export default class Collection<
       index += size
     } while (index < this.items.length)
 
-    return chunks
+    return this.newCollection(chunks)
   }
 
   /**
