@@ -1,7 +1,9 @@
 import Collection from './Collection'
 import { variadic } from './helpers'
 
-const collect = <T>(...collection: T[] | [T[]]): Collection<T> => {
+const collect = <T extends Record<string, any>>(
+  ...collection: T[] | [T[]]
+): Collection<T> => {
   const items = variadic(collection)
 
   return new Collection<T>(items)

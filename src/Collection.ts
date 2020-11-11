@@ -1,6 +1,8 @@
 import { variadic } from './helpers'
 
-export default class Collection<T> extends Array<T> {
+export default class Collection<T extends Record<string, any>> extends Array<
+  T
+> {
   constructor(...collection: T[] | [T[]]) {
     const items = variadic(collection)
 
