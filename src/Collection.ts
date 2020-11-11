@@ -45,10 +45,31 @@ export default class Collection<
   }
 
   /**
-   * The collapse method collapses a collection of collections into a single, flat collection.
+   * The collapse method collapses an array of collections into a single, flat collection.
    */
-  public collapse(): this {
-    return this.newInstance(([] as Item[]).concat(...this.items))
+  public collapse(...array: Array<Item[]> | [Array<Item[]>]): this {
+    let arrayOfCollections: Array<Item[]>
+
+    if (array.length === 1 && Array.isArray(array[0])) {
+      arrayOfCollections = array[0] as Array<Item[]>
+    } else {
+      arrayOfCollections = array as Array<Item[]>
+    }
+
+    if (
+      arrayOfCollections.length < 2 ||
+      !Array.isArray(arrayOfCollections[0])
+    ) {
+      throw new Error(
+        'The array must contain multiple collections. Use push() for single a collection.'
+      )
+    }
+
+    arrayOfCollections.splice(0, 0, this.items)
+
+    const collection = ([] as Item[]).concat(...arrayOfCollections)
+
+    return this.newInstance(collection)
   }
 
   /**
