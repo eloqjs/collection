@@ -1,4 +1,5 @@
 import {
+  clone,
   isArray,
   isFunction,
   isObject,
@@ -7,6 +8,14 @@ import {
 } from '../src/helpers'
 
 describe('Helpers', () => {
+  describe('clone()', () => {
+    it('Should clone an Array', () => {
+      const array = [{ foo: 'bar' }]
+
+      expect(clone(array)).toEqual(array)
+    })
+  })
+
   describe('nestedValue()', () => {
     it('Should get value of a nested property', () => {
       const value = { foo: 'bar' }

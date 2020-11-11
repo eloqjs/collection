@@ -1,4 +1,16 @@
 /**
+ * Clone helper
+ *
+ * Clone an array.
+ *
+ * @param items
+ * @returns {*}
+ */
+export function clone(items: unknown[]): unknown[] {
+  return [...items]
+}
+
+/**
  * Get value of a nested property.
  *
  * @param mainObject
