@@ -74,6 +74,10 @@ export default class Collection<
     return this.newInstance(collection)
   }
 
+  public contains(item: Item): boolean
+  public contains(closure: (...args: any[]) => any): boolean
+  public contains<V>(key: keyof Item, value: V): boolean
+
   /**
    * The contains method determines whether the collection contains a given item.
    */
