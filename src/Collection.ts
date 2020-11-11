@@ -83,16 +83,22 @@ export default class Collection<
       return this.items.filter((item, index) => key(item, index)).length > 0
     }
 
-    if (value) {
-      return (
-        this.items.filter(
-          (items) =>
-            !!items[key as keyof Item] && items[key as keyof Item] === value
-        ).length > 0
-      )
+    if (isString(key)) {
+      if (value) {
+        return (
+          this.items.filter((items) => !!items[key] && items[key] === value)
+            .length > 0
+        )
+      }
+
+      return false
     }
 
-    return this.items.indexOf(key as Item) !== -1
+    return (
+      this.items.findIndex((item) => {
+        return item[this.primaryKey()] === value?.[this.primaryKey()]
+      }) !== -1
+    )
   }
 
   /**
