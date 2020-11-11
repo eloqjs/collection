@@ -1,5 +1,5 @@
 import Collection from './Collection'
-import { variadic } from './utils'
+import { variadic } from './helpers'
 
 const collect = <T>(...collection: T[] | [T[]]): Collection<T> => {
   const items = variadic(collection)

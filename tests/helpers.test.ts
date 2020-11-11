@@ -4,9 +4,9 @@ import {
   isObject,
   nestedValue,
   variadic
-} from '../src/utils'
+} from '../src/helpers'
 
-describe('Utilities', () => {
+describe('Helpers', () => {
   describe('nestedValue()', () => {
     it('Should get value of a nested property', () => {
       const value = { foo: 'bar' }

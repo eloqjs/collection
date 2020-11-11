@@ -1,4 +1,4 @@
-import { variadic } from './utils'
+import { variadic } from './helpers'
 
 export default class Collection<T> extends Array<T> {
   constructor(...collection: T[] | [T[]]) {
