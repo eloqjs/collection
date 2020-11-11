@@ -13,10 +13,16 @@ export default class Collection<
     super(...items)
   }
 
+  /**
+   * Get the items of the array.
+   */
   protected get items(): this {
     return this
   }
 
+  /**
+   * Set the items of the array.
+   */
   protected set items(collection: this) {
     this.splice(0, this.length, ...collection)
   }
