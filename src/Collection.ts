@@ -251,14 +251,14 @@ export default class Collection<
   }
 
   /**
-   * Get the primary key for the model.
+   * Get the primary key for the item.
    */
   protected primaryKey(): string {
     return 'id'
   }
 
   /**
-   * Get the value of the model's primary key.
+   * Get the value of the item's primary key.
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()]
