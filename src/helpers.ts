@@ -1,10 +1,8 @@
 /**
- * Clone helper
- *
  * Clone an array.
  *
  * @param items
- * @returns {*}
+ * @returns {[*]}
  */
 export function clone(items: unknown[]): unknown[] {
   return [...items]
