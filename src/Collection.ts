@@ -31,4 +31,18 @@ export default class Collection<
     const instance = this.constructor as Constructor<this>
     return new instance(collection)
   }
+
+  /**
+   * Get the primary key for the model.
+   */
+  protected primaryKey(): string {
+    return 'id'
+  }
+
+  /**
+   * Get the value of the model's primary key.
+   */
+  protected getPrimaryKey(): string {
+    return this[this.primaryKey()]
+  }
 }
