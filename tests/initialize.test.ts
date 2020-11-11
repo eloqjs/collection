@@ -24,6 +24,8 @@ describe('Initialize Collection', () => {
       const array = [{}, {}, {}]
       const collection = collect(array)
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       expect(collection.items).toEqual(array)
     })
 
@@ -32,10 +34,16 @@ describe('Initialize Collection', () => {
       const array2 = [{}, {}, {}, {}, {}, {}]
       const collection = collect(array1)
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       expect(collection.items).toEqual(array1)
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       collection.items = collect(array2)
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       expect(collection.items).toEqual(array2)
     })
   })

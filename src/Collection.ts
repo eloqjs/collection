@@ -7,11 +7,11 @@ export default class Collection<T> extends Array<T> {
     super(...items)
   }
 
-  get items(): this {
+  protected get items(): this {
     return this
   }
 
-  set items(collection: this) {
+  protected set items(collection: this) {
     this.splice(0, this.length, ...collection)
   }
 }
