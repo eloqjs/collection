@@ -3,6 +3,7 @@ import {
   isArray,
   isFunction,
   isObject,
+  isString,
   nestedValue,
   variadic
 } from '../src/helpers'
@@ -102,6 +103,24 @@ describe('Helpers', () => {
       expect(isFunction(array)).toBeFalsy()
       expect(isFunction(object)).toBeFalsy()
       expect(isFunction(string)).toBeFalsy()
+    })
+  })
+
+  describe('isString()', () => {
+    it('Should return true if the passed value is a String', () => {
+      const string = ''
+
+      expect(isString(string)).toBeTruthy()
+    })
+
+    it('Should return false if the passed value is not a String', () => {
+      const array: unknown = []
+      const func = () => true
+      const object = {}
+
+      expect(isString(array)).toBeFalsy()
+      expect(isString(func)).toBeFalsy()
+      expect(isString(object)).toBeFalsy()
     })
   })
 })
