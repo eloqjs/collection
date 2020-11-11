@@ -4,6 +4,8 @@ import type { Constructor, Operator } from './types'
 export default class Collection<
   Item extends Record<string, any> = Record<string, any>
 > extends Array<Item> {
+  constructor(collection: Item[])
+  constructor(...items: Item[])
   constructor(...collection: Item[] | [Item[]]) {
     const items = variadic(collection)
 
