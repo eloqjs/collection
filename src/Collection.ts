@@ -1,8 +1,5 @@
 import { variadic } from './helpers'
-
-type Constructor<T extends Record<string, any> = Record<string, any>> = new (
-  ...args: any[]
-) => T
+import type { Constructor } from './types'
 
 export default class Collection<
   T extends Record<string, any> = Record<string, any>
