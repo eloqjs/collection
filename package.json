@@ -16,6 +16,26 @@
   "keywords": [],
   "author": "João Pedro Antunes Silva",
   "license": "MIT",
+  "jest": {
+    "clearMocks": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/*.ts",
+      "!src/index.ts"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageProvider": "v8",
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ],
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/build/"
+    ]
+  },
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.7",
