@@ -24,6 +24,10 @@ describe('Protected Methods', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       expect(collection.newCollection(array)).toEqual(array)
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      expect(collection.newCollection(array)).not.toBeInstanceOf(Collection)
     })
   })
 
