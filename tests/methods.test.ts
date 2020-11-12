@@ -253,4 +253,178 @@ describe('Public Methods', () => {
       expect(mockConsole.calls).toEqual([[collection]])
     })
   })
+
+  describe('where()', () => {
+    const products = [
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+      { product: 'Door', price: '100' }
+    ]
+    const collection = collect(products)
+
+    it('Should filter the collection by a given key/value pair', () => {
+      const filtered = collection.where('price', 100)
+
+      expect(filtered).toEqual([
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' }
+      ])
+      expect(collection).toEqual(products)
+    })
+
+    it('Should return everything that matches', () => {
+      const filtered = collection.where('manufacturer', 'IKEA')
+
+      expect(filtered).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+      ])
+      expect(collection).toEqual(products)
+    })
+
+    it('Should accept a custom operator: less than', () => {
+      const under200 = collection.where('price', '<', 150)
+
+      expect(under200).toEqual([
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Door', price: '100' }
+      ])
+    })
+
+    it('Should accept a custom operator: less than or equal to', () => {
+      const overOrExactly150 = collection.where('price', '<=', 150)
+
+      expect(overOrExactly150).toEqual([
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { product: 'Door', price: '100' }
+      ])
+    })
+
+    it('Should accept a custom operator: bigger than', () => {
+      const over150 = collection.where('price', '>', 150)
+
+      expect(over150).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' }
+      ])
+    })
+
+    it('Should accept a custom operator: bigger than or equal to', () => {
+      const overOrExactly150 = collection.where('price', '>=', 150)
+
+      expect(overOrExactly150).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+      ])
+    })
+
+    it('Should accept a custom operator: loosely equal', () => {
+      const loosly100 = collection.where('price', '==', 100)
+
+      expect(loosly100).toEqual([
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Door', price: '100' }
+      ])
+    })
+
+    it('Should accept a custom operator: strictly not equal', () => {
+      const not100 = collection.where('price', '!==', 100)
+
+      expect(not100).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { product: 'Door', price: '100' }
+      ])
+    })
+
+    it('Should accept a custom operator: loosely not equal', () => {
+      const not200 = collection.where('price', '!=', 200)
+
+      expect(not200).toEqual([
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { product: 'Door', price: '100' }
+      ])
+
+      const not100 = collection.where('price', '<>', 100)
+
+      expect(not100).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+      ])
+    })
+
+    it('Should work with nested objects', () => {
+      const collection2 = collect([
+        { product: 'Desk', price: 200, foo: { bar: 1 } },
+        { product: 'Chair', price: 100, foo: { bar: 2 } },
+        { product: 'Bookcase', price: 150, foo: { bar: 2 } },
+        { product: 'Door', price: 100, foo: { bar: 1 } }
+      ])
+
+      const filtered = collection2.where('foo.bar', 1)
+
+      expect(filtered).toEqual([
+        {
+          product: 'Desk',
+          price: 200,
+          foo: {
+            bar: 1
+          }
+        },
+        {
+          product: 'Door',
+          price: 100,
+          foo: {
+            bar: 1
+          }
+        }
+      ])
+    })
+
+    it('Should work when only passing one argument', () => {
+      const hasManufacturer = collection.where('manufacturer')
+
+      expect(hasManufacturer).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+      ])
+
+      const hasProduct = collection.where('product')
+
+      expect(hasProduct).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { product: 'Door', price: '100' }
+      ])
+    })
+
+    it('Should work when passing two argument', () => {
+      const hasManufacturer = collection.where('manufacturer', true)
+
+      expect(hasManufacturer).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+      ])
+
+      const dontHaveManufacturer = collection.where('manufacturer', false)
+
+      expect(dontHaveManufacturer).toEqual([{ product: 'Door', price: '100' }])
+    })
+
+    it('Should work with nested properties', () => {
+      const collection2 = collect([
+        { name: { firstname: 'Mohamed', lastname: 'Salah' } },
+        { name: { firstname: 'Sadio', lastname: 'Mané' } },
+        { name: { firstname: 'Roberto', lastname: 'Firmino' } }
+      ])
+
+      expect(collection2.where('name.lastname', 'Mané')).toEqual([
+        { name: { firstname: 'Sadio', lastname: 'Mané' } }
+      ])
+    })
+  })
 })
