@@ -1,5 +1,5 @@
 {
-  "name": "api-collection",
+  "name": "@eloqjs/collection",
   "version": "0.0.0-development",
   "description": "",
   "main": "build/index.js",
@@ -13,7 +13,7 @@
     "lint-fix": "yarn lint --fix",
     "test": "jest"
   },
-  "repository": "github:JoaoPedroAS51/api-collection",
+  "repository": "github:eloqjs/collection",
   "keywords": [],
   "author": "João Pedro Antunes Silva",
   "license": "MIT",
