@@ -201,14 +201,14 @@ export default class Collection<
    * The firstWhere method returns the first element in the collection with the given key / value pair.
    */
   public firstWhere<V extends unknown>(
-    key: keyof Item,
+    key: keyof Item | string,
     operator: V | Operator,
     value?: V
   ): Item {
     return this.where(key, operator as Operator, value).first() || {}
   }
 
-  public where<V extends unknown>(key: keyof Item, value: V): this
+  public where<V extends unknown>(key: keyof Item | string, value?: V): this
   public where<V extends unknown>(
     key: keyof Item,
     operator: Operator,
@@ -219,8 +219,8 @@ export default class Collection<
    * The where method filters the collection by a given key / value pair.
    */
   public where<V extends unknown>(
-    key: keyof Item,
-    operator: V | Operator,
+    key: keyof Item | string,
+    operator?: V | Operator,
     value?: V
   ): this {
     if (!isString(key)) {
