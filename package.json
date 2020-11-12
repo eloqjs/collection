@@ -1,6 +1,6 @@
 {
   "name": "api-collection",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -13,6 +13,7 @@
     "lint-fix": "yarn lint --fix",
     "test": "jest"
   },
+  "repository": "github:JoaoPedroAS51/api-collection",
   "keywords": [],
   "author": "João Pedro Antunes Silva",
   "license": "MIT",
@@ -34,6 +35,26 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/build/"
+    ]
+  },
+  "release": {
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "master",
+      "next",
+      "next-major",
+      {
+        "name": "dev",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      },
+      {
+        "name": "beta",
+        "prerelease": true
+      }
     ]
   },
   "devDependencies": {
