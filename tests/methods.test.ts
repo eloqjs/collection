@@ -189,6 +189,23 @@ describe('Public Methods', () => {
       expect(collection.contains('name', 'Gerrard')).toBeFalsy()
     })
 
+    it('Should return false when only key was provided', () => {
+      const collection = collect([
+        {
+          name: 'Steven Gerrard',
+          number: 8
+        },
+        {
+          name: 'Steve Jobs',
+          number: 6
+        }
+      ])
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      expect(collection.contains('name')).toBeFalsy()
+    })
+
     it('Should accept a closure', () => {
       const collection = collect([
         {
@@ -376,12 +393,26 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
+    it('Should return an empty object when no matches', () => {
+      const collection = collect([])
+      const first = collection.first()
+
+      expect(first).toStrictEqual({})
+    })
+
     it('Should accept a callback', () => {
       const collection = collect(products)
       const first = collection.first((item) => item.price < 150)
 
       expect(first).toEqual(products[1])
       expect(collection).toEqual(products)
+    })
+
+    it('Should return an empty object when no matches on callback', () => {
+      const collection = collect(products)
+      const first = collection.first((item) => item.price > 200)
+
+      expect(first).toStrictEqual({})
     })
   })
 
@@ -405,7 +436,7 @@ describe('Public Methods', () => {
     it('Should return an empty object when no matches', () => {
       const collection = collect(products)
 
-      expect(collection.firstWhere('manufacturer', 'xoxo')).toEqual({})
+      expect(collection.firstWhere('manufacturer', 'xoxo')).toStrictEqual({})
     })
 
     it('Should be possible to pass an operator', () => {
@@ -517,6 +548,18 @@ describe('Public Methods', () => {
       ])
     })
 
+    it('Should use default operator (strictly equal) when an invalid operator was provided', () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const filtered = collection.where('manufacturer', '====', 'IKEA')
+
+      expect(filtered).toEqual([
+        { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+      ])
+      expect(collection).toEqual(products)
+    })
+
     it('Should work with nested objects', () => {
       const collection2 = collect([
         { product: 'Desk', price: 200, foo: { bar: 1 } },
@@ -588,6 +631,16 @@ describe('Public Methods', () => {
       expect(collection2.where('name.lastname', 'Mané')).toEqual([
         { name: { firstname: 'Sadio', lastname: 'Mané' } }
       ])
+    })
+
+    it('Should throw an error when key is not an string', () => {
+      const errorModel = () => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        collection.where(100, 100)
+      }
+
+      expect(errorModel).toThrow('KEY must be an string.')
     })
   })
 })
