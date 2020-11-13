@@ -212,9 +212,12 @@ export default class Collection<
     return {} as Item
   }
 
-  public firstWhere<V extends unknown>(key: keyof Item, value: V): Item
   public firstWhere<V extends unknown>(
-    key: keyof Item,
+    key: keyof Item | string,
+    value?: V
+  ): Item
+  public firstWhere<V extends unknown>(
+    key: keyof Item | string,
     operator: Operator,
     value: V
   ): Item
@@ -237,7 +240,7 @@ export default class Collection<
 
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
   public where<V extends unknown>(
-    key: keyof Item,
+    key: keyof Item | string,
     operator: Operator,
     value: V
   ): this
