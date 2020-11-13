@@ -25,7 +25,7 @@ export function getProp(
     return holder
   }
 
-  if (key === 'string' && key in holder) {
+  if (isString(key) && key in holder) {
     return holder[key]
   }
 
