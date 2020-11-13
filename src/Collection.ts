@@ -1,4 +1,4 @@
-import { isFunction, isString, nestedValue, variadic } from './helpers'
+import { getProp, isFunction, isString, variadic } from './helpers'
 import type { Constructor, Operator } from './types'
 
 export default class Collection<
@@ -233,13 +233,13 @@ export default class Collection<
 
     if (operator === undefined || operator === true) {
       return this.newInstance(
-        items.filter((item) => nestedValue(item, key as string))
+        items.filter((item) => getProp(item, key as string))
       )
     }
 
     if (operator === false) {
       return this.newInstance(
-        items.filter((item) => !nestedValue(item, key as string))
+        items.filter((item) => !getProp(item, key as string))
       )
     }
 
@@ -251,30 +251,30 @@ export default class Collection<
     const collection = items.filter((item) => {
       switch (comparisonOperator) {
         case '==':
-          return nestedValue(item, key) == comparisonValue
+          return getProp(item, key) == comparisonValue
 
         default:
         case '===':
-          return nestedValue(item, key) === comparisonValue
+          return getProp(item, key) === comparisonValue
 
         case '!=':
         case '<>':
-          return nestedValue(item, key) != comparisonValue
+          return getProp(item, key) != comparisonValue
 
         case '!==':
-          return nestedValue(item, key) !== comparisonValue
+          return getProp(item, key) !== comparisonValue
 
         case '<':
-          return (nestedValue(item, key) as never) < (comparisonValue as never)
+          return (getProp(item, key) as never) < (comparisonValue as never)
 
         case '<=':
-          return (nestedValue(item, key) as never) <= (comparisonValue as never)
+          return (getProp(item, key) as never) <= (comparisonValue as never)
 
         case '>':
-          return (nestedValue(item, key) as never) > (comparisonValue as never)
+          return (getProp(item, key) as never) > (comparisonValue as never)
 
         case '>=':
-          return (nestedValue(item, key) as never) >= (comparisonValue as never)
+          return (getProp(item, key) as never) >= (comparisonValue as never)
       }
     })
 

@@ -1,10 +1,10 @@
 import {
   clone,
+  getProp,
   isArray,
   isFunction,
   isObject,
   isString,
-  nestedValue,
   variadic
 } from '../src/helpers'
 
@@ -21,13 +21,13 @@ describe('Helpers', () => {
     it('Should get value of a nested property', () => {
       const value = { foo: 'bar' }
 
-      expect(nestedValue(value, 'foo')).toBe('bar')
+      expect(getProp(value, 'foo')).toBe('bar')
     })
 
     it('Should get value of a deep nested property', () => {
       const value = { foo: { bar: 'baz' } }
 
-      expect(nestedValue(value, 'foo.bar')).toBe('baz')
+      expect(getProp(value, 'foo.bar')).toBe('baz')
     })
   })
 

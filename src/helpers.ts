@@ -9,13 +9,15 @@ export function clone(items: unknown[]): unknown[] {
 }
 
 /**
- * Get value of a nested property.
+ * Get property defined by dot notation in string.
  *
- * @param holder
- * @param {string} key
- * @returns {*}
+ * Based on {@link https://github.com/dy/dotprop} (MIT)
+ *
+ * @param  {Object} holder - Target object where to look property up.
+ * @param  {string | string[]} key - Dot notation, like `'a.b.c'` or `['a', 'b', 'c']`.
+ * @return {*} - A property value.
  */
-export function nestedValue(
+export function getProp(
   holder: Record<string, unknown>,
   key: string | string[]
 ): unknown {
