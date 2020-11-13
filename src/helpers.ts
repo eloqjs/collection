@@ -2,7 +2,7 @@
  * Clone an array.
  *
  * @param items
- * @returns {[*]}
+ * @return {[*]}
  */
 export function clone(items: unknown[]): unknown[] {
   return [...items]
@@ -48,7 +48,7 @@ export function getProp(
  * Variadic helper function.
  *
  * @param args
- * @returns {*}
+ * @return {*}
  */
 export function variadic<T>(args: T[] | [T[]]): T[] {
   if (Array.isArray(args[0])) {
@@ -62,7 +62,7 @@ export function variadic<T>(args: T[] | [T[]]): T[] {
  * The isArray() method determines whether the passed value is an Array.
  *
  * @param {*} item
- * @returns {boolean}
+ * @return {boolean}
  */
 export function isArray(item: unknown): item is Array<unknown> {
   return Array.isArray(item)
@@ -72,7 +72,7 @@ export function isArray(item: unknown): item is Array<unknown> {
  * The isObject() method determines whether the passed value is an Object.
  *
  * @param {*} item
- * @returns {boolean}
+ * @return {boolean}
  */
 export function isObject(item: unknown): item is Record<string, unknown> {
   return (
@@ -84,7 +84,7 @@ export function isObject(item: unknown): item is Record<string, unknown> {
  * The isFunction() method determines whether the passed value is a Function.
  *
  * @param {*} item
- * @returns {boolean}
+ * @return {boolean}
  */
 export function isFunction(
   item: unknown
