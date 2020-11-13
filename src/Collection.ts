@@ -154,7 +154,7 @@ export default class Collection<
    * The each method iterates over the items in the collection and passes each item to a callback.
    */
   public each(
-    fn: (item: Item, index?: number, items?: Item[]) => false | void
+    fn: (item: Item, index: number, items: Item[]) => false | void
   ): this {
     let stop = false
 
