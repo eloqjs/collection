@@ -14,6 +14,8 @@ export default class Collection<
 
   /**
    * Get the items of the array.
+   *
+   * @return {Collection}
    */
   protected get items(): this {
     return this
@@ -30,6 +32,7 @@ export default class Collection<
    * The chunk method breaks the collection into multiple, smaller collections of a given size.
    *
    * @param size - Size of the chunks.
+   * @return {Object[]}
    */
   public chunk(size: number): this[] {
     const chunks = []
@@ -48,6 +51,8 @@ export default class Collection<
 
   /**
    * The collapse method collapses an array of collections into a single, flat collection.
+   * @param {...*} array
+   * @return {Collection}
    */
   public collapse(...array: Array<Item[]> | [Array<Item[]>]): this {
     let arrayOfCollections: Array<Item[]>
@@ -79,6 +84,10 @@ export default class Collection<
 
   /**
    * The contains method determines whether the collection contains a given item.
+   *
+   * @param {string|Object|Function} key
+   * @param [value]
+   * @return {boolean}
    */
   public contains<V>(
     key: keyof Item | Item | ((item: Item) => unknown),
@@ -108,6 +117,8 @@ export default class Collection<
 
   /**
    * The count method returns the total number of items in the collection.
+   *
+   * @return {number}
    */
   public count(): number {
     return this.items.length
@@ -127,6 +138,10 @@ export default class Collection<
   /**
    * The diff method compares the collection against another collection or a plain array based on its values.
    * This method will return the values in the original collection that are not present in the given collection.
+   *
+   * @param {Collection} values
+   * @param {string} key
+   * @return {Collection}
    */
   public diff(values: this, key: string = this.primaryKey()): this {
     const collection = this.items.filter((item) => {
@@ -142,6 +157,8 @@ export default class Collection<
 
   /**
    * The dump method outputs the results at that moment and then continues processing.
+   *
+   * @return {Collection}
    */
   public dump(): this {
     // eslint-disable-next-line
@@ -152,6 +169,9 @@ export default class Collection<
 
   /**
    * The each method iterates over the items in the collection and passes each item to a callback.
+   *
+   * @param {Function} fn
+   * @return {Collection}
    */
   public each(
     fn: (item: Item, index: number, items: Item[]) => false | void
@@ -168,7 +188,10 @@ export default class Collection<
   }
 
   /**
-   * The first method returns the first element in the collection that passes a given truth test.
+   * The first method returns the first el;ement in the collection that passes a given truth test.
+   *
+   * @param {Function} fn
+   * @return {Object}
    */
   public first(fn?: (item: Item) => boolean): Item {
     if (isFunction(fn)) {
@@ -198,6 +221,11 @@ export default class Collection<
 
   /**
    * The firstWhere method returns the first element in the collection with the given key / value pair.
+   *
+   * @param {string} key
+   * @param {string} [operator]
+   * @param {*} [value]
+   * @return {Object}
    */
   public firstWhere<V extends unknown>(
     key: keyof Item | string,
@@ -216,6 +244,11 @@ export default class Collection<
 
   /**
    * The where method filters the collection by a given key / value pair.
+   *
+   * @param {string} key
+   * @param {string} [operator]
+   * @param {*} [value]
+   * @return {Object}
    */
   public where<V extends unknown>(
     key: keyof Item | string,
@@ -283,6 +316,9 @@ export default class Collection<
 
   /**
    * Creates a new instance of the Collection.
+   *
+   * @param {...*} collection
+   * @return {Collection}
    */
   protected newInstance(...collection: Item[] | [Item[]]): this {
     const items = variadic(collection)
@@ -293,6 +329,9 @@ export default class Collection<
 
   /**
    * Wrap an array with another collection library.
+   *
+   * @param {[*]} array
+   * @return {[*]}
    */
   protected newCollection<T extends unknown[]>(array: T): T {
     return array
@@ -300,6 +339,8 @@ export default class Collection<
 
   /**
    * Get the primary key for the item.
+   *
+   * @return {string}
    */
   protected primaryKey(): string {
     return 'id'
@@ -307,6 +348,9 @@ export default class Collection<
 
   /**
    * Get the value of the item's primary key.
+   *
+   * @param {Object} item
+   * @return {string|number}
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()] as string | number
