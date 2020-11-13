@@ -101,7 +101,7 @@ export default class Collection<
 
     return (
       this.items.findIndex((item) => {
-        return item[this.primaryKey()] === value?.[this.primaryKey()]
+        return item[this.primaryKey()] === key[this.primaryKey()]
       }) !== -1
     )
   }
