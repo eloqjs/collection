@@ -11,19 +11,35 @@ export function clone(items: unknown[]): unknown[] {
 /**
  * Get value of a nested property.
  *
- * @param mainObject
+ * @param holder
  * @param {string} key
  * @returns {*}
  */
-export function nestedValue(mainObject: unknown, key: string): any {
-  if (isObject(mainObject)) {
-    return key.split('.').reduce((obj, property) => {
-      return obj[property]
-    }, mainObject)
+export function nestedValue(
+  holder: Record<string, unknown>,
+  key: string | string[]
+): unknown {
+  if (!key || !holder) {
+    return holder
   }
 
-  // If we end up here, we're not working with an object, and @var mainObject is the value itself
-  return mainObject
+  if (key === 'string' && key in holder) {
+    return holder[key]
+  }
+
+  const propParts = Array.isArray(key) ? key : (key + '').split('.')
+
+  let result: unknown = holder
+
+  while (propParts.length && result) {
+    const propPart = propParts.shift()
+
+    if (isObject(result) && propPart) {
+      result = result[propPart]
+    }
+  }
+
+  return result
 }
 
 /**

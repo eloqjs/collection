@@ -29,12 +29,6 @@ describe('Helpers', () => {
 
       expect(nestedValue(value, 'foo.bar')).toBe('baz')
     })
-
-    it('Should return the value itself if the value is not an Object', () => {
-      const value = 'foo'
-
-      expect(nestedValue(value, 'bar')).toBe('foo')
-    })
   })
 
   describe('variadic()', () => {
