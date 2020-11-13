@@ -2,7 +2,7 @@ import { isFunction, isString, nestedValue, variadic } from './helpers'
 import type { Constructor, Operator } from './types'
 
 export default class Collection<
-  Item extends Record<string, any> = Record<string, any>
+  Item extends Record<string, unknown> = Record<string, unknown>
 > extends Array<Item> {
   constructor(collection: Item[])
   constructor(...items: Item[])
@@ -74,14 +74,14 @@ export default class Collection<
     return this.newInstance(collection)
   }
 
-  public contains(item: Item | ((...args: any[]) => any)): boolean
+  public contains(item: Item | ((item: Item) => boolean)): boolean
   public contains<V>(key: keyof Item, value: V): boolean
 
   /**
    * The contains method determines whether the collection contains a given item.
    */
   public contains<V>(
-    key: keyof Item | Item | ((...args: any[]) => any),
+    key: keyof Item | Item | ((item: Item) => unknown),
     value?: V
   ): boolean {
     if (isFunction(key)) {
@@ -265,16 +265,16 @@ export default class Collection<
           return nestedValue(item, key) !== comparisonValue
 
         case '<':
-          return nestedValue(item, key) < (comparisonValue as any)
+          return (nestedValue(item, key) as never) < (comparisonValue as never)
 
         case '<=':
-          return nestedValue(item, key) <= (comparisonValue as any)
+          return (nestedValue(item, key) as never) <= (comparisonValue as never)
 
         case '>':
-          return nestedValue(item, key) > (comparisonValue as any)
+          return (nestedValue(item, key) as never) > (comparisonValue as never)
 
         case '>=':
-          return nestedValue(item, key) >= (comparisonValue as any)
+          return (nestedValue(item, key) as never) >= (comparisonValue as never)
       }
     })
 
@@ -294,7 +294,7 @@ export default class Collection<
   /**
    * Wrap an array with another collection library.
    */
-  protected newCollection(array: any[]): any[] {
+  protected newCollection<T extends unknown[]>(array: T): T {
     return array
   }
 
@@ -309,6 +309,6 @@ export default class Collection<
    * Get the value of the item's primary key.
    */
   protected getPrimaryKey(item: Item): string | number {
-    return item[this.primaryKey()]
+    return item[this.primaryKey()] as string | number
   }
 }

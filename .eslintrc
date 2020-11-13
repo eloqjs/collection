@@ -34,9 +34,6 @@
     "prettier/prettier": "error",
     "simple-import-sort/sort": "warn",
 
-    /* Typescript */
-    "@typescript-eslint/no-explicit-any": "off",
-
     /* Others */
     "no-console": "error"
   }

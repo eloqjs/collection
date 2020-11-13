@@ -62,7 +62,7 @@ export function variadic<T>(args: T[] | [T[]]): T[] {
  * @param {*} item
  * @returns {boolean}
  */
-export function isArray(item: unknown): item is Array<any> {
+export function isArray(item: unknown): item is Array<unknown> {
   return Array.isArray(item)
 }
 
@@ -72,7 +72,7 @@ export function isArray(item: unknown): item is Array<any> {
  * @param {*} item
  * @returns {boolean}
  */
-export function isObject(item: unknown): item is Record<string, any> {
+export function isObject(item: unknown): item is Record<string, unknown> {
   return (
     typeof item === 'object' && Array.isArray(item) === false && item !== null
   )
@@ -84,7 +84,9 @@ export function isObject(item: unknown): item is Record<string, any> {
  * @param {*} item
  * @returns {boolean}
  */
-export function isFunction(item: unknown): item is (...args: any[]) => any {
+export function isFunction(
+  item: unknown
+): item is (...args: unknown[]) => unknown {
   return typeof item === 'function'
 }
 
