@@ -17,17 +17,75 @@ describe('Helpers', () => {
     })
   })
 
-  describe('nestedValue()', () => {
-    it('Should get value of a nested property', () => {
-      const value = { foo: 'bar' }
+  /**
+   * Tests of `getProp`
+   * Based on tests from https://github.com/dy/dotprop (MIT)
+   */
+  describe('getProp()', () => {
+    it('Should get property defined by dot notation in string.', () => {
+      const holder = {
+        a: {
+          b: {
+            c: 1
+          }
+        }
+      }
 
-      expect(getProp(value, 'foo')).toBe('bar')
+      const result = getProp(holder, 'a.b.c')
+
+      expect(result).toBe(1)
     })
 
-    it('Should get value of a deep nested property', () => {
-      const value = { foo: { bar: 'baz' } }
+    it('Should get property defined by array-type keys.', () => {
+      const holder = {
+        a: {
+          b: {
+            c: 1
+          }
+        }
+      }
 
-      expect(getProp(value, 'foo.bar')).toBe('baz')
+      const result = getProp(holder, ['a', 'b', 'c'])
+
+      expect(result).toBe(1)
+    })
+
+    it('Should get property defined by simple string.', () => {
+      const holder = {
+        a: {
+          b: {
+            c: 1
+          }
+        }
+      }
+
+      const result = getProp(holder, 'a')
+
+      expect(result).toBe(holder.a)
+    })
+
+    it('Should return holder when propName is not defined.', () => {
+      const holder = {
+        a: {
+          b: {
+            c: 1
+          }
+        }
+      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const result = getProp(holder)
+
+      expect(result).toBe(holder)
+    })
+
+    it('Should return undefined when holder is not defined.', () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const result = getProp()
+
+      expect(result).toBeUndefined()
     })
   })
 
