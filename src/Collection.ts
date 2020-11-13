@@ -204,7 +204,7 @@ export default class Collection<
     operator: V | Operator,
     value?: V
   ): Item {
-    return this.where(key, operator as Operator, value).first() || {}
+    return this.where(key, operator as Operator, value).first()
   }
 
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
