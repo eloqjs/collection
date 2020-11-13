@@ -251,10 +251,7 @@ export default class Collection<
     const collection = items.filter((item) => {
       switch (comparisonOperator) {
         case '==':
-          return (
-            nestedValue(item, key) === Number(comparisonValue) ||
-            nestedValue(item, key) === (comparisonValue as any).toString()
-          )
+          return nestedValue(item, key) == comparisonValue
 
         default:
         case '===':
@@ -262,10 +259,7 @@ export default class Collection<
 
         case '!=':
         case '<>':
-          return (
-            nestedValue(item, key) !== Number(comparisonValue) &&
-            nestedValue(item, key) !== (comparisonValue as any).toString()
-          )
+          return nestedValue(item, key) != comparisonValue
 
         case '!==':
           return nestedValue(item, key) !== comparisonValue
