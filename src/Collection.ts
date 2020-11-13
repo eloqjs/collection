@@ -238,6 +238,17 @@ export default class Collection<
     return this.where(key, operator as Operator, value).first()
   }
 
+  /**
+   * The forPage method returns a new collection containing the items that would be present on a given page number.
+   * The method accepts the page number as its first argument
+   * and the number of items to show per page as its second argument.
+   */
+  forPage(page: number, chunk: number): this {
+    const collection = this.items.slice(page * chunk - chunk, page * chunk)
+
+    return this.newInstance(collection)
+  }
+
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
   public where<V extends unknown>(
     key: keyof Item | string,
