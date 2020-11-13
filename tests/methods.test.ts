@@ -241,6 +241,33 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('diff()', () => {
+    it('Should return the missing values from collection', () => {
+      const products1 = [
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+        { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+      ]
+      const products2 = [
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { id: 9, product: 'Door', price: 100, manufacturer: 'IKEA' }
+      ]
+      const collection1 = collect(products1)
+      const collection2 = collect(products2)
+      const diff = collection1.diff(collection2)
+
+      expect(diff).toEqual([
+        { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+        { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+      ])
+      expect(collection1).toEqual(products1)
+    })
+  })
+
   describe('dump()', () => {
     it('Should console log the collection', () => {
       const mockConsole = hoax(console, 'log')
@@ -251,6 +278,142 @@ describe('Public Methods', () => {
       mockConsole.reset()
 
       expect(mockConsole.calls).toEqual([[collection]])
+    })
+  })
+
+  describe('each()', () => {
+    it('Should iterate over the collection', () => {
+      let sum = 0
+      const products = [
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+        { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+      ]
+      const collection = collect(products)
+
+      const each = collection.each((item) => {
+        sum += item.price
+      })
+
+      expect(each).toEqual(products)
+      expect(sum).toEqual(800)
+      expect(collection).toEqual(products)
+
+      let sum2 = 0
+
+      const summed = collection.each((item) => {
+        if (item.price > 150) {
+          return
+        }
+
+        sum2 += item.price
+      })
+
+      expect(summed).toEqual(products)
+      expect(sum2).toEqual(400)
+    })
+
+    it('Should stop iterating, when returning false', () => {
+      const products = [
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+        { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+      ]
+      const collection = collect(products)
+
+      const result: unknown[] = []
+
+      collection.each((item, key) => {
+        if (item.price === 150) {
+          return false
+        }
+
+        result[key] = item
+      })
+
+      expect(result).toEqual([
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' }
+      ])
+    })
+
+    it('Should not modify the collection', () => {
+      const products = [
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+        { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+      ]
+      const collection = collect(products)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const mapped = collection.each((item) => item.price * 2)
+
+      expect(collection).toEqual(products)
+      expect(mapped).toEqual(collection)
+    })
+  })
+
+  describe('first()', () => {
+    const products = [
+      { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+      { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+      { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+      { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+    ]
+
+    it('Should return the first item from the collection', () => {
+      const collection = collect(products)
+      const first = collection.first()
+
+      expect(first).toEqual(products[0])
+      expect(collection).toEqual(products)
+    })
+
+    it('Should accept a callback', () => {
+      const collection = collect(products)
+      const first = collection.first((item) => item.price < 150)
+
+      expect(first).toEqual(products[1])
+      expect(collection).toEqual(products)
+    })
+  })
+
+  describe('firstWhere()', () => {
+    const products = [
+      { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+      { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+      { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+      { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+    ]
+
+    it('Should return the first item where it matches', () => {
+      const collection = collect(products)
+
+      expect(collection.firstWhere('manufacturer', 'IKEA').product).toEqual(
+        'Desk'
+      )
+    })
+
+    it('Should return an empty object when no matches', () => {
+      const collection = collect(products)
+
+      expect(collection.firstWhere('manufacturer', 'xoxo')).toEqual({})
+    })
+
+    it('Should be possible to pass an operator', () => {
+      const collection = collect(products)
+
+      expect(
+        collection.firstWhere('manufacturer', '!==', 'IKEA').product
+      ).toEqual('Chair')
     })
   })
 
