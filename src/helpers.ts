@@ -4,8 +4,8 @@
  * @param items
  * @return {[*]}
  */
-export function clone(items: unknown[]): unknown[] {
-  return [...items]
+export function clone<T extends unknown[]>(items: T): T {
+  return [...items] as T
 }
 
 /**
