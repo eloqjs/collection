@@ -330,6 +330,7 @@ export default class Collection<
     value: keyof Item | string,
     key: keyof Item | string
   ): Record<string, unknown>
+
   /**
    * The pluck method retrieves all of the values for a given key.
    *
