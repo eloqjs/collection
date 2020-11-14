@@ -1,4 +1,13 @@
-import { getProp, isArray, isFunction, isString, variadic } from './helpers'
+import {
+  buildKeyPathMap,
+  clone,
+  getProp,
+  isArray,
+  isFunction,
+  isString,
+  matches,
+  variadic
+} from './helpers'
 import type { Constructor, Operator } from './types'
 
 export default class Collection<
@@ -314,6 +323,76 @@ export default class Collection<
     })
 
     return this.newCollection(collection)
+  }
+
+  pluck(value: keyof Item | string): unknown[]
+  pluck(
+    value: keyof Item | string,
+    key: keyof Item | string
+  ): Record<string, unknown>
+  /**
+   * The pluck method retrieves all of the values for a given key.
+   *
+   * @param {string} value
+   * @param {string} [key]
+   * @return {[]|Object}
+   */
+  pluck(
+    value: keyof Item | string,
+    key?: keyof Item | string
+  ): unknown[] | Record<string, unknown> {
+    if ((value as string).indexOf('*') !== -1) {
+      const keyPathMap = buildKeyPathMap(this.items)
+      const keyMatches: unknown[] = []
+
+      if (key) {
+        keyMatches.push(...matches(key as string, keyPathMap))
+      }
+
+      const valueMatches: unknown[] = []
+      valueMatches.push(...matches(value as string, keyPathMap))
+
+      if (key) {
+        const collection = {}
+
+        this.items.forEach((item, index) => {
+          collection[(keyMatches[index] as string) || ''] = valueMatches
+        })
+
+        return this.newCollection(collection)
+      }
+
+      return this.newCollection([valueMatches])
+    }
+
+    if (key) {
+      const collection = {}
+
+      this.items.forEach((item) => {
+        if (getProp(item, value as string) !== undefined) {
+          collection[(item[key as string] as string) || ''] = getProp(
+            item,
+            value as string
+          )
+        } else {
+          collection[(item[key as string] as string) || ''] = null
+        }
+      })
+
+      return this.newCollection(collection)
+    }
+
+    return this.newCollection(
+      clone(
+        this.map((item) => {
+          if (getProp(item, value as string) !== undefined) {
+            return getProp(item, value as string)
+          }
+
+          return null
+        })
+      )
+    )
   }
 
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
