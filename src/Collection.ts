@@ -89,7 +89,7 @@ export default class Collection<
   }
 
   public contains(item: Item | ((item: Item) => boolean)): boolean
-  public contains<V, K>(key: keyof Item | K, value: V): boolean
+  public contains<V, K extends string>(key: keyof Item | K, value: V): boolean
 
   /**
    * The contains method determines whether the collection contains a given item.
@@ -98,7 +98,7 @@ export default class Collection<
    * @param [value]
    * @return {boolean}
    */
-  public contains<V, K>(
+  public contains<V, K extends string>(
     key: keyof Item | K | Item | ((item: Item) => unknown),
     value?: V
   ): boolean {
@@ -224,8 +224,11 @@ export default class Collection<
     return {} as Item
   }
 
-  public firstWhere<V extends unknown, K>(key: keyof Item | K, value?: V): Item
-  public firstWhere<V extends unknown, K>(
+  public firstWhere<V extends unknown, K extends string>(
+    key: keyof Item | K,
+    value?: V
+  ): Item
+  public firstWhere<V extends unknown, K extends string>(
     key: keyof Item | K,
     operator: Operator,
     value: V
@@ -239,7 +242,7 @@ export default class Collection<
    * @param {*} [value]
    * @return {Object}
    */
-  public firstWhere<V extends unknown, K>(
+  public firstWhere<V extends unknown, K extends string>(
     key: keyof Item | K,
     operator: V | Operator,
     value?: V
@@ -294,7 +297,7 @@ export default class Collection<
    * @param {Function|string} key
    * @return {Object}
    */
-  groupBy<K>(
+  groupBy<K extends string>(
     key: ((item: Item, index?: number) => K) | keyof Item | K
   ): Record<string, unknown> {
     const collection = {}
@@ -322,7 +325,7 @@ export default class Collection<
   }
 
   pluck<V>(value: keyof Item | V): unknown[]
-  pluck<V, K>(
+  pluck<V, K extends string>(
     value: keyof Item | V,
     key: keyof Item | K
   ): Record<string, unknown>
@@ -334,7 +337,7 @@ export default class Collection<
    * @param {string} [key]
    * @return {[]|Object}
    */
-  pluck<V, K>(
+  pluck<V, K extends string>(
     value: keyof Item | V,
     key?: keyof Item | K
   ): unknown[] | Record<string, unknown> {
@@ -390,8 +393,11 @@ export default class Collection<
     )
   }
 
-  public where<V extends unknown, K>(key: keyof Item | K, value?: V): this
-  public where<V extends unknown, K>(
+  public where<V extends unknown, K extends string>(
+    key: keyof Item | K,
+    value?: V
+  ): this
+  public where<V extends unknown, K extends string>(
     key: keyof Item | K,
     operator: Operator,
     value: V
@@ -405,7 +411,7 @@ export default class Collection<
    * @param {*} [value]
    * @return {Object}
    */
-  public where<V extends unknown, K>(
+  public where<V extends unknown, K extends string>(
     key: keyof Item | K,
     operator?: V | Operator,
     value?: V
