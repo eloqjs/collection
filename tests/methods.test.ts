@@ -599,7 +599,7 @@ describe('Public Methods', () => {
       }
     )
 
-    it('should be able to use nested value as key', () => {
+    it('Should be able to use nested value as key', () => {
       const collection = collect([
         {
           name: 'Virgil van Dijk',
@@ -733,6 +733,22 @@ describe('Public Methods', () => {
         Door: null
       })
     })
+
+    it(
+      'Should use null as value if value is missing ' +
+        'and use empty string as key if object is missing property',
+      () => {
+        const pluck = collection.pluck('manufacturer', 'manufacturer')
+
+        expect(pluck['']).toBeNull()
+
+        expect(pluck).toEqual({
+          '': null,
+          'Herman Miller': 'Herman Miller',
+          IKEA: 'IKEA'
+        })
+      }
+    )
 
     it('Should not return null instead of 0', () => {
       const data = [
@@ -896,6 +912,50 @@ describe('Public Methods', () => {
 
       expect(users.pluck('*.*.*')).toEqual([['Editor', 'Admin']])
     })
+
+    it('Should be able to pluck key and value pairs using wildcards', () => {
+      const users = collect([
+        {
+          name: 'John',
+          roles: [
+            {
+              name: 'Editor'
+            },
+            {
+              name: 'Admin'
+            }
+          ]
+        }
+      ])
+
+      expect(users.pluck('roles.*.name', 'name')).toEqual({
+        John: ['Editor', 'Admin']
+      })
+    })
+
+    it(
+      'Should be able to pluck key and value pairs using wildcards and ' +
+        'use empty string as key if object is missing property',
+      () => {
+        const users = collect([
+          {
+            name: '',
+            roles: [
+              {
+                name: 'Editor'
+              },
+              {
+                name: 'Admin'
+              }
+            ]
+          }
+        ])
+
+        expect(users.pluck('roles.*.name', 'name')).toEqual({
+          '': ['Editor', 'Admin']
+        })
+      }
+    )
   })
 
   describe('where()', () => {
