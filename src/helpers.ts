@@ -36,7 +36,7 @@ export function getProp(
   while (propParts.length && result) {
     const propPart = propParts.shift()
 
-    if (isObject(result) && propPart) {
+    if ((isObject(result) || isArray(result)) && propPart) {
       result = result[propPart]
     }
   }
