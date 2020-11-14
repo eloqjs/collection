@@ -4,6 +4,8 @@
  * @param items
  * @return {[*]}
  */
+import { Key, KeyOrArray } from './types'
+
 export function clone<T extends unknown[]>(items: T): T {
   return [...items] as T
 }
@@ -19,7 +21,7 @@ export function clone<T extends unknown[]>(items: T): T {
  */
 export function getProp(
   holder: Record<string, unknown>,
-  key: string | string[]
+  key: KeyOrArray
 ): unknown {
   if (!key || !holder) {
     return holder
@@ -152,7 +154,7 @@ export function buildKeyPathMap(
  * @return {[]}
  */
 export function matches(
-  key: string,
+  key: Key,
   pathMap: unknown[] | Record<string, unknown>
 ): unknown[] {
   const matches: unknown[] = []

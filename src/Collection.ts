@@ -7,7 +7,7 @@ import {
   matches,
   variadic
 } from './helpers'
-import type { Constructor, Operator } from './types'
+import type { Constructor, Key, KeyOrArray, Operator } from './types'
 
 export default class Collection<
   Item extends Record<string, unknown> = Record<string, unknown>
@@ -88,7 +88,7 @@ export default class Collection<
   }
 
   public contains(item: Item | ((item: Item) => boolean)): boolean
-  public contains<V, K extends string>(key: keyof Item | K, value: V): boolean
+  public contains<V, K extends Key>(key: keyof Item | K, value: V): boolean
 
   /**
    * The contains method determines whether the collection contains a given item.
@@ -97,7 +97,7 @@ export default class Collection<
    * @param [value]
    * @return {boolean}
    */
-  public contains<V, K extends string>(
+  public contains<V, K extends Key>(
     key: keyof Item | K | Item | ((item: Item) => unknown),
     value?: V
   ): boolean {
@@ -151,14 +151,15 @@ export default class Collection<
    * @param {string} key
    * @return {Collection}
    */
-  public diff<K extends string>(
+  public diff<K extends Key>(
     values: this,
     key: keyof Item | K = this.primaryKey()
   ): this {
     const collection = this.items.filter((item) => {
       return (
         values.findIndex((value) => {
-          return value[key] === item[key]
+          const _key = key.toString()
+          return value[_key] === item[_key]
         }) === -1
       )
     })
@@ -223,11 +224,11 @@ export default class Collection<
     return {} as Item
   }
 
-  public firstWhere<V extends unknown, K extends string>(
+  public firstWhere<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
   ): Item
-  public firstWhere<V extends unknown, K extends string>(
+  public firstWhere<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator: Operator,
     value: V
@@ -241,7 +242,7 @@ export default class Collection<
    * @param {*} [value]
    * @return {Object}
    */
-  public firstWhere<V extends unknown, K extends string>(
+  public firstWhere<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator: V | Operator,
     value?: V
@@ -296,18 +297,18 @@ export default class Collection<
    * @param {Function|string} key
    * @return {Object}
    */
-  groupBy<K extends string | string[]>(
+  groupBy<K extends KeyOrArray>(
     key: ((item: Item, index?: number) => K) | keyof Item | K
   ): Record<string, unknown> {
     const collection = {}
 
     this.items.forEach((item, index) => {
-      let resolvedKey: string | number = ''
+      let resolvedKey: Key = ''
 
       if (isFunction(key)) {
         resolvedKey = key(item, index) as string
       } else {
-        const value = getProp(item, key as string | string[]) as string | number
+        const value = getProp(item, key as KeyOrArray) as Key
 
         if (value !== undefined) {
           resolvedKey = value
@@ -331,12 +332,12 @@ export default class Collection<
    * @param {string} glue - The "glue" string you wish to place between the values.
    * @return {string}
    */
-  implode<K extends string>(key: keyof Item | K, glue: string): string {
+  implode<K extends Key>(key: keyof Item | K, glue: string): string {
     return this.pluck(key).join(glue)
   }
 
-  pluck<V>(value: keyof Item | V): unknown[]
-  pluck<V, K extends string>(
+  pluck<V extends Key>(value: keyof Item | V): unknown[]
+  pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key: keyof Item | K
   ): Record<string, unknown>
@@ -348,7 +349,7 @@ export default class Collection<
    * @param {string} [key]
    * @return {[]|Object}
    */
-  pluck<V, K extends string>(
+  pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key?: keyof Item | K
   ): unknown[] | Record<string, unknown> {
@@ -404,11 +405,11 @@ export default class Collection<
     )
   }
 
-  public where<V extends unknown, K extends string>(
+  public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
   ): this
-  public where<V extends unknown, K extends string>(
+  public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator: Operator,
     value: V
@@ -422,7 +423,7 @@ export default class Collection<
    * @param {*} [value]
    * @return {Object}
    */
-  public where<V extends unknown, K extends string>(
+  public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator?: V | Operator,
     value?: V
