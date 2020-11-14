@@ -652,6 +652,28 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('isEmpty()', () => {
+    it('Should return true if collection is empty', () => {
+      expect(collect().isEmpty()).toBeTruthy()
+      expect(collect([]).isEmpty()).toBeTruthy()
+    })
+
+    it('Should return false if collection is not empty', () => {
+      expect(collect({ key: 'value' }).isEmpty()).toBeFalsy()
+    })
+  })
+
+  describe('isNotEmpty()', () => {
+    it('Should return false if collection is empty', () => {
+      expect(collect().isNotEmpty()).toBeFalsy()
+      expect(collect([]).isNotEmpty()).toBeFalsy()
+    })
+
+    it('Should return true if collection is not empty', () => {
+      expect(collect({ key: 'value' }).isNotEmpty()).toBeTruthy()
+    })
+  })
+
   describe('pluck()', () => {
     const products = [
       { product: 'Desk', price: 200, manufacturer: 'IKEA' },

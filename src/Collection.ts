@@ -336,6 +336,24 @@ export default class Collection<
     return this.pluck(key).join(glue)
   }
 
+  /**
+   * The isEmpty method returns true if the collection is empty; otherwise, false is returned.
+   *
+   * @return {boolean}
+   */
+  isEmpty(): boolean {
+    return !this.items.length
+  }
+
+  /**
+   * The isNotEmpty method returns true if the collection is not empty; otherwise, false is returned.
+   *
+   * @return {boolean}
+   */
+  isNotEmpty(): boolean {
+    return !this.isEmpty()
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
