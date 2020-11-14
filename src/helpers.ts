@@ -94,9 +94,22 @@ export function isFunction(
 
 /**
  * The isString() method determines whether the passed value is a String.
+ *
+ * @param {*} item
+ * @return {boolean}
  */
 export function isString(item: unknown): item is string {
   return typeof item === 'string'
+}
+
+/**
+ * The isNumber() method determines whether the passed value is a Number.
+ *
+ * @param {*} item
+ * @return {boolean}
+ */
+export function isNumber(item: unknown): item is number {
+  return typeof item === 'number'
 }
 
 /**

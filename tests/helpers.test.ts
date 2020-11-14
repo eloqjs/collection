@@ -3,6 +3,7 @@ import {
   getProp,
   isArray,
   isFunction,
+  isNumber,
   isObject,
   isString,
   variadic
@@ -132,10 +133,12 @@ describe('Helpers', () => {
     it('Should return false if the passed value is not an Object', () => {
       const array: unknown = []
       const func = () => true
+      const number = 0
       const string = ''
 
       expect(isObject(array)).toBeFalsy()
       expect(isObject(func)).toBeFalsy()
+      expect(isObject(number)).toBeFalsy()
       expect(isObject(string)).toBeFalsy()
     })
   })
@@ -149,12 +152,34 @@ describe('Helpers', () => {
 
     it('Should return false if the passed value is not a Function', () => {
       const array: unknown = []
+      const number = 0
       const object = {}
       const string = ''
 
       expect(isFunction(array)).toBeFalsy()
+      expect(isFunction(number)).toBeFalsy()
       expect(isFunction(object)).toBeFalsy()
       expect(isFunction(string)).toBeFalsy()
+    })
+  })
+
+  describe('isNumber()', () => {
+    it('Should return true if the passed value is a Number', () => {
+      const number = 0
+
+      expect(isNumber(number)).toBeTruthy()
+    })
+
+    it('Should return false if the passed value is not a Number', () => {
+      const array: unknown = []
+      const func = () => true
+      const object = {}
+      const string = ''
+
+      expect(isNumber(array)).toBeFalsy()
+      expect(isNumber(func)).toBeFalsy()
+      expect(isNumber(object)).toBeFalsy()
+      expect(isNumber(string)).toBeFalsy()
     })
   })
 
@@ -168,10 +193,12 @@ describe('Helpers', () => {
     it('Should return false if the passed value is not a String', () => {
       const array: unknown = []
       const func = () => true
+      const number = 0
       const object = {}
 
       expect(isString(array)).toBeFalsy()
       expect(isString(func)).toBeFalsy()
+      expect(isString(number)).toBeFalsy()
       expect(isString(object)).toBeFalsy()
     })
   })
