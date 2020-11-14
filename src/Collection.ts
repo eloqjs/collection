@@ -89,7 +89,7 @@ export default class Collection<
   }
 
   public contains(item: Item | ((item: Item) => boolean)): boolean
-  public contains<V>(key: keyof Item, value: V): boolean
+  public contains<V, K>(key: keyof Item | K, value: V): boolean
 
   /**
    * The contains method determines whether the collection contains a given item.
@@ -98,8 +98,8 @@ export default class Collection<
    * @param [value]
    * @return {boolean}
    */
-  public contains<V>(
-    key: keyof Item | Item | ((item: Item) => unknown),
+  public contains<V, K>(
+    key: keyof Item | K | Item | ((item: Item) => unknown),
     value?: V
   ): boolean {
     if (isFunction(key)) {
@@ -152,7 +152,10 @@ export default class Collection<
    * @param {string} key
    * @return {Collection}
    */
-  public diff(values: this, key: string = this.primaryKey()): this {
+  public diff<K extends string>(
+    values: this,
+    key: keyof Item | K = this.primaryKey()
+  ): this {
     const collection = this.items.filter((item) => {
       return (
         values.findIndex((value) => {
@@ -221,12 +224,9 @@ export default class Collection<
     return {} as Item
   }
 
-  public firstWhere<V extends unknown>(
-    key: keyof Item | string,
-    value?: V
-  ): Item
-  public firstWhere<V extends unknown>(
-    key: keyof Item | string,
+  public firstWhere<V extends unknown, K>(key: keyof Item | K, value?: V): Item
+  public firstWhere<V extends unknown, K>(
+    key: keyof Item | K,
     operator: Operator,
     value: V
   ): Item
@@ -239,8 +239,8 @@ export default class Collection<
    * @param {*} [value]
    * @return {Object}
    */
-  public firstWhere<V extends unknown>(
-    key: keyof Item | string,
+  public firstWhere<V extends unknown, K>(
+    key: keyof Item | K,
     operator: V | Operator,
     value?: V
   ): Item {
@@ -294,12 +294,8 @@ export default class Collection<
    * @param {Function|string} key
    * @return {Object}
    */
-  groupBy(
-    key:
-      | ((item: Item, index?: number) => string)
-      | keyof Item
-      | string
-      | string[]
+  groupBy<K>(
+    key: ((item: Item, index?: number) => K) | keyof Item | K
   ): Record<string, unknown> {
     const collection = {}
 
@@ -325,10 +321,10 @@ export default class Collection<
     return collection
   }
 
-  pluck(value: keyof Item | string): unknown[]
-  pluck(
-    value: keyof Item | string,
-    key: keyof Item | string
+  pluck<V>(value: keyof Item | V): unknown[]
+  pluck<V, K>(
+    value: keyof Item | V,
+    key: keyof Item | K
   ): Record<string, unknown>
 
   /**
@@ -338,9 +334,9 @@ export default class Collection<
    * @param {string} [key]
    * @return {[]|Object}
    */
-  pluck(
-    value: keyof Item | string,
-    key?: keyof Item | string
+  pluck<V, K>(
+    value: keyof Item | V,
+    key?: keyof Item | K
   ): unknown[] | Record<string, unknown> {
     if ((value as string).indexOf('*') !== -1) {
       const keyPathMap = buildKeyPathMap(this.items)
@@ -394,9 +390,9 @@ export default class Collection<
     )
   }
 
-  public where<V extends unknown>(key: keyof Item | string, value?: V): this
-  public where<V extends unknown>(
-    key: keyof Item | string,
+  public where<V extends unknown, K>(key: keyof Item | K, value?: V): this
+  public where<V extends unknown, K>(
+    key: keyof Item | K,
     operator: Operator,
     value: V
   ): this
@@ -409,8 +405,8 @@ export default class Collection<
    * @param {*} [value]
    * @return {Object}
    */
-  public where<V extends unknown>(
-    key: keyof Item | string,
+  public where<V extends unknown, K>(
+    key: keyof Item | K,
     operator?: V | Operator,
     value?: V
   ): this {
