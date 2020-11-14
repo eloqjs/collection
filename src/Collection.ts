@@ -377,7 +377,7 @@ export default class Collection<
    * @param {[*]} array
    * @return {[*]}
    */
-  protected newCollection<T extends unknown[]>(array: T): T {
+  protected newCollection<T>(array: T): T {
     return array
   }
 
