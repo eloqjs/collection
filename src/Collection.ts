@@ -242,6 +242,10 @@ export default class Collection<
    * The forPage method returns a new collection containing the items that would be present on a given page number.
    * The method accepts the page number as its first argument
    * and the number of items to show per page as its second argument.
+   *
+   * @param {number} page
+   * @param {number} chunk
+   * @return {Collection}
    */
   forPage(page: number, chunk: number): this {
     const collection = this.items.slice(page * chunk - chunk, page * chunk)
@@ -251,6 +255,9 @@ export default class Collection<
 
   /**
    * The forget method removes an item from the collection by its key.
+   *
+   * @param {number} index
+   * @return {Collection}
    */
   forget(index: number): this {
     this.items.splice(index, 1)
