@@ -324,6 +324,17 @@ export default class Collection<
     return collection
   }
 
+  /**
+   * The implode method joins the items in a collection.
+   *
+   * @param {string} key - The key of the attributes you wish to join.
+   * @param {string} glue - The "glue" string you wish to place between the values.
+   * @return {string}
+   */
+  implode<K extends string>(key: keyof Item | K, glue: string): string {
+    return this.pluck(key).join(glue)
+  }
+
   pluck<V>(value: keyof Item | V): unknown[]
   pluck<V, K extends string>(
     value: keyof Item | V,
