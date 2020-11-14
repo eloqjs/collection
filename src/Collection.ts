@@ -2,7 +2,6 @@ import {
   buildKeyPathMap,
   clone,
   getProp,
-  isArray,
   isFunction,
   isString,
   matches,
@@ -297,7 +296,7 @@ export default class Collection<
    * @param {Function|string} key
    * @return {Object}
    */
-  groupBy<K extends string>(
+  groupBy<K extends string | string[]>(
     key: ((item: Item, index?: number) => K) | keyof Item | K
   ): Record<string, unknown> {
     const collection = {}
@@ -307,15 +306,16 @@ export default class Collection<
 
       if (isFunction(key)) {
         resolvedKey = key(item, index) as string
-      } else if (
-        (isString(key) || isArray(key)) &&
-        getProp(item, key as string | string[]) !== undefined
-      ) {
-        resolvedKey = getProp(item, key as string | string[]) as string | number
+      } else {
+        const value = getProp(item, key as string | string[]) as string | number
+
+        if (value !== undefined) {
+          resolvedKey = value
+        }
       }
 
       if (collection[resolvedKey] === undefined) {
-        collection[resolvedKey] = this.newInstance([])
+        collection[resolvedKey] = []
       }
 
       collection[resolvedKey].push(item)
