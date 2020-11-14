@@ -449,7 +449,7 @@ describe('Public Methods', () => {
   })
 
   describe('forPage()', () => {
-    it('should return a collection containing the items that would be present on a given page number', () => {
+    it('Should return a collection containing the items that would be present on a given page number', () => {
       const products = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -505,6 +505,22 @@ describe('Public Methods', () => {
       ])
 
       expect(collection).toEqual(products)
+    })
+  })
+
+  describe('forget()', () => {
+    it('Should delete by index', () => {
+      const collection = collect([
+        { id: 1 },
+        { id: 2 },
+        { id: 3 },
+        { id: 4 },
+        { id: 5 }
+      ])
+      const forget = collection.forget(2)
+
+      expect(forget).toEqual([{ id: 1 }, { id: 2 }, { id: 4 }, { id: 5 }])
+      expect(collection).toEqual([{ id: 1 }, { id: 2 }, { id: 4 }, { id: 5 }])
     })
   })
 

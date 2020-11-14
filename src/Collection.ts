@@ -249,6 +249,15 @@ export default class Collection<
     return this.newInstance(collection)
   }
 
+  /**
+   * The forget method removes an item from the collection by its key.
+   */
+  forget(index: number): this {
+    this.items.splice(index, 1)
+
+    return this
+  }
+
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
   public where<V extends unknown>(
     key: keyof Item | string,
