@@ -98,3 +98,65 @@ export function isFunction(
 export function isString(item: unknown): item is string {
   return typeof item === 'string'
 }
+
+/**
+ * Build key path map.
+ *
+ * @param {Object} items
+ * @return {[]|Object}
+ */
+export function buildKeyPathMap(
+  items: Record<string, unknown>[]
+): unknown[] | Record<string, unknown> {
+  const keyPaths = {}
+
+  items.forEach((item, index) => {
+    function buildKeyPath(val: unknown, keyPath: string | number) {
+      if (isObject(val)) {
+        Object.keys(val).forEach((prop) => {
+          buildKeyPath(val[prop], `${keyPath}.${prop}`)
+        })
+      } else if (isArray(val)) {
+        val.forEach((v, i) => {
+          buildKeyPath(v, `${keyPath}.${i}`)
+        })
+      }
+
+      keyPaths[keyPath] = val
+    }
+
+    buildKeyPath(item, index)
+  })
+
+  return keyPaths
+}
+
+/**
+ * Match key path map.
+ *
+ * @param {string} key
+ * @param {[]|Object} pathMap
+ * @return {[]}
+ */
+export function matches(
+  key: string,
+  pathMap: unknown[] | Record<string, unknown>
+): unknown[] {
+  const matches: unknown[] = []
+  const regex = new RegExp(`0.${key}`, 'g')
+  const numberOfLevels = `0.${key}`.split('.').length
+
+  Object.keys(pathMap).forEach((k) => {
+    const matchingKey = k.match(regex)
+
+    if (matchingKey) {
+      const match = matchingKey[0]
+
+      if (match.split('.').length === numberOfLevels) {
+        matches.push(pathMap[match])
+      }
+    }
+  })
+
+  return matches
+}
