@@ -300,15 +300,15 @@ export default class Collection<
     const collection = {}
 
     this.items.forEach((item, index) => {
-      let resolvedKey = ''
+      let resolvedKey: string | number = ''
 
       if (isFunction(key)) {
         resolvedKey = key(item, index) as string
       } else if (
         (isString(key) || isArray(key)) &&
-        isString(getProp(item, key as string | string[]))
+        getProp(item, key as string | string[]) !== undefined
       ) {
-        resolvedKey = getProp(item, key as string | string[]) as string
+        resolvedKey = getProp(item, key as string | string[]) as string | number
       }
 
       if (collection[resolvedKey] === undefined) {
