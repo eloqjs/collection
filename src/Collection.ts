@@ -55,7 +55,7 @@ export default class Collection<
       index += size
     } while (index < this.items.length)
 
-    return this.newCollection(chunks)
+    return chunks
   }
 
   /**
@@ -197,7 +197,7 @@ export default class Collection<
   }
 
   /**
-   * The first method returns the first el;ement in the collection that passes a given truth test.
+   * The first method returns the first element in the collection that passes a given truth test.
    *
    * @param {Function} fn
    * @return {Object}
@@ -322,7 +322,7 @@ export default class Collection<
       collection[resolvedKey].push(item)
     })
 
-    return this.newCollection(collection)
+    return collection
   }
 
   pluck(value: keyof Item | string): unknown[]
@@ -360,10 +360,10 @@ export default class Collection<
           collection[(keyMatches[index] as string) || ''] = valueMatches
         })
 
-        return this.newCollection(collection)
+        return collection
       }
 
-      return this.newCollection([valueMatches])
+      return [valueMatches]
     }
 
     if (key) {
@@ -380,19 +380,17 @@ export default class Collection<
         }
       })
 
-      return this.newCollection(collection)
+      return collection
     }
 
-    return this.newCollection(
-      clone(
-        this.map((item) => {
-          if (getProp(item, value as string) !== undefined) {
-            return getProp(item, value as string)
-          }
+    return clone(
+      this.map((item) => {
+        if (getProp(item, value as string) !== undefined) {
+          return getProp(item, value as string)
+        }
 
-          return null
-        })
-      )
+        return null
+      })
     )
   }
 
@@ -486,16 +484,6 @@ export default class Collection<
     const instance = this.constructor as Constructor<this>
 
     return new instance(items)
-  }
-
-  /**
-   * Wrap an array with another collection library.
-   *
-   * @param {[*]} array
-   * @return {[*]}
-   */
-  protected newCollection<T>(array: T): T {
-    return array
   }
 
   /**

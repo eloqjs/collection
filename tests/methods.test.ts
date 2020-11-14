@@ -16,21 +16,6 @@ describe('Protected Methods', () => {
     })
   })
 
-  describe('newCollection()', () => {
-    it('Should wrap an array with another collection library', () => {
-      const array = [{ id: 1 }, { id: 2 }, { id: 3 }]
-      const collection = collect(array)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.newCollection(array)).toEqual(array)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.newCollection(array)).not.toBeInstanceOf(Collection)
-    })
-  })
-
   describe('primaryKey()', () => {
     it('Should get the primary key for the item', () => {
       const collection = collect()
