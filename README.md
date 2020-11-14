@@ -1,4 +1,4 @@
-# API Collection
+# Collection
 
 ## Thanks
 
