@@ -1,4 +1,4 @@
-import { getProp, isFunction, isString, variadic } from './helpers'
+import { getProp, isArray, isFunction, isString, variadic } from './helpers'
 import type { Constructor, Operator } from './types'
 
 export default class Collection<
@@ -277,6 +277,43 @@ export default class Collection<
     }
 
     return null
+  }
+
+  /**
+   * The groupBy method groups the collection's items by a given key.
+   *
+   * @param {Function|string} key
+   * @return {Object}
+   */
+  groupBy(
+    key:
+      | ((item: Item, index?: number) => string)
+      | keyof Item
+      | string
+      | string[]
+  ): Record<string, unknown> {
+    const collection = {}
+
+    this.items.forEach((item, index) => {
+      let resolvedKey = ''
+
+      if (isFunction(key)) {
+        resolvedKey = key(item, index) as string
+      } else if (
+        (isString(key) || isArray(key)) &&
+        isString(getProp(item, key as string | string[]))
+      ) {
+        resolvedKey = getProp(item, key as string | string[]) as string
+      }
+
+      if (collection[resolvedKey] === undefined) {
+        collection[resolvedKey] = this.newInstance([])
+      }
+
+      collection[resolvedKey].push(item)
+    })
+
+    return this.newCollection(collection)
   }
 
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
