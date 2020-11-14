@@ -29,7 +29,7 @@ export function getProp(
     return holder[key]
   }
 
-  const propParts = Array.isArray(key) ? key : (key + '').split('.')
+  const propParts = Array.isArray(key) ? clone(key) : (key + '').split('.')
 
   let result: unknown = holder
 
