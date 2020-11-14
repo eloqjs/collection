@@ -524,6 +524,21 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('get()', () => {
+    const data = [{ id: 1 }, { id: 2 }]
+    const collection = collect(data)
+
+    it('Should return the item at a given index', () => {
+      expect(collection.get(1)).toEqual({ id: 2 })
+      expect(collection).toEqual(data)
+    })
+
+    it('Should return null when the index does not exist', () => {
+      expect(collection.get(2)).toBeNull()
+      expect(collection).toEqual(data)
+    })
+  })
+
   describe('where()', () => {
     const products = [
       { product: 'Desk', price: 200, manufacturer: 'IKEA' },

@@ -258,6 +258,20 @@ export default class Collection<
     return this
   }
 
+  /**
+   * The get method returns the item at a given key. If the key does not exist, null is returned.
+   *
+   * @param {number} index
+   * @return {Object|null}
+   */
+  get(index: number): Item | null {
+    if (this.items[index] !== undefined) {
+      return this.items[index]
+    }
+
+    return null
+  }
+
   public where<V extends unknown>(key: keyof Item | string, value?: V): this
   public where<V extends unknown>(
     key: keyof Item | string,
