@@ -5,6 +5,7 @@
     /* Basic Options */
     "target": "ES6",
     "declaration": true,
+    "declarationMap": true,
     "outDir": "build",
     /* Strict Type-Checking Options */
     "strict": true,
