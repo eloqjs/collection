@@ -202,7 +202,7 @@ export default class Collection<
   /**
    * The first method returns the first element in the collection that passes a given truth test.
    *
-   * @param {Function} fn
+   * @param {Function} [fn]
    * @return {Object}
    */
   public first(fn?: (item: Item) => boolean): Item {
