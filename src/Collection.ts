@@ -408,6 +408,22 @@ export default class Collection<
     return collection
   }
 
+  /**
+   * The last method returns the last element in the collection that passes a given truth test.
+   *
+   * @param {Function} [fn]
+   * @return {Object}
+   */
+  last(fn?: (item: Item) => boolean): Item {
+    let items: Item[] = clone(this.items)
+
+    if (isFunction(fn)) {
+      items = items.filter(fn)
+    }
+
+    return items[items.length - 1]
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,

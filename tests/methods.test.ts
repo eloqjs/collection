@@ -841,6 +841,26 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('last()', () => {
+    it('Should return the last item from the collection', () => {
+      const data = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]
+      const collection = collect(data)
+      const last = collection.last()
+
+      expect(last).toEqual({ id: 4 })
+      expect(collection).toEqual(data)
+    })
+
+    it('Should accept custom callback', () => {
+      const data = [{ id: 1 }, { id: 2 }, { id: 3 }]
+      const collection = collect(data)
+      const last = collection.last((item) => item.id > 1)
+
+      expect(last).toEqual({ id: 3 })
+      expect(collection).toEqual(data)
+    })
+  })
+
   describe('pluck()', () => {
     const products = [
       { product: 'Desk', price: 200, manufacturer: 'IKEA' },
