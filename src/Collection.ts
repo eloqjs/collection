@@ -300,7 +300,7 @@ export default class Collection<
    * @return {Object}
    */
   groupBy<K extends KeyVariadic>(
-    key: keyof Item | K | ((item: Item, index: number) => K)
+    key: keyof Item | K | ((item: Item, index: number) => Key)
   ): Record<string, unknown> {
     const collection = {}
 
@@ -308,7 +308,7 @@ export default class Collection<
       let resolvedKey: Key = ''
 
       if (isFunction(key)) {
-        resolvedKey = key(item, index) as Key
+        resolvedKey = key(item, index)
       } else {
         const value = getProp(item, key as KeyVariadic) as Key
 
