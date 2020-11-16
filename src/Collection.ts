@@ -377,6 +377,30 @@ export default class Collection<
     return !this.isEmpty()
   }
 
+  /**
+   * The keyBy method keys the collection by the given key.
+   * If multiple items have the same key, only the last one will appear in the new collection.
+   */
+  keyBy<K extends KeyOrArray>(
+    key: keyof Item | K | ((item: Item) => Key)
+  ): Record<Key, Item> {
+    const collection: Record<Key, Item> = {}
+
+    if (isFunction(key)) {
+      this.items.forEach((item) => {
+        collection[key(item) as Key] = item
+      })
+    } else {
+      this.items.forEach((item) => {
+        const keyValue = (getProp(item, key as KeyOrArray) as Key) || ''
+
+        collection[keyValue] = item
+      })
+    }
+
+    return collection
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
