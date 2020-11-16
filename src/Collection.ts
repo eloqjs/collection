@@ -7,7 +7,7 @@ import {
   matches,
   variadic
 } from './helpers'
-import type { Constructor, Key, KeyOrArray, Operator } from './types'
+import type { Constructor, Key, KeyVariadic, Operator } from './types'
 
 export default class Collection<
   Item extends Record<Key, unknown> = Record<Key, unknown>
@@ -299,7 +299,7 @@ export default class Collection<
    * @param {Function|string} key
    * @return {Object}
    */
-  groupBy<K extends KeyOrArray>(
+  groupBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item, index: number) => K)
   ): Record<string, unknown> {
     const collection = {}
@@ -310,7 +310,7 @@ export default class Collection<
       if (isFunction(key)) {
         resolvedKey = key(item, index) as Key
       } else {
-        const value = getProp(item, key as KeyOrArray) as Key
+        const value = getProp(item, key as KeyVariadic) as Key
 
         if (value !== undefined) {
           resolvedKey = value
@@ -381,7 +381,7 @@ export default class Collection<
    * The keyBy method keys the collection by the given key.
    * If multiple items have the same key, only the last one will appear in the new collection.
    */
-  keyBy<K extends KeyOrArray>(
+  keyBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => Key)
   ): Record<Key, Item> {
     const collection: Record<Key, Item> = {}
@@ -392,7 +392,7 @@ export default class Collection<
       })
     } else {
       this.items.forEach((item) => {
-        const keyValue = (getProp(item, key as KeyOrArray) as Key) || ''
+        const keyValue = (getProp(item, key as KeyVariadic) as Key) || ''
 
         collection[keyValue] = item
       })

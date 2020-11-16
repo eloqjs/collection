@@ -10,6 +10,6 @@ export type Operator =
   | '>='
   | '<='
 export type Key = string
-export type KeyOrArray = Key | Key[]
+export type KeyVariadic = Key | Key[]
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ExtractFunction<T> = Extract<T, Function>

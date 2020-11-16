@@ -4,7 +4,7 @@
  * @param items
  * @return {[*]}
  */
-import { ExtractFunction, Key, KeyOrArray } from './types'
+import { ExtractFunction, Key, KeyVariadic } from './types'
 
 export function clone<T extends unknown[]>(items: T): T {
   return [...items] as T
@@ -21,7 +21,7 @@ export function clone<T extends unknown[]>(items: T): T {
  */
 export function getProp(
   holder: Record<string, unknown>,
-  key: KeyOrArray
+  key: KeyVariadic
 ): unknown {
   if (!key || !holder) {
     return holder
