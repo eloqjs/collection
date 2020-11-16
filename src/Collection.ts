@@ -326,6 +326,27 @@ export default class Collection<
   }
 
   /**
+   * The intersect method removes any values from the original collection
+   * that are not present in the given array or collection.
+   * The resulting collection will preserve the original collection's keys.
+   */
+  intersect<K extends Key>(
+    values: this,
+    key: keyof Item | K = this.primaryKey()
+  ): this {
+    const collection = this.items.filter((item) => {
+      return (
+        values.findIndex((value) => {
+          const _key = key.toString()
+          return value[_key] === item[_key]
+        }) !== -1
+      )
+    })
+
+    return this.newInstance(collection)
+  }
+
+  /**
    * The implode method joins the items in a collection.
    *
    * @param {string} key - The key of the attributes you wish to join.
