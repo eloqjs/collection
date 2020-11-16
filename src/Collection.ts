@@ -7,11 +7,11 @@ import {
   matches,
   variadic
 } from './helpers'
-import type { Constructor, Key, KeyVariadic, Operator } from './types'
+import type { Constructor, ItemData, Key, KeyVariadic, Operator } from './types'
 
-export default class Collection<
-  Item extends Record<Key, unknown> = Record<Key, unknown>
-> extends Array<Item> {
+export default class Collection<Item extends ItemData = ItemData> extends Array<
+  Item
+> {
   constructor(collection: Item[])
   constructor(...items: Item[])
   constructor(...collection: Item[] | [Item[]]) {
