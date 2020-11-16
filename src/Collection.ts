@@ -10,7 +10,7 @@ import {
 import type { Constructor, Key, KeyOrArray, Operator } from './types'
 
 export default class Collection<
-  Item extends Record<string, unknown> = Record<string, unknown>
+  Item extends Record<Key, unknown> = Record<Key, unknown>
 > extends Array<Item> {
   constructor(collection: Item[])
   constructor(...items: Item[])
