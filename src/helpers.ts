@@ -4,7 +4,7 @@
  * @param items
  * @return {[*]}
  */
-import { Key, KeyOrArray } from './types'
+import { ExtractFunction, Key, KeyOrArray } from './types'
 
 export function clone<T extends unknown[]>(items: T): T {
   return [...items] as T
@@ -88,9 +88,7 @@ export function isObject(item: unknown): item is Record<string, unknown> {
  * @param {*} item
  * @return {boolean}
  */
-export function isFunction(
-  item: unknown
-): item is (...args: unknown[]) => unknown {
+export function isFunction<T>(item: T): item is ExtractFunction<T> {
   return typeof item === 'function'
 }
 

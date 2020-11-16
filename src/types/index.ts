@@ -11,3 +11,5 @@ export type Operator =
   | '<='
 export type Key = string | number
 export type KeyOrArray = Key | Key[]
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ExtractFunction<T> = Extract<T, Function>
