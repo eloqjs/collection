@@ -331,6 +331,10 @@ export default class Collection<
    * The intersect method removes any values from the original collection
    * that are not present in the given array or collection.
    * The resulting collection will preserve the original collection's keys.
+   *
+   * @param {Collection} values
+   * @param {string} key
+   * @return {Collection}
    */
   intersect<K extends Key>(
     values: this,
@@ -380,6 +384,9 @@ export default class Collection<
   /**
    * The keyBy method keys the collection by the given key.
    * If multiple items have the same key, only the last one will appear in the new collection.
+   *
+   * @param {string|string[]|Function} key
+   * @return {Object}
    */
   keyBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => Key)
