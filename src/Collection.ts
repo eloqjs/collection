@@ -42,7 +42,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param size - Size of the chunks.
    * @return {Object[]}
    */
-  public chunk(size: number): this[] {
+  public chunk(size: number): Collection<Item>[] {
     const chunks = []
     let index = 0
 
@@ -62,7 +62,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {...*} array
    * @return {Collection}
    */
-  public collapse(...array: Array<Item[]> | [Array<Item[]>]): this {
+  public collapse(...array: Array<Item[]> | [Array<Item[]>]): Collection<Item> {
     let arrayOfCollections: Array<Item[]>
 
     if (array.length === 1 && Array.isArray(array[0])) {
@@ -156,7 +156,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   public diff<K extends Key>(
     values: this,
     key: keyof Item | K = this.primaryKey()
-  ): this {
+  ): Collection<Item> {
     const collection = this.items.filter((item) => {
       return (
         values.findIndex((value) => {
@@ -261,7 +261,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} chunk
    * @return {Collection}
    */
-  forPage(page: number, chunk: number): this {
+  forPage(page: number, chunk: number): Collection<Item> {
     const collection = this.items.slice(page * chunk - chunk, page * chunk)
 
     return this.newInstance(collection)
@@ -339,7 +339,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   intersect<K extends Key>(
     values: this,
     key: keyof Item | K = this.primaryKey()
-  ): this {
+  ): Collection<Item> {
     const collection = this.items.filter((item) => {
       return (
         values.findIndex((value) => {
@@ -496,12 +496,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
-  ): this
+  ): Collection<Item>
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator: Operator,
     value: V
-  ): this
+  ): Collection<Item>
 
   /**
    * The where method filters the collection by a given key / value pair.
@@ -515,7 +515,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     operator?: V | Operator,
     value?: V
-  ): this {
+  ): Collection<Item> {
     if (!isString(key)) {
       throw new Error('KEY must be an string.')
     }
@@ -579,7 +579,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {...*} collection
    * @return {Collection}
    */
-  protected newInstance(...collection: Item[] | [Item[]]): this {
+  protected newInstance(...collection: Item[] | [Item[]]): Collection<Item> {
     const items = variadic(collection)
     const instance = this.constructor as Constructor<this>
 
