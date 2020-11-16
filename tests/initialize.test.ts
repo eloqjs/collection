@@ -2,25 +2,25 @@ import { collect, Collection } from '../src'
 
 describe('Initialize Collection', () => {
   describe('collect()', () => {
-    it('Should create an instance of Collection', () => {
+    it('should create an instance of Collection', () => {
       expect(collect()).toBeInstanceOf(Collection)
     })
 
-    it('Should accept multiple parameters', () => {
+    it('should accept multiple parameters', () => {
       const array = [{}, {}, {}]
       const collection = collect(...array)
 
       expect(collection).toEqual(array)
     })
 
-    it('Should accept an array', () => {
+    it('should accept an array', () => {
       const array = [{}, {}, {}]
       const collection = collect(array)
 
       expect(collection).toEqual(array)
     })
 
-    it('Should return itself using items property', () => {
+    it('should return itself using items property', () => {
       const array = [{}, {}, {}]
       const collection = collect(array)
 
@@ -29,7 +29,7 @@ describe('Initialize Collection', () => {
       expect(collection.items).toEqual(array)
     })
 
-    it('Should mutate itself using items property', () => {
+    it('should mutate itself using items property', () => {
       const array1 = [{}, {}, {}]
       const array2 = [{}, {}, {}, {}, {}, {}]
       const collection = collect(array1)

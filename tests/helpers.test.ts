@@ -11,7 +11,7 @@ import {
 
 describe('Helpers', () => {
   describe('clone()', () => {
-    it('Should clone an Array', () => {
+    it('should clone an Array', () => {
       const array = [{ foo: 'bar' }]
 
       expect(clone(array)).toEqual(array)
@@ -23,7 +23,7 @@ describe('Helpers', () => {
    * Based on tests from https://github.com/dy/dotprop (MIT)
    */
   describe('getProp()', () => {
-    it('Should get property defined by dot notation in string.', () => {
+    it('should get property defined by dot notation in string.', () => {
       const holder = {
         a: {
           b: {
@@ -37,7 +37,7 @@ describe('Helpers', () => {
       expect(result).toBe(1)
     })
 
-    it('Should get property defined by array-type keys.', () => {
+    it('should get property defined by array-type keys.', () => {
       const holder = {
         a: {
           b: {
@@ -51,7 +51,7 @@ describe('Helpers', () => {
       expect(result).toBe(1)
     })
 
-    it('Should get property defined by simple string.', () => {
+    it('should get property defined by simple string.', () => {
       const holder = {
         a: {
           b: {
@@ -65,7 +65,7 @@ describe('Helpers', () => {
       expect(result).toBe(holder.a)
     })
 
-    it('Should return holder when propName is not defined.', () => {
+    it('should return holder when propName is not defined.', () => {
       const holder = {
         a: {
           b: {
@@ -81,7 +81,7 @@ describe('Helpers', () => {
       expect(result).toBe(holder)
     })
 
-    it('Should return undefined when holder is not defined.', () => {
+    it('should return undefined when holder is not defined.', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const result = getProp()
@@ -91,14 +91,14 @@ describe('Helpers', () => {
   })
 
   describe('variadic()', () => {
-    it('Should unwrap the Array', () => {
+    it('should unwrap the Array', () => {
       const array = [{}, {}, {}]
       const wrappedArray = [array]
 
       expect(variadic(wrappedArray)).toEqual(array)
     })
 
-    it('Should return the Array itself', () => {
+    it('should return the Array itself', () => {
       const array = [{}, {}, {}]
 
       expect(variadic(array)).toEqual(array)
@@ -106,13 +106,13 @@ describe('Helpers', () => {
   })
 
   describe('isArray()', () => {
-    it('Should return true if the passed value is an Array', () => {
+    it('should return true if the passed value is an Array', () => {
       const array: unknown = []
 
       expect(isArray(array)).toBeTruthy()
     })
 
-    it('Should return false if the passed value is not an Array', () => {
+    it('should return false if the passed value is not an Array', () => {
       const func = () => true
       const object = {}
       const string = ''
@@ -124,13 +124,13 @@ describe('Helpers', () => {
   })
 
   describe('isObject()', () => {
-    it('Should return true if the passed value is an Object', () => {
+    it('should return true if the passed value is an Object', () => {
       const object = {}
 
       expect(isObject(object)).toBeTruthy()
     })
 
-    it('Should return false if the passed value is not an Object', () => {
+    it('should return false if the passed value is not an Object', () => {
       const array: unknown = []
       const func = () => true
       const number = 0
@@ -144,13 +144,13 @@ describe('Helpers', () => {
   })
 
   describe('isFunction()', () => {
-    it('Should return true if the passed value is a Function', () => {
+    it('should return true if the passed value is a Function', () => {
       const func = () => true
 
       expect(isFunction(func)).toBeTruthy()
     })
 
-    it('Should return false if the passed value is not a Function', () => {
+    it('should return false if the passed value is not a Function', () => {
       const array: unknown = []
       const number = 0
       const object = {}
@@ -164,13 +164,13 @@ describe('Helpers', () => {
   })
 
   describe('isNumber()', () => {
-    it('Should return true if the passed value is a Number', () => {
+    it('should return true if the passed value is a Number', () => {
       const number = 0
 
       expect(isNumber(number)).toBeTruthy()
     })
 
-    it('Should return false if the passed value is not a Number', () => {
+    it('should return false if the passed value is not a Number', () => {
       const array: unknown = []
       const func = () => true
       const object = {}
@@ -184,13 +184,13 @@ describe('Helpers', () => {
   })
 
   describe('isString()', () => {
-    it('Should return true if the passed value is a String', () => {
+    it('should return true if the passed value is a String', () => {
       const string = ''
 
       expect(isString(string)).toBeTruthy()
     })
 
-    it('Should return false if the passed value is not a String', () => {
+    it('should return false if the passed value is not a String', () => {
       const array: unknown = []
       const func = () => true
       const number = 0

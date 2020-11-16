@@ -5,7 +5,7 @@ import { hoax } from './utils'
 
 describe('Protected Methods', () => {
   describe('newInstance()', () => {
-    it('Should create a new instance of Collection', () => {
+    it('should create a new instance of Collection', () => {
       const array = [{ id: 1 }, { id: 2 }, { id: 3 }]
       const collection = collect(array)
 
@@ -19,7 +19,7 @@ describe('Protected Methods', () => {
   })
 
   describe('primaryKey()', () => {
-    it('Should get the primary key for the item', () => {
+    it('should get the primary key for the item', () => {
       const collection = collect()
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,7 +29,7 @@ describe('Protected Methods', () => {
   })
 
   describe('getPrimaryKey()', () => {
-    it("Should get the value of the item's primary key", () => {
+    it("should get the value of the item's primary key", () => {
       const array = [{ id: 1 }, { id: 2 }, { id: 3 }]
       const collection = collect(array)
 
@@ -42,7 +42,7 @@ describe('Protected Methods', () => {
 
 describe('Public Methods', () => {
   describe('chunk()', () => {
-    it('Should break the collection into multiple, smaller collections of a given size', () => {
+    it('should break the collection into multiple, smaller collections of a given size', () => {
       const array = [
         { id: 1 },
         { id: 2 },
@@ -62,7 +62,7 @@ describe('Public Methods', () => {
   })
 
   describe('collapse()', () => {
-    it('Should collapse an array of collections into a single, flat collection', () => {
+    it('should collapse an array of collections into a single, flat collection', () => {
       const array = [
         { id: 1 },
         { id: 2 },
@@ -83,7 +83,7 @@ describe('Public Methods', () => {
       expect(collection.collapse(chunkArray)).toEqual(array)
     })
 
-    it('Should accept multiple parameters', () => {
+    it('should accept multiple parameters', () => {
       const array = [
         { id: 1 },
         { id: 2 },
@@ -101,7 +101,7 @@ describe('Public Methods', () => {
       expect(collection.collapse(...chunkArray)).toEqual(array)
     })
 
-    it('Should accept an array', () => {
+    it('should accept an array', () => {
       const array = [
         { id: 1 },
         { id: 2 },
@@ -119,7 +119,7 @@ describe('Public Methods', () => {
       expect(collection.collapse(chunkArray)).toEqual(array)
     })
 
-    it('Should throw an error if the array contains only a single collection', () => {
+    it('should throw an error if the array contains only a single collection', () => {
       const chunkArray = [[{ id: 1 }, { id: 2 }, { id: 3 }]]
       const collection = collect<{ id: number }>()
       const errorModel = () => {
@@ -131,7 +131,7 @@ describe('Public Methods', () => {
       )
     })
 
-    it('Should throw an error if the array contains items instead of collections', () => {
+    it('should throw an error if the array contains items instead of collections', () => {
       const chunkArray = [{ id: 1 }, { id: 2 }, { id: 3 }]
       const collection = collect<{ id: number }>()
       const errorModel = () => {
@@ -160,7 +160,7 @@ describe('Public Methods', () => {
       expect(collection.contains(collection.first())).toBeTruthy()
     })
 
-    it('Should accept a key / value pair', () => {
+    it('should accept a key / value pair', () => {
       const collection = collect([
         {
           name: 'Steven Gerrard',
@@ -176,7 +176,7 @@ describe('Public Methods', () => {
       expect(collection.contains('name', 'Gerrard')).toBeFalsy()
     })
 
-    it('Should return false when only key was provided', () => {
+    it('should return false when only key was provided', () => {
       const collection = collect([
         {
           name: 'Steven Gerrard',
@@ -193,7 +193,7 @@ describe('Public Methods', () => {
       expect(collection.contains('name')).toBeFalsy()
     })
 
-    it('Should accept a closure', () => {
+    it('should accept a closure', () => {
       const collection = collect([
         {
           name: 'Steven Gerrard',
@@ -214,7 +214,7 @@ describe('Public Methods', () => {
   })
 
   describe('count()', () => {
-    it('Should return the number of items in the collection', () => {
+    it('should return the number of items in the collection', () => {
       const array = [{ id: 1 }]
 
       expect(collect(array).count()).toBe(1)
@@ -230,7 +230,7 @@ describe('Public Methods', () => {
   })
 
   describe('dd()', () => {
-    it('Should dump the collection and exit the current process', () => {
+    it('should dump the collection and exit the current process', () => {
       const mockConsole = hoax(console, 'log')
       const mockProcess = hoax(process, 'exit')
       const collection = collect([{ id: 1 }, { id: 2 }, { id: 3 }])
@@ -246,7 +246,7 @@ describe('Public Methods', () => {
   })
 
   describe('diff()', () => {
-    it('Should return the missing values from collection', () => {
+    it('should return the missing values from collection', () => {
       const products1 = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -273,7 +273,7 @@ describe('Public Methods', () => {
   })
 
   describe('dump()', () => {
-    it('Should console log the collection', () => {
+    it('should console log the collection', () => {
       const mockConsole = hoax(console, 'log')
       const collection = collect([{ id: 1 }, { id: 2 }, { id: 3 }])
 
@@ -286,7 +286,7 @@ describe('Public Methods', () => {
   })
 
   describe('each()', () => {
-    it('Should iterate over the collection', () => {
+    it('should iterate over the collection', () => {
       let sum = 0
       const products = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
@@ -319,7 +319,7 @@ describe('Public Methods', () => {
       expect(sum2).toEqual(400)
     })
 
-    it('Should stop iterating, when returning false', () => {
+    it('should stop iterating, when returning false', () => {
       const products = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -345,7 +345,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should not modify the collection', () => {
+    it('should not modify the collection', () => {
       const products = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -372,7 +372,7 @@ describe('Public Methods', () => {
       { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
     ]
 
-    it('Should return the first item from the collection', () => {
+    it('should return the first item from the collection', () => {
       const collection = collect(products)
       const first = collection.first()
 
@@ -380,14 +380,14 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should return an empty object when no matches', () => {
+    it('should return an empty object when no matches', () => {
       const collection = collect([])
       const first = collection.first()
 
       expect(first).toStrictEqual({})
     })
 
-    it('Should accept a callback', () => {
+    it('should accept a callback', () => {
       const collection = collect(products)
       const first = collection.first((item) => item.price < 150)
 
@@ -395,7 +395,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should return an empty object when no matches on callback', () => {
+    it('should return an empty object when no matches on callback', () => {
       const collection = collect(products)
       const first = collection.first((item) => item.price > 200)
 
@@ -412,7 +412,7 @@ describe('Public Methods', () => {
       { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
     ]
 
-    it('Should return the first item where it matches', () => {
+    it('should return the first item where it matches', () => {
       const collection = collect(products)
 
       expect(collection.firstWhere('manufacturer', 'IKEA').product).toEqual(
@@ -420,13 +420,13 @@ describe('Public Methods', () => {
       )
     })
 
-    it('Should return an empty object when no matches', () => {
+    it('should return an empty object when no matches', () => {
       const collection = collect(products)
 
       expect(collection.firstWhere('manufacturer', 'xoxo')).toStrictEqual({})
     })
 
-    it('Should be possible to pass an operator', () => {
+    it('should be possible to pass an operator', () => {
       const collection = collect(products)
 
       expect(
@@ -436,7 +436,7 @@ describe('Public Methods', () => {
   })
 
   describe('forPage()', () => {
-    it('Should return a collection containing the items that would be present on a given page number', () => {
+    it('should return a collection containing the items that would be present on a given page number', () => {
       const products = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -496,7 +496,7 @@ describe('Public Methods', () => {
   })
 
   describe('forget()', () => {
-    it('Should delete by index', () => {
+    it('should delete by index', () => {
       const collection = collect([
         { id: 1 },
         { id: 2 },
@@ -515,12 +515,12 @@ describe('Public Methods', () => {
     const data = [{ id: 1 }, { id: 2 }]
     const collection = collect(data)
 
-    it('Should return the item at a given index', () => {
+    it('should return the item at a given index', () => {
       expect(collection.get(1)).toEqual({ id: 2 })
       expect(collection).toEqual(data)
     })
 
-    it('Should return null when the index does not exist', () => {
+    it('should return null when the index does not exist', () => {
       expect(collection.get(2)).toBeNull()
       expect(collection).toEqual(data)
     })
@@ -535,7 +535,7 @@ describe('Public Methods', () => {
       { product: 'Chair', manufacturer: 'Herman Miller' }
     ]
 
-    it('Should group the collections items by the given key', () => {
+    it('should group the collections items by the given key', () => {
       const collection = collect(products)
       const grouped = collection.groupBy('manufacturer')
 
@@ -543,7 +543,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should accept a custom callback to group by', () => {
+    it('should accept a custom callback to group by', () => {
       const collection = collect(products)
       const grouped = collection.groupBy((item) =>
         item.manufacturer.substring(0, 3)
@@ -562,7 +562,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should return a collection of collections when grouped', () => {
+    it('should return a collection of collections when grouped', () => {
       const collection = collect(products)
       const grouped = collection.groupBy('manufacturer')
 
@@ -581,7 +581,7 @@ describe('Public Methods', () => {
     })
 
     it(
-      'Should use an empty string as the key ' +
+      'should use an empty string as the key ' +
         'if objects are missing the key to group by',
       () => {
         const collection = collect(products)
@@ -601,7 +601,7 @@ describe('Public Methods', () => {
       }
     )
 
-    it('Should be able to use nested value as key', () => {
+    it('should be able to use nested value as key', () => {
       const collection = collect([
         {
           name: 'Virgil van Dijk',
@@ -624,7 +624,7 @@ describe('Public Methods', () => {
   })
 
   describe('implode()', () => {
-    it('Should glue together the collection', () => {
+    it('should glue together the collection', () => {
       const collection = collect([
         { product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -641,7 +641,7 @@ describe('Public Methods', () => {
       expect(implodeManufacturer).toEqual('IKEA-Herman Miller-IKEA-')
     })
 
-    it('Should replace null with a blank value', () => {
+    it('should replace null with a blank value', () => {
       const collection = collect([
         { product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -655,7 +655,7 @@ describe('Public Methods', () => {
   })
 
   describe('intersect()', () => {
-    it('Should return the matching values from collection', () => {
+    it('should return the matching values from collection', () => {
       const products1 = [
         { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
         { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -683,23 +683,23 @@ describe('Public Methods', () => {
   })
 
   describe('isEmpty()', () => {
-    it('Should return true if collection is empty', () => {
+    it('should return true if collection is empty', () => {
       expect(collect().isEmpty()).toBeTruthy()
       expect(collect([]).isEmpty()).toBeTruthy()
     })
 
-    it('Should return false if collection is not empty', () => {
+    it('should return false if collection is not empty', () => {
       expect(collect({ key: 'value' }).isEmpty()).toBeFalsy()
     })
   })
 
   describe('isNotEmpty()', () => {
-    it('Should return false if collection is empty', () => {
+    it('should return false if collection is empty', () => {
       expect(collect().isNotEmpty()).toBeFalsy()
       expect(collect([]).isNotEmpty()).toBeFalsy()
     })
 
-    it('Should return true if collection is not empty', () => {
+    it('should return true if collection is not empty', () => {
       expect(collect({ key: 'value' }).isNotEmpty()).toBeTruthy()
     })
   })
@@ -726,7 +726,7 @@ describe('Public Methods', () => {
       }
     ]
 
-    it('Should key the collection by the given key', () => {
+    it('should key the collection by the given key', () => {
       const collection = collect(data)
       const keyed = collection.keyBy('manufacturer')
 
@@ -748,7 +748,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(data)
     })
 
-    it('Should key the collection by the given callback', () => {
+    it('should key the collection by the given callback', () => {
       const collection = collect(data)
       const keyedUpperCase = collection.keyBy((item) =>
         item.manufacturer.toUpperCase()
@@ -772,7 +772,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(data)
     })
 
-    it('Should only keep one items per key', () => {
+    it('should only keep one items per key', () => {
       const collection = collect([
         {
           name: 'Sadio Mané',
@@ -798,7 +798,7 @@ describe('Public Methods', () => {
       })
     })
 
-    it('Should key everything by an empty string if key does not exist', () => {
+    it('should key everything by an empty string if key does not exist', () => {
       const collection = collect(data)
       const keyed = collection.keyBy('xoxo')
 
@@ -814,7 +814,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(data)
     })
 
-    it('Should be able to use nested value as key', () => {
+    it('should be able to use nested value as key', () => {
       const collection = collect([
         {
           name: 'Virgil van Dijk',
@@ -842,7 +842,7 @@ describe('Public Methods', () => {
   })
 
   describe('last()', () => {
-    it('Should return the last item from the collection', () => {
+    it('should return the last item from the collection', () => {
       const data = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]
       const collection = collect(data)
       const last = collection.last()
@@ -851,7 +851,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(data)
     })
 
-    it('Should accept custom callback', () => {
+    it('should accept custom callback', () => {
       const data = [{ id: 1 }, { id: 2 }, { id: 3 }]
       const collection = collect(data)
       const last = collection.last((item) => item.id > 1)
@@ -876,7 +876,7 @@ describe('Public Methods', () => {
 
     const collection = collect([{ name: 'Firmino' }, { name: 'Mané' }])
 
-    it('Should map into a class', () => {
+    it('should map into a class', () => {
       const data = collection.mapInto(Person)
       expect(data).toBeInstanceOf(Array)
 
@@ -884,7 +884,7 @@ describe('Public Methods', () => {
       expect(data.last()).toEqual(new Person({ name: 'Mané' }))
     })
 
-    it('Should trigger the callback after apply class instance', () => {
+    it('should trigger the callback after apply class instance', () => {
       const data = collection.mapInto(Person, (person) => {
         person.uppercase()
       })
@@ -903,14 +903,14 @@ describe('Public Methods', () => {
     ]
     const collection = collect(products)
 
-    it('Should retrieve all of the collection values for a given key', () => {
+    it('should retrieve all of the collection values for a given key', () => {
       const pluck = collection.pluck('product')
 
       expect(pluck).toEqual(['Desk', 'Chair', 'Bookcase', 'Door'])
       expect(collection).toEqual(products)
     })
 
-    it('Should return null when an object is missing the key', () => {
+    it('should return null when an object is missing the key', () => {
       const pluck = collection.pluck('manufacturer')
 
       expect(pluck).toEqual(['IKEA', 'Herman Miller', 'IKEA', null])
@@ -921,7 +921,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should be able to pluck key and value pairs', () => {
+    it('should be able to pluck key and value pairs', () => {
       const pluck = collection.pluck('price', 'product')
 
       expect(pluck).toEqual({
@@ -932,20 +932,20 @@ describe('Public Methods', () => {
       })
     })
 
-    it('Should return an array when only plucking values', () => {
+    it('should return an array when only plucking values', () => {
       const pluck = collection.pluck('product')
 
       expect(Array.isArray(pluck)).toBeTruthy()
     })
 
-    it('Should return an object when plucking key and value pairs', () => {
+    it('should return an object when plucking key and value pairs', () => {
       const pluck = collection.pluck('price', 'product')
 
       expect(typeof pluck).toBe('object')
       expect(Array.isArray(pluck)).toBeFalsy()
     })
 
-    it('Should overwrite existing keys', () => {
+    it('should overwrite existing keys', () => {
       const pluck = collection.pluck('product', 'manufacturer')
 
       expect(pluck).toEqual({
@@ -955,7 +955,7 @@ describe('Public Methods', () => {
       })
     })
 
-    it('Should use empty string as key if object is missing property', () => {
+    it('should use empty string as key if object is missing property', () => {
       const pluck = collection.pluck('product', 'manufacturer')
       const keys = Object.keys(pluck)
 
@@ -963,7 +963,7 @@ describe('Public Methods', () => {
       expect(pluck[keys[2]]).toEqual('Door')
     })
 
-    it('Should use null as value if value is missing', () => {
+    it('should use null as value if value is missing', () => {
       const pluck = collection.pluck('manufacturer', 'product')
 
       expect(pluck['Door']).toBeNull()
@@ -977,7 +977,7 @@ describe('Public Methods', () => {
     })
 
     it(
-      'Should use null as value if value is missing ' +
+      'should use null as value if value is missing ' +
         'and use empty string as key if object is missing property',
       () => {
         const pluck = collection.pluck('manufacturer', 'manufacturer')
@@ -992,7 +992,7 @@ describe('Public Methods', () => {
       }
     )
 
-    it('Should not return null instead of 0', () => {
+    it('should not return null instead of 0', () => {
       const data = [
         { name: 'January', count: 0 },
         { name: 'February', count: 0 },
@@ -1026,7 +1026,7 @@ describe('Public Methods', () => {
       expect(collect(data).pluck('count', 'name')['January']).toBe(0)
     })
 
-    it('Should allow dot notation', () => {
+    it('should allow dot notation', () => {
       const users = collect([
         {
           name: 'John',
@@ -1045,7 +1045,7 @@ describe('Public Methods', () => {
       expect(users.pluck('roles.1.name')).toEqual(['Admin'])
     })
 
-    it('Should allow wildcard dot notation', () => {
+    it('should allow wildcard dot notation', () => {
       const users = collect([
         {
           name: 'John',
@@ -1077,7 +1077,7 @@ describe('Public Methods', () => {
       expect(users.pluck('roles.*.name')).toEqual([['Editor', 'Admin']])
     })
 
-    it('Should allow null as value in wildcard', () => {
+    it('should allow null as value in wildcard', () => {
       const users = collect([
         {
           name: 'John',
@@ -1095,7 +1095,7 @@ describe('Public Methods', () => {
       expect(users.pluck('roles.*.name')).toEqual([['Editor', null]])
     })
 
-    it('Should allow undefined as value in wildcard', () => {
+    it('should allow undefined as value in wildcard', () => {
       const users = collect([
         {
           name: 'John',
@@ -1113,7 +1113,7 @@ describe('Public Methods', () => {
       expect(users.pluck('roles.*.name')).toEqual([['Editor', undefined]])
     })
 
-    it('Should allow symbol as value in wildcard', () => {
+    it('should allow symbol as value in wildcard', () => {
       const symbol = Symbol('Foo')
 
       const users = collect([
@@ -1133,7 +1133,7 @@ describe('Public Methods', () => {
       expect(users.pluck('roles.*.name')).toEqual([['Editor', symbol]])
     })
 
-    it('Should allow multiple wildcards', () => {
+    it('should allow multiple wildcards', () => {
       const users = collect([
         {
           name: 'John',
@@ -1155,7 +1155,7 @@ describe('Public Methods', () => {
       expect(users.pluck('*.*.*')).toEqual([['Editor', 'Admin']])
     })
 
-    it('Should be able to pluck key and value pairs using wildcards', () => {
+    it('should be able to pluck key and value pairs using wildcards', () => {
       const users = collect([
         {
           name: 'John',
@@ -1176,7 +1176,7 @@ describe('Public Methods', () => {
     })
 
     it(
-      'Should be able to pluck key and value pairs using wildcards and ' +
+      'should be able to pluck key and value pairs using wildcards and ' +
         'use empty string as key if object is missing property',
       () => {
         const users = collect([
@@ -1209,7 +1209,7 @@ describe('Public Methods', () => {
     ]
     const collection = collect(products)
 
-    it('Should filter the collection by a given key/value pair', () => {
+    it('should filter the collection by a given key/value pair', () => {
       const filtered = collection.where('price', 100)
 
       expect(filtered).toEqual([
@@ -1218,7 +1218,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should return everything that matches', () => {
+    it('should return everything that matches', () => {
       const filtered = collection.where('manufacturer', 'IKEA')
 
       expect(filtered).toEqual([
@@ -1228,7 +1228,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should accept a custom operator: less than', () => {
+    it('should accept a custom operator: less than', () => {
       const under200 = collection.where('price', '<', 150)
 
       expect(under200).toEqual([
@@ -1237,7 +1237,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should accept a custom operator: less than or equal to', () => {
+    it('should accept a custom operator: less than or equal to', () => {
       const overOrExactly150 = collection.where('price', '<=', 150)
 
       expect(overOrExactly150).toEqual([
@@ -1247,7 +1247,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should accept a custom operator: bigger than', () => {
+    it('should accept a custom operator: bigger than', () => {
       const over150 = collection.where('price', '>', 150)
 
       expect(over150).toEqual([
@@ -1255,7 +1255,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should accept a custom operator: bigger than or equal to', () => {
+    it('should accept a custom operator: bigger than or equal to', () => {
       const overOrExactly150 = collection.where('price', '>=', 150)
 
       expect(overOrExactly150).toEqual([
@@ -1264,7 +1264,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should accept a custom operator: loosely equal', () => {
+    it('should accept a custom operator: loosely equal', () => {
       const loosly100 = collection.where('price', '==', 100)
 
       expect(loosly100).toEqual([
@@ -1273,7 +1273,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should accept a custom operator: strictly not equal', () => {
+    it('should accept a custom operator: strictly not equal', () => {
       const not100 = collection.where('price', '!==', 100)
 
       expect(not100).toEqual([
@@ -1283,7 +1283,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should accept a custom operator: loosely not equal', () => {
+    it('should accept a custom operator: loosely not equal', () => {
       const not200 = collection.where('price', '!=', 200)
 
       expect(not200).toEqual([
@@ -1300,7 +1300,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should use default operator (strictly equal) when an invalid operator was provided', () => {
+    it('should use default operator (strictly equal) when an invalid operator was provided', () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const filtered = collection.where('manufacturer', '====', 'IKEA')
@@ -1312,7 +1312,7 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('Should work with nested objects', () => {
+    it('should work with nested objects', () => {
       const collection2 = collect([
         { product: 'Desk', price: 200, foo: { bar: 1 } },
         { product: 'Chair', price: 100, foo: { bar: 2 } },
@@ -1340,7 +1340,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should work when only passing one argument', () => {
+    it('should work when only passing one argument', () => {
       const hasManufacturer = collection.where('manufacturer')
 
       expect(hasManufacturer).toEqual([
@@ -1359,7 +1359,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should work when passing two argument', () => {
+    it('should work when passing two argument', () => {
       const hasManufacturer = collection.where('manufacturer', true)
 
       expect(hasManufacturer).toEqual([
@@ -1373,7 +1373,7 @@ describe('Public Methods', () => {
       expect(dontHaveManufacturer).toEqual([{ product: 'Door', price: '100' }])
     })
 
-    it('Should work with nested properties', () => {
+    it('should work with nested properties', () => {
       const collection2 = collect([
         { name: { firstname: 'Mohamed', lastname: 'Salah' } },
         { name: { firstname: 'Sadio', lastname: 'Mané' } },
@@ -1385,7 +1385,7 @@ describe('Public Methods', () => {
       ])
     })
 
-    it('Should throw an error when key is not an string', () => {
+    it('should throw an error when key is not an string', () => {
       const errorModel = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
