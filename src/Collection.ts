@@ -399,17 +399,17 @@ export default class Collection<
       const keyMatches: unknown[] = []
 
       if (key) {
-        keyMatches.push(...matches(key as string, keyPathMap))
+        keyMatches.push(...matches(key as Key, keyPathMap))
       }
 
       const valueMatches: unknown[] = []
-      valueMatches.push(...matches(value as string, keyPathMap))
+      valueMatches.push(...matches(value as Key, keyPathMap))
 
       if (key) {
         const collection = {}
 
         this.items.forEach((item, index) => {
-          collection[(keyMatches[index] as string) || ''] = valueMatches
+          collection[(keyMatches[index] as Key) || ''] = valueMatches
         })
 
         return collection
@@ -422,13 +422,13 @@ export default class Collection<
       const collection = {}
 
       this.items.forEach((item) => {
-        if (getProp(item, value as string) !== undefined) {
-          collection[(item[key as string] as string) || ''] = getProp(
+        if (getProp(item, value as Key) !== undefined) {
+          collection[(item[key as Key] as Key) || ''] = getProp(
             item,
-            value as string
+            value as Key
           )
         } else {
-          collection[(item[key as string] as string) || ''] = null
+          collection[(item[key as Key] as Key) || ''] = null
         }
       })
 
@@ -437,8 +437,8 @@ export default class Collection<
 
     return clone(
       this.map((item) => {
-        if (getProp(item, value as string) !== undefined) {
-          return getProp(item, value as string)
+        if (getProp(item, value as Key) !== undefined) {
+          return getProp(item, value as Key)
         }
 
         return null
@@ -479,14 +479,12 @@ export default class Collection<
     const items = this.items
 
     if (operator === undefined || operator === true) {
-      return this.newInstance(
-        items.filter((item) => getProp(item, key as string))
-      )
+      return this.newInstance(items.filter((item) => getProp(item, key as Key)))
     }
 
     if (operator === false) {
       return this.newInstance(
-        items.filter((item) => !getProp(item, key as string))
+        items.filter((item) => !getProp(item, key as Key))
       )
     }
 
@@ -556,7 +554,7 @@ export default class Collection<
    * @param {Object} item
    * @return {string|number}
    */
-  protected getPrimaryKey(item: Item): string | number {
-    return item[this.primaryKey()] as string | number
+  protected getPrimaryKey(item: Item): Key {
+    return item[this.primaryKey()] as Key
   }
 }
