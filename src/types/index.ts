@@ -1,4 +1,7 @@
 export type Constructor<T> = new (...args: unknown[]) => T
+export type ClassConstructor<T, Item> = {
+  new (item: Item): T
+}
 export type Operator =
   | '==='
   | '=='

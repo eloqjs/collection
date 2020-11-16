@@ -7,7 +7,14 @@ import {
   matches,
   variadic
 } from './helpers'
-import type { Constructor, ItemData, Key, KeyVariadic, Operator } from './types'
+import type {
+  ClassConstructor,
+  Constructor,
+  ItemData,
+  Key,
+  KeyVariadic,
+  Operator
+} from './types'
 
 export default class Collection<Item extends ItemData = ItemData> extends Array<
   Item
@@ -422,6 +429,32 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     }
 
     return items[items.length - 1]
+  }
+
+  /**
+   * The mapInto method iterates through the collection and instantiates the given class with each element as a constructor.
+   *
+   * @param {Function} classConstructor
+   * @param {Function} [fn]
+   * @return {Collection}
+   */
+  mapInto<T extends Item>(
+    classConstructor: ClassConstructor<T, Item>,
+    fn?: (item: T) => void
+  ): Collection<T> {
+    return this.items.map((item) => {
+      let _item: T = item as T
+
+      if (!(item instanceof classConstructor)) {
+        _item = new classConstructor(item)
+      }
+
+      if (isFunction(fn)) {
+        fn(_item)
+      }
+
+      return _item
+    }) as Collection<T>
   }
 
   pluck<V extends Key>(value: keyof Item | V): unknown[]
