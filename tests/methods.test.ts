@@ -1,4 +1,6 @@
 import { collect, Collection } from '../src'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { hoax } from './utils'
 
 describe('Protected Methods', () => {
