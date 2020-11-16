@@ -87,7 +87,9 @@ export default class Collection<
     return this.newInstance(collection)
   }
 
-  public contains(item: Item | ((item: Item) => boolean)): boolean
+  public contains(
+    item: Item | ((item: Item, index: number) => boolean)
+  ): boolean
   public contains<V, K extends Key>(key: keyof Item | K, value: V): boolean
 
   /**
@@ -98,7 +100,7 @@ export default class Collection<
    * @return {boolean}
    */
   public contains<V, K extends Key>(
-    key: keyof Item | K | Item | ((item: Item) => unknown),
+    key: keyof Item | K | Item | ((item: Item, index: number) => unknown),
     value?: V
   ): boolean {
     if (isFunction(key)) {
