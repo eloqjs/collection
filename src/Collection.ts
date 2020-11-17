@@ -818,6 +818,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return parseFloat(total.toPrecision(12))
   }
 
+  /**
+   * The take method returns a new collection with the specified number of items.
+   * You may also pass a negative integer to take the specified amount of items from the end of the collection.
+   *
+   * @param {number} length
+   */
+  take(length: number): Collection<Item> {
+    if (length < 0) {
+      return this.newInstance(this.items.slice(length))
+    }
+
+    return this.newInstance(this.items.slice(0, length))
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
