@@ -752,6 +752,23 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The put method sets the given key and value in the collection.
+   *
+   * @param {Object} item
+   * @param {number} [index]
+   * @return {this}
+   */
+  put(item: Item, index?: number): this {
+    if (index !== undefined) {
+      this.items.splice(index, 1, item)
+    } else {
+      this.items.push(item)
+    }
+
+    return this
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key

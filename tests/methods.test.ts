@@ -1667,6 +1667,34 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('put()', () => {
+    const data = [
+      { name: 'Alex Doe' },
+      { name: 'Joe Doe' },
+      { name: 'John Doe' }
+    ]
+
+    it('should set the given key and value in the collection', () => {
+      const collection = collect(data)
+      const modified = collection.put({ name: 'Mary Doe' }, 1)
+
+      expect(collection).toEqual(modified)
+      expect(collection).toEqual([
+        { name: 'Alex Doe' },
+        { name: 'Mary Doe' },
+        { name: 'John Doe' }
+      ])
+    })
+
+    it('should push the value into the collection if key was not provided', () => {
+      const collection = collect(data)
+      const modified = collection.put({ name: 'Mary Doe' })
+
+      expect(collection).toEqual(modified)
+      expect(collection).toEqual([...data, { name: 'Mary Doe' }])
+    })
+  })
+
   describe('sum()', () => {
     it('should return the sum of collection values by key', () => {
       const collection = collect([
