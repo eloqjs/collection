@@ -1108,6 +1108,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The tap method passes the collection to the given callback,
+   * allowing you to "tap" into the collection at a specific point
+   * and do something with the items while not affecting the collection itself.
+   *
+   * @param {Function} callback
+   * @return {this}
+   */
+  tap(callback: (collection: Collection<Item>) => void): this {
+    callback(this)
+
+    return this
+  }
+
+  /**
    * The toArray method converts the collection into a standard array.
    *
    * @return {Object[]}
