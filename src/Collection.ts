@@ -634,7 +634,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object} item
    * @return {string|number}
    */
-  protected getPrimaryKey(item: Item): Key {
-    return item[this.primaryKey()] as Key
+  protected getPrimaryKey(item: Item): string | number {
+    return item[this.primaryKey()] as string | number
   }
 }
