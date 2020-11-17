@@ -882,6 +882,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The skip method returns a new collection, without the first given amount of items.
+   *
+   * @param {number} number
+   * @return {Collection}
+   */
+  skip(number: number): Collection<Item> {
+    return this.newInstance(this.items.slice(number))
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
