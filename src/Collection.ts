@@ -705,6 +705,32 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     )
   }
 
+  /**
+   * The sum method returns the sum of all items in the collection.
+   *
+   * @param {string|string[]|Function} key
+   * @return {number}
+   */
+  sum<K extends KeyVariadic>(
+    key: keyof Item | K | ((item: Item) => string | number)
+  ): number {
+    let total = 0
+
+    if (isFunction(key)) {
+      for (const item of this.items) {
+        const value = key(item)
+        total += isString(value) ? parseFloat(value) : value
+      }
+    } else {
+      for (const item of this.items) {
+        const value = getProp(item, key as KeyVariadic) as string | number
+        total += isString(value) ? parseFloat(value) : value
+      }
+    }
+
+    return parseFloat(total.toPrecision(12))
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
