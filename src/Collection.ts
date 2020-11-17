@@ -950,7 +950,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The sorted collection keeps the original array keys.
    *
    * @param {string|string[]|Function} value
-   * @return {Collection>}
+   * @return {Collection}
    */
   sortBy<K extends KeyVariadic>(
     value: keyof Item | K | ((item: Item) => number)
@@ -993,7 +993,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * but will sort the collection in the opposite order.
    *
    * @param {string|string[]|Function} value
-   * @return {Collection>}
+   * @return {Collection}
    */
   sortByDesc<K extends KeyVariadic>(
     value: keyof Item | K | ((item: Item) => number)
