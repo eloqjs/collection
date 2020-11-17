@@ -920,6 +920,32 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The skipWhile method skips items while the given callback returns true and
+   * then returns the remaining items in the collection
+   * You may also pass a simple value to the skipWhile.
+   *
+   * @param {Object|Function} value
+   * @return {Collection}
+   */
+  skipWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
+    let previous: boolean | null = null
+
+    const callback = isFunction(value)
+      ? value
+      : (item: Item) => equal(item, value)
+
+    const items = this.items.filter((item) => {
+      if (previous !== true) {
+        previous = !callback(item)
+      }
+
+      return previous
+    })
+
+    return this.newInstance(items)
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
