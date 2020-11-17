@@ -805,6 +805,26 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this
   }
 
+  random(): Item
+  random(length: number): Collection<Item>
+
+  /**
+   * The random method returns a random item from the collection.
+   *
+   * @param {number} length
+   * @return {Object|Collection}
+   */
+  random(length?: number): Item | Collection<Item> {
+    const collection = this.newInstance(clone(this.items)).shuffle()
+
+    // If not a length was specified
+    if (!length) {
+      return collection.first()
+    }
+
+    return collection.take(length)
+  }
+
   /**
    * The shuffle method randomly shuffles the items in the collection.
    *
@@ -827,26 +847,6 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     this.items = items
 
     return this
-  }
-
-  random(): Item
-  random(length: number): Collection<Item>
-
-  /**
-   * The random method returns a random item from the collection.
-   *
-   * @param {number} length
-   * @return {Object|Collection}
-   */
-  random(length?: number): Item | Collection<Item> {
-    const collection = this.newInstance(clone(this.items)).shuffle()
-
-    // If not a length was specified
-    if (!length) {
-      return collection.first()
-    }
-
-    return collection.take(length)
   }
 
   /**
