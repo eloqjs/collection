@@ -457,6 +457,30 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     }) as Collection<T>
   }
 
+  /**
+   * The mapToGroups method iterates through the collection and passes each value to the given callback.
+   *
+   * @param {Function} fn
+   * @return {Object}
+   */
+  mapToGroups(
+    fn: (item: Item, index: number) => [Key, unknown]
+  ): Record<string, unknown> {
+    const collection = {}
+
+    this.items.forEach((item, index) => {
+      const [key, value] = fn(item, index)
+
+      if (collection[key] === undefined) {
+        collection[key] = [value]
+      } else {
+        collection[key].push(value)
+      }
+    })
+
+    return collection
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
