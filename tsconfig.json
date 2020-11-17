@@ -12,7 +12,7 @@
     "strict": true,
     /* Module Resolution Options */
     "moduleResolution": "node",
-    "types": ["@types/node", "@types/jest"],
+    "types": ["@types/node", "@types/jest", "@types/deep-equal"],
     "esModuleInterop": true,
     /* Advanced Options */
     "skipLibCheck": true,
