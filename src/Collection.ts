@@ -839,6 +839,25 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The search method searches the collection for the given value and returns its key if found.
+   * If the item is not found, false is returned.
+   *
+   * @param {Function} callback
+   * @return {number|boolean}
+   */
+  search(callback: (item: Item, index: number) => boolean): number | false {
+    const result = this.items.findIndex((item, index) => {
+      return callback(this.items[index], index)
+    })
+
+    if (result === undefined || result < 0) {
+      return false
+    }
+
+    return result
+  }
+
+  /**
    * The shuffle method randomly shuffles the items in the collection.
    *
    * @return {this}
