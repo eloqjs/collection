@@ -1222,6 +1222,34 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this
   }
 
+  /**
+   * The whenEmpty method will execute the given callback when the collection is empty.
+   *
+   * @param {Function} callback
+   * @param {Function} [defaultCallback]
+   * @return {this}
+   */
+  whenEmpty(
+    callback: (collection: this, value: boolean) => void,
+    defaultCallback?: (collection: this, value: boolean) => void
+  ): this {
+    return this.when(this.isEmpty(), callback, defaultCallback)
+  }
+
+  /**
+   * The whenNotEmpty method will execute the given callback when the collection is not empty.
+   *
+   * @param {Function} callback
+   * @param {Function} [defaultCallback]
+   * @return {this}
+   */
+  whenNotEmpty(
+    callback: (collection: this, value: boolean) => void,
+    defaultCallback?: (collection: this, value: boolean) => void
+  ): this {
+    return this.when(this.isNotEmpty(), callback, defaultCallback)
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
