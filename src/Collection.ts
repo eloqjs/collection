@@ -946,6 +946,49 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The sortBy method sorts the collection by the given key.
+   * The sorted collection keeps the original array keys.
+   *
+   * @param {string|string[]|Function} value
+   * @return {Collection>}
+   */
+  sortBy<K extends KeyVariadic>(
+    value: keyof Item | K | ((item: Item) => number)
+  ): Collection<Item> {
+    const collection = clone(this.items)
+    const getValue = (item: Item): number => {
+      if (isFunction(value)) {
+        return value(item)
+      }
+
+      return getProp(item, value as KeyVariadic) as number
+    }
+
+    collection.sort((a, b) => {
+      const valueA = getValue(a)
+      const valueB = getValue(b)
+
+      if (valueA === null || valueA === undefined) {
+        return 1
+      }
+      if (valueB === null || valueB === undefined) {
+        return -1
+      }
+
+      if (valueA < valueB) {
+        return -1
+      }
+      if (valueA > valueB) {
+        return 1
+      }
+
+      return 0
+    })
+
+    return this.newInstance(collection)
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
