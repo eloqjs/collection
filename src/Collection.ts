@@ -769,6 +769,30 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The shuffle method randomly shuffles the items in the collection.
+   *
+   * @return {this}
+   */
+  shuffle(): this {
+    const items = clone(this.items)
+
+    let j
+    let x
+    let i
+
+    for (i = items.length; i; i -= 1) {
+      j = Math.floor(Math.random() * i)
+      x = items[i - 1]
+      items[i - 1] = items[j]
+      items[j] = x
+    }
+
+    this.items = items
+
+    return this
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
