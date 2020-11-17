@@ -716,6 +716,18 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The prepend method adds an item to the beginning of the collection.
+   *
+   * @param {Object} value
+   * @return {this}
+   */
+  prepend(value: Item): this {
+    this.items.unshift(value)
+
+    return this
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
