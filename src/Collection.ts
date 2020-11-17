@@ -557,6 +557,45 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     )
   }
 
+  /**
+   * The mode method returns the [mode value]{@link https://en.wikipedia.org/wiki/Mode_(statistics)} of a given key.
+   *
+   * @param {string|string[]} key
+   * @return {number}
+   */
+  mode<K extends KeyVariadic>(key: keyof Item | K): number[] | null {
+    const values: { key: number; count: number }[] = []
+    let highestCount = 1
+
+    if (!this.items.length) {
+      return null
+    }
+
+    this.items.forEach((item) => {
+      const tempValues = values.filter((value) => {
+        return value.key === getProp(item, key as KeyVariadic)
+      })
+
+      if (!tempValues.length) {
+        values.push({
+          key: getProp(item, key as KeyVariadic) as number,
+          count: 1
+        })
+      } else {
+        tempValues[0].count += 1
+        const { count } = tempValues[0]
+
+        if (count > highestCount) {
+          highestCount = count
+        }
+      }
+    })
+
+    return values
+      .filter((value) => value.count === highestCount)
+      .map((value) => value.key)
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
