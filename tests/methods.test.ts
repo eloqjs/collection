@@ -2237,6 +2237,38 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('toArray()', () => {
+    it('should convert the collection into a standard array', () => {
+      const data = [
+        { name: 'Desk', price: 200 },
+        { name: 'Chair', price: 100 },
+        { name: 'Bookcase', price: 150 }
+      ]
+      const collection = collect(data)
+      const array = collection.toArray()
+
+      expect(array).toEqual(data)
+      expect(array).toBeInstanceOf(Array)
+      expect(array).not.toBeInstanceOf(Collection)
+    })
+  })
+
+  describe('toJson()', () => {
+    const data = [
+      { name: 'Desk', price: 200 },
+      { name: 'Chair', price: 100 },
+      { name: 'Bookcase', price: 150 }
+    ]
+
+    it('should convert the collection into JSON string', () => {
+      const collection = collect(data)
+
+      expect(collection.toJson()).toEqual(
+        '[{"name":"Desk","price":200},{"name":"Chair","price":100},{"name":"Bookcase","price":150}]'
+      )
+    })
+  })
+
   describe('where()', () => {
     const products = [
       { product: 'Desk', price: 200, manufacturer: 'IKEA' },

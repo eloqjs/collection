@@ -1107,6 +1107,24 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this.newInstance(items)
   }
 
+  /**
+   * The toArray method converts the collection into a standard array.
+   *
+   * @return {Object[]}
+   */
+  toArray(): Item[] {
+    return clone(this.items)
+  }
+
+  /**
+   * The toJson method converts the collection into JSON string.
+   *
+   * @return {string}
+   */
+  toJson(): string {
+    return JSON.stringify(this)
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
