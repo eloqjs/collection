@@ -30,7 +30,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * Get the items of the array.
    *
-   * @return {Collection}
+   * @return {this}
    */
   protected get items(): this {
     return this
@@ -179,7 +179,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The dump method outputs the results at that moment and then continues processing.
    *
-   * @return {Collection}
+   * @return {this}
    */
   public dump(): this {
     // eslint-disable-next-line
@@ -192,7 +192,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The each method iterates over the items in the collection and passes each item to a callback.
    *
    * @param {Function} callback
-   * @return {Collection}
+   * @return {this}
    */
   public each(
     callback: (item: Item, index: number, items: Item[]) => false | void
@@ -278,7 +278,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The forget method removes an item from the collection by its key.
    *
    * @param {number} index
-   * @return {Collection}
+   * @return {this}
    */
   forget(index: number): this {
     this.items.splice(index, 1)
