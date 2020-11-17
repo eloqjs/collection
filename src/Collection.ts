@@ -1166,6 +1166,40 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this as Collection<T>
   }
 
+  /**
+   * The unique method returns all of the unique items in the collection.
+   *
+   * @param {string|string[]|Function} key
+   * @return {Collection}
+   */
+  unique<K extends KeyVariadic>(
+    key: keyof Item | K | ((item: Item) => Key)
+  ): Collection<Item> {
+    const collection = []
+    const usedKeys: Key[] = []
+
+    for (
+      let iterator = 0, { length } = this.items;
+      iterator < length;
+      iterator += 1
+    ) {
+      let uniqueKey: Key
+
+      if (isFunction(key)) {
+        uniqueKey = key(this.items[iterator])
+      } else {
+        uniqueKey = getProp(this.items[iterator], key as KeyVariadic) as Key
+      }
+
+      if (usedKeys.indexOf(uniqueKey) === -1) {
+        collection.push(this.items[iterator])
+        usedKeys.push(uniqueKey)
+      }
+    }
+
+    return this.newInstance(collection)
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
