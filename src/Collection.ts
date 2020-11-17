@@ -15,6 +15,7 @@ import type {
   KeyVariadic,
   Operator
 } from './types'
+import { ClassCollection } from './types'
 
 export default class Collection<Item extends ItemData = ItemData> extends Array<
   Item
@@ -644,6 +645,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   pipe<U>(callback: (collection: this) => U): U {
     return callback(this)
+  }
+
+  /**
+   * The pipeInto method creates a new instance of the given class and passes the collection into the constructor.
+   *
+   * @param {Function} classConstructor
+   * @return {Function}
+   */
+  pipeInto<T>(classConstructor: ClassCollection<T, this>): T {
+    return new classConstructor(this)
   }
 
   pluck<V extends Key>(value: keyof Item | V): unknown[]

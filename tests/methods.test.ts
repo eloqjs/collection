@@ -1300,6 +1300,25 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('pipeInto()', () => {
+    class ResourceCollection {
+      public collection: { name: string }[]
+
+      constructor(collection: { name: string }[]) {
+        this.collection = collection
+      }
+    }
+
+    const collection = collect([{ name: 'Firmino' }, { name: 'Mané' }])
+
+    it('should pipe into a class', () => {
+      const data = collection.pipeInto(ResourceCollection)
+
+      expect(data).toBeInstanceOf(ResourceCollection)
+      expect(data.collection).toEqual(collection)
+    })
+  })
+
   describe('pluck()', () => {
     const products = [
       { product: 'Desk', price: 200, manufacturer: 'IKEA' },
