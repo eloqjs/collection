@@ -1616,6 +1616,38 @@ describe('Public Methods', () => {
     })
   })
 
+  describe('pull()', () => {
+    const players = [
+      {
+        firstname: 'John',
+        lastname: 'Doe'
+      },
+      {
+        firstname: 'Joe',
+        lastname: 'Doe'
+      }
+    ]
+
+    it('should return the item at a given key and remove it from the collection', () => {
+      const a = collect(players)
+      const b = collect(players)
+
+      expect(a.pull(0)?.firstname).toEqual('John')
+      expect(a).toEqual([
+        {
+          firstname: 'Joe',
+          lastname: 'Doe'
+        }
+      ])
+      expect(b).toEqual(players)
+    })
+
+    it('should return null if the key does not exist', () => {
+      const collection = collect(players)
+      expect(collection.pull(2)).toBeNull()
+    })
+  })
+
   describe('sum()', () => {
     it('should return the sum of collection values by key', () => {
       const collection = collect([

@@ -728,6 +728,19 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The pull method removes and returns an item from the collection by its key.
+   *
+   * @param {number} index
+   * @return {Object|null}
+   */
+  pull(index: number): Item | null {
+    const returnValue = this.items[index] || null
+    this.items.splice(index, 1)
+
+    return returnValue
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
