@@ -568,7 +568,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const values: { key: number; count: number }[] = []
     let highestCount = 1
 
-    if (!this.items.length) {
+    if (this.isEmpty()) {
       return null
     }
 
