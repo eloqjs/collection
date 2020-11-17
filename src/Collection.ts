@@ -826,6 +826,19 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The reject method filters the collection using the given callback.
+   * The callback should return true if the item should be removed from the resulting collection.
+   *
+   * @param {Function} callback
+   * @return {Collection}
+   */
+  reject(callback: (item: Item) => boolean): Collection<Item> {
+    return this.newInstance(this.items).filter(
+      (item) => !callback(item)
+    ) as Collection<Item>
+  }
+
+  /**
    * The shuffle method randomly shuffles the items in the collection.
    *
    * @return {this}
