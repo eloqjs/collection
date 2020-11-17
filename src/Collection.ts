@@ -832,6 +832,33 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this.newInstance(this.items.slice(0, length))
   }
 
+  /**
+   * The takeUntil method returns items in the collection until the given callback returns true.
+   * You may also pass a simple value to the takeUntil method to get the items until the given value is found.
+   *
+   * @param {Object|Function} value
+   * @return {Collection}
+   */
+  takeUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
+    let previous: boolean | null = null
+
+    let callback = (item: Item) => item === value
+
+    if (isFunction(value)) {
+      callback = value
+    }
+
+    const items = this.items.filter((item) => {
+      if (previous !== false) {
+        previous = !callback(item)
+      }
+
+      return previous
+    })
+
+    return this.newInstance(items)
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
