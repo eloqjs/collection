@@ -1,3 +1,5 @@
+import equal from 'deep-equal'
+
 import {
   buildKeyPathMap,
   clone,
@@ -889,6 +891,32 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   skip(number: number): Collection<Item> {
     return this.newInstance(this.items.slice(number))
+  }
+
+  /**
+   * The skipUntil method skips items until the given callback returns true and
+   * then returns the remaining items in the collection.
+   * You may also pass a simple value to the skipUntil method to skip all items until the given value is found.
+   *
+   * @param {Object|Function} value
+   * @return {Collection}
+   */
+  skipUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
+    let previous: boolean | null = null
+
+    const callback = isFunction(value)
+      ? value
+      : (item: Item) => equal(item, value)
+
+    const items = this.items.filter((item) => {
+      if (previous !== true) {
+        previous = callback(item)
+      }
+
+      return previous
+    })
+
+    return this.newInstance(items)
   }
 
   /**
