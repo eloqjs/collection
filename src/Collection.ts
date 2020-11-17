@@ -1157,6 +1157,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return JSON.stringify(this)
   }
 
+  /**
+   * The transform method iterates over the collection and calls the given callback with each item in the collection.
+   * The items in the collection will be replaced by the values returned by the callback.
+   */
+  transform<T extends ItemData>(fn: (item: Item) => T): Collection<T> {
+    this.items = this.items.map(fn) as this
+    return this as Collection<T>
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
