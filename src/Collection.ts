@@ -989,6 +989,19 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * This method has the same signature as the sortBy method,
+   * but will sort the collection in the opposite order.
+   *
+   * @param {string|string[]|Function} value
+   * @return {Collection>}
+   */
+  sortByDesc<K extends KeyVariadic>(
+    value: keyof Item | K | ((item: Item) => number)
+  ): Collection<Item> {
+    return this.sortBy(value).reverse() as Collection<Item>
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
