@@ -23,7 +23,7 @@ export function getProp(
   holder: Record<string, unknown>,
   key: KeyVariadic
 ): unknown {
-  if (!key || !holder) {
+  if (!key) {
     return holder
   }
 

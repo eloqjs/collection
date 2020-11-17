@@ -80,14 +80,6 @@ describe('Helpers', () => {
 
       expect(result).toBe(holder)
     })
-
-    it('should return undefined when holder is not defined.', () => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const result = getProp()
-
-      expect(result).toBeUndefined()
-    })
   })
 
   describe('variadic()', () => {
