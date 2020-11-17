@@ -1216,6 +1216,34 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * Alias for the [whenNotEmpty()]{@link Collection#whenNotEmpty} method.
+   *
+   * @param {Function} callback
+   * @param {Function} [defaultCallback]
+   * @return {this}
+   */
+  unlessEmpty(
+    callback: (collection: this, value: boolean) => void,
+    defaultCallback?: (collection: this, value: boolean) => void
+  ): this {
+    return this.whenNotEmpty(callback, defaultCallback)
+  }
+
+  /**
+   * Alias for the [whenEmpty()]{@link Collection#whenEmpty} method.
+   *
+   * @param {Function} callback
+   * @param {Function} [defaultCallback]
+   * @return {this}
+   */
+  unlessNotEmpty(
+    callback: (collection: this, value: boolean) => void,
+    defaultCallback?: (collection: this, value: boolean) => void
+  ): this {
+    return this.whenEmpty(callback, defaultCallback)
+  }
+
+  /**
    * The when method will execute the given callback when the first argument given to the method evaluates to true.
    *
    * @param {unknown} value
