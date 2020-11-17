@@ -859,6 +859,32 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this.newInstance(items)
   }
 
+  /**
+   * The takeWhile method returns items in the collection until the given callback returns false.
+   *
+   * @param {Object|Function} value
+   * @return {Collection}
+   */
+  takeWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
+    let previous: boolean | null = null
+
+    let callback = (item: Item) => item === value
+
+    if (isFunction(value)) {
+      callback = value
+    }
+
+    const items = this.items.filter((item) => {
+      if (previous !== false) {
+        previous = callback(item)
+      }
+
+      return previous
+    })
+
+    return this.newInstance(items)
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
