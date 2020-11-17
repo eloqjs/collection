@@ -1200,6 +1200,28 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this.newInstance(collection)
   }
 
+  /**
+   * The when method will execute the given callback when the first argument given to the method evaluates to true.
+   *
+   * @param {unknown} value
+   * @param {Function} callback
+   * @param {Function} [defaultCallback]
+   * @return {this}
+   */
+  when<V>(
+    value: V,
+    callback: (collection: this, value: V) => void,
+    defaultCallback?: (collection: this, value: V) => void
+  ): this {
+    if (value) {
+      callback(this, value)
+    } else if (defaultCallback) {
+      defaultCallback(this, value)
+    }
+
+    return this
+  }
+
   public where<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
