@@ -596,6 +596,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       .map((value) => value.key)
   }
 
+  /**
+   * The nth method creates a new collection consisting of every n-th element.
+   *
+   * @param {number} step
+   * @param {number} [offset]
+   */
+  nth(step: number, offset?: number): Collection<Item> {
+    const collection = this.items
+      .slice(offset)
+      .filter((item, index) => index % step === 0)
+
+    return this.newInstance(collection)
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
