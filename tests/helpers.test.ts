@@ -23,60 +23,35 @@ describe('Helpers', () => {
    * Based on tests from https://github.com/dy/dotprop (MIT)
    */
   describe('getProp()', () => {
-    it('should get property defined by dot notation in string.', () => {
-      const holder = {
-        a: {
-          b: {
-            c: 1
-          }
+    const holder = {
+      a: {
+        b: {
+          c: 1
         }
       }
+    }
 
+    it('should get property defined by dot notation in string.', () => {
       const result = getProp(holder, 'a.b.c')
 
       expect(result).toBe(1)
     })
 
     it('should get property defined by array-type keys.', () => {
-      const holder = {
-        a: {
-          b: {
-            c: 1
-          }
-        }
-      }
-
       const result = getProp(holder, ['a', 'b', 'c'])
 
       expect(result).toBe(1)
     })
 
     it('should get property defined by simple string.', () => {
-      const holder = {
-        a: {
-          b: {
-            c: 1
-          }
-        }
-      }
-
       const result = getProp(holder, 'a')
 
       expect(result).toBe(holder.a)
     })
 
-    it('should return holder when propName is not defined.', () => {
-      const holder = {
-        a: {
-          b: {
-            c: 1
-          }
-        }
-      }
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const result = getProp(holder)
+    it('should return holder when key is not defined.', () => {
+      const key = ''
+      const result = getProp(holder, key)
 
       expect(result).toBe(holder)
     })
