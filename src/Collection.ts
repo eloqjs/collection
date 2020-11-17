@@ -1002,6 +1002,23 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The split method breaks a collection into the given number of groups.
+   *
+   * @param {number} numberOfGroups
+   * @return {Collection[]}
+   */
+  split(numberOfGroups: number): Collection<Item>[] {
+    const itemsPerGroup = Math.round(this.items.length / numberOfGroups)
+    const collection = []
+
+    for (let iterator = 0; iterator < numberOfGroups; iterator += 1) {
+      collection.push(this.newInstance(this.items.splice(0, itemsPerGroup)))
+    }
+
+    return collection
+  }
+
+  /**
    * The sum method returns the sum of all items in the collection.
    *
    * @param {string|string[]|Function} key
