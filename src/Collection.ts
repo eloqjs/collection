@@ -636,6 +636,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return arrays
   }
 
+  /**
+   * The pipe method passes the collection to the given callback and returns the result.
+   *
+   * @param {Function} callback
+   * @return {*}
+   */
+  pipe<U>(callback: (collection: this) => U): U {
+    return callback(this)
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
