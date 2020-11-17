@@ -519,7 +519,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
-   * The median method returns the median value of a given key.
+   * The median method returns the [median value]{@link https://en.wikipedia.org/wiki/Median} of a given key.
    *
    * @param {string|string[]} key
    * @return {number}
