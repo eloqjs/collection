@@ -1201,6 +1201,21 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The unless method will execute the given callback when the first argument given to the method evaluates to false.
+   *
+   * @param {unknown} value
+   * @param {Function} callback
+   * @param {Function} [defaultCallback]
+   */
+  unless<V>(
+    value: V,
+    callback: (collection: this, value: boolean) => void,
+    defaultCallback?: (collection: this, value: boolean) => void
+  ): this {
+    return this.when(!value, callback, defaultCallback)
+  }
+
+  /**
    * The when method will execute the given callback when the first argument given to the method evaluates to true.
    *
    * @param {unknown} value
