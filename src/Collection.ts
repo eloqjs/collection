@@ -481,6 +481,25 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return collection
   }
 
+  /**
+   * The mapWithKeys method iterates through the collection and passes each value to the given callback.
+   * The callback should return an array where the first element represents the key
+   * and the second element represents the value pair.
+   *
+   * @param {Function} fn
+   * @return {Object}
+   */
+  mapWithKeys(fn: (item: Item) => [Key, unknown]): Record<string, unknown> {
+    const collection = {}
+
+    this.items.forEach((item) => {
+      const [key, value] = fn(item)
+      collection[key] = value
+    })
+
+    return collection
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
