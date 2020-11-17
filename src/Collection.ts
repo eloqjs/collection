@@ -45,6 +45,26 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * Alias for the avg() method.
+   *
+   * @param {string|string[]} key
+   * @return {number}
+   */
+  average<K extends KeyVariadic>(key: keyof Item | K): number {
+    return this.avg(key)
+  }
+
+  /**
+   * The avg method returns the average of all items in the collection.
+   *
+   * @param {string|string[]} key
+   * @return {number}
+   */
+  avg<K extends KeyVariadic>(key: keyof Item | K): number {
+    return this.sum(key) / this.items.length
+  }
+
+  /**
    * The chunk method breaks the collection into multiple, smaller collections of a given size.
    *
    * @param size - Size of the chunks.
