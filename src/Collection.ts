@@ -969,11 +969,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   takeUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
     let previous: boolean | null = null
 
-    let callback = (item: Item) => item === value
-
-    if (isFunction(value)) {
-      callback = value
-    }
+    const callback = isFunction(value)
+      ? value
+      : (item: Item) => equal(item, value)
 
     const items = this.items.filter((item) => {
       if (previous !== false) {
@@ -995,11 +993,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   takeWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
     let previous: boolean | null = null
 
-    let callback = (item: Item) => item === value
-
-    if (isFunction(value)) {
-      callback = value
-    }
+    const callback = isFunction(value)
+      ? value
+      : (item: Item) => equal(item, value)
 
     const items = this.items.filter((item) => {
       if (previous !== false) {
