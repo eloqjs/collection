@@ -502,6 +502,22 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return collection
   }
 
+  /**
+   * The max method returns the maximum value of a given key.
+   *
+   * @param {string|string[]} key
+   * @return {number}
+   */
+  max<K extends KeyVariadic>(key: keyof Item | K): number {
+    const filtered = this.items.filter(
+      (item) => getProp(item, key as KeyVariadic) !== undefined
+    )
+
+    return Math.max(
+      ...filtered.map((item) => getProp(item, key as KeyVariadic) as number)
+    )
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
