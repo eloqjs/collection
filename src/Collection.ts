@@ -610,6 +610,32 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this.newInstance(collection)
   }
 
+  /**
+   * The partition method may be combined with destructuring to separate elements
+   * that pass a given truth test from those that do not.
+   *
+   * @param {Function} callback
+   * @return {[Collection, Collection]}
+   */
+  partition(
+    callback: (item: Item) => boolean
+  ): [Collection<Item>, Collection<Item>] {
+    const arrays: [Collection<Item>, Collection<Item>] = [
+      this.newInstance([]),
+      this.newInstance([])
+    ]
+
+    this.items.forEach((item) => {
+      if (callback(item)) {
+        arrays[0].push(item)
+      } else {
+        arrays[1].push(item)
+      }
+    })
+
+    return arrays
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
