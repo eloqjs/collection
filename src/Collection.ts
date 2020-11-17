@@ -518,6 +518,29 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     )
   }
 
+  /**
+   * The median method returns the median value of a given key.
+   *
+   * @param {string|string[]} key
+   * @return {number}
+   */
+  median<K extends KeyVariadic>(key: keyof Item | K): number {
+    const { length } = this.items
+
+    if (length % 2 === 0) {
+      return (
+        ((getProp(this.items[length / 2 - 1], key as KeyVariadic) as number) +
+          (getProp(this.items[length / 2], key as KeyVariadic) as number)) /
+        2
+      )
+    }
+
+    return getProp(
+      this.items[Math.floor(length / 2)],
+      key as KeyVariadic
+    ) as number
+  }
+
   pluck<V extends Key>(value: keyof Item | V): unknown[]
   pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
