@@ -163,6 +163,23 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The countBy method counts the occurrences of values in the collection.
+   *
+   * @param {Function} callback
+   * @return {Object}
+   */
+  public countBy(
+    callback: (item: Item, index: number) => Key
+  ): Record<string, number> {
+    const group = this.groupBy(callback)
+
+    return Object.keys(group).reduce((result, key) => {
+      result[key] = (group[key] as unknown[]).length
+      return result
+    }, {})
+  }
+
+  /**
    * The dd method will console.log the collection and exit the current process.
    */
   public dd(): void {
