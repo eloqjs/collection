@@ -191,18 +191,18 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The each method iterates over the items in the collection and passes each item to a callback.
    *
-   * @param {Function} fn
+   * @param {Function} callback
    * @return {Collection}
    */
   public each(
-    fn: (item: Item, index: number, items: Item[]) => false | void
+    callback: (item: Item, index: number, items: Item[]) => false | void
   ): this {
     let stop = false
 
     const { length } = this.items
 
     for (let index = 0; index < length && !stop; index += 1) {
-      stop = fn(this.items[index], index, this.items) === false
+      stop = callback(this.items[index], index, this.items) === false
     }
 
     return this
@@ -211,14 +211,14 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The first method returns the first element in the collection that passes a given truth test.
    *
-   * @param {Function} [fn]
+   * @param {Function} [callback]
    * @return {Object}
    */
-  public first(fn?: (item: Item) => boolean): Item {
-    if (isFunction(fn)) {
+  public first(callback?: (item: Item) => boolean): Item {
+    if (isFunction(callback)) {
       for (let i = 0, { length } = this.items; i < length; i += 1) {
         const item = this.items[i]
-        if (fn(item)) {
+        if (callback(item)) {
           return item
         }
       }
@@ -418,14 +418,14 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The last method returns the last element in the collection that passes a given truth test.
    *
-   * @param {Function} [fn]
+   * @param {Function} [callback]
    * @return {Object}
    */
-  last(fn?: (item: Item) => boolean): Item {
+  last(callback?: (item: Item) => boolean): Item {
     let items: Item[] = clone(this.items)
 
-    if (isFunction(fn)) {
-      items = items.filter(fn)
+    if (isFunction(callback)) {
+      items = items.filter(callback)
     }
 
     return items[items.length - 1]
@@ -435,12 +435,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The mapInto method iterates through the collection and instantiates the given class with each element as a constructor.
    *
    * @param {Function} classConstructor
-   * @param {Function} [fn]
+   * @param {Function} [callback]
    * @return {Collection}
    */
   mapInto<T extends Item>(
     classConstructor: ClassConstructor<T, Item>,
-    fn?: (item: T) => void
+    callback?: (item: T) => void
   ): Collection<T> {
     return this.items.map((item) => {
       let _item: T = item as T
@@ -449,8 +449,8 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
         _item = new classConstructor(item)
       }
 
-      if (isFunction(fn)) {
-        fn(_item)
+      if (isFunction(callback)) {
+        callback(_item)
       }
 
       return _item
@@ -460,16 +460,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The mapToGroups method iterates through the collection and passes each value to the given callback.
    *
-   * @param {Function} fn
+   * @param {Function} callback
    * @return {Object}
    */
   mapToGroups(
-    fn: (item: Item, index: number) => [Key, unknown]
+    callback: (item: Item, index: number) => [Key, unknown]
   ): Record<string, unknown> {
     const collection = {}
 
     this.items.forEach((item, index) => {
-      const [key, value] = fn(item, index)
+      const [key, value] = callback(item, index)
 
       if (collection[key] === undefined) {
         collection[key] = [value]
@@ -486,14 +486,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The callback should return an array where the first element represents the key
    * and the second element represents the value pair.
    *
-   * @param {Function} fn
+   * @param {Function} callback
    * @return {Object}
    */
-  mapWithKeys(fn: (item: Item) => [Key, unknown]): Record<string, unknown> {
+  mapWithKeys(
+    callback: (item: Item) => [Key, unknown]
+  ): Record<string, unknown> {
     const collection = {}
 
     this.items.forEach((item) => {
-      const [key, value] = fn(item)
+      const [key, value] = callback(item)
       collection[key] = value
     })
 
