@@ -1244,6 +1244,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The unwrap method will unwrap the given collection.
+   *
+   * @param {Object[]|Collection} value
+   * @return {Object[]}
+   */
+  unwrap<T extends ItemData>(value: T[] | Collection<T>): T[] {
+    if (value instanceof this.constructor) {
+      return (value as Collection<T>).toArray()
+    }
+
+    return value
+  }
+
+  /**
    * The when method will execute the given callback when the first argument given to the method evaluates to true.
    *
    * @param {unknown} value
