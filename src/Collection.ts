@@ -3,7 +3,9 @@ import {
   clone,
   getProp,
   getValue,
+  isArray,
   isFunction,
+  isObject,
   isString,
   matches,
   variadic
@@ -257,6 +259,79 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   except(keys: string[] | number[]): Collection<Item> {
     return this.whereNotIn(this.primaryKey(), keys)
+  }
+
+  /**
+   * The find method finds an item that has a given primary key.
+   * If key is an item, find will attempt to return an item matching the primary key.
+   * If key is an array of keys, find will return all items which match the keys
+   * using [whereIn()]{@link Collection#whereIn}
+   *
+   * @param {string|number|string[]|number[]|Object} key
+   * @param {unknown} [defaultValue]
+   * @return {Object|Collection|this|null}
+   */
+  find<D = null>(
+    key: string | number | string[] | number[] | Item,
+    defaultValue?: DefaultValue<D>
+  ): ItemOrDefault<Item, D> | Collection<Item> | this
+  find<S extends Item>(
+    predicate: (
+      this: void,
+      value: Item,
+      index: number,
+      obj: Item[]
+    ) => value is S,
+    thisArg?: unknown
+  ): S | undefined
+  find(
+    predicate: (value: Item, index: number, obj: Item[]) => unknown,
+    thisArg?: unknown
+  ): Item | undefined
+
+  /**
+   * The find method finds an item that has a given primary key.
+   * If key is an item, find will attempt to return an item matching the primary key.
+   * If key is an array of keys, find will return all items which match the keys
+   * using [whereIn()]{@link Collection#whereIn}
+   *
+   * @param {string|number|string[]|number[]|Object} keyOrPredicate
+   * @param {unknown} [defaultValueOrThisArg]
+   * @return {Object|Collection|this|null}
+   */
+  find<D = null>(
+    keyOrPredicate:
+      | string
+      | number
+      | string[]
+      | number[]
+      | Item
+      | ((value: Item, index: number, obj: Item[]) => unknown),
+    defaultValueOrThisArg?: DefaultValue<D>
+  ): ItemOrDefault<Item, D> | Collection<Item> | this | undefined {
+    if (isFunction(keyOrPredicate)) {
+      return super.find(keyOrPredicate, defaultValueOrThisArg)
+    }
+
+    let key = keyOrPredicate
+    const defaultValue = defaultValueOrThisArg || null
+
+    if (isObject(key)) {
+      key = this.getPrimaryKey(key)
+    }
+
+    if (isArray(key)) {
+      if (this.isEmpty()) {
+        return this
+      }
+
+      return this.whereIn(this.primaryKey(), key)
+    }
+
+    return (
+      this.first((item) => this.getPrimaryKey(item) === key) ||
+      getValue(defaultValue)
+    )
   }
 
   /**
