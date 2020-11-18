@@ -661,6 +661,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The only method returns all of the items that have the given primary keys.
+   *
+   * @param {string[]|number[]} keys
+   * @return {Collection}
+   */
+  only(keys: string[] | number[]): Collection<Item> {
+    return this.whereIn(this.primaryKey(), keys)
+  }
+
+  /**
    * The partition method may be combined with destructuring to separate elements
    * that pass a given truth test from those that do not.
    *
