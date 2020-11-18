@@ -1398,6 +1398,24 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The whereBetween method filters the collection within a given range.
+   *
+   * @param {string|string[]} key
+   * @param {unknown[]} values
+   * @return {Collection}
+   */
+  whereBetween<K extends KeyVariadic, V>(
+    key: keyof Item | K,
+    values: V[]
+  ): Collection<Item> {
+    return this.where(key, '>=', values[0]).where(
+      key,
+      '<=',
+      values[values.length - 1]
+    )
+  }
+
+  /**
    * The whereIn method filters the collection by a given key / value contained within the given array.
    *
    * @param {string|string[]} key
