@@ -180,8 +180,9 @@ describe('Public Methods', () => {
           number: 2
         }
       ])
+      const first = collection.first() as { name: string; number: number }
 
-      expect(collection.contains(collection.first())).toBeTruthy()
+      expect(collection.contains(first)).toBeTruthy()
     })
 
     it('should accept a key / value pair', () => {
@@ -445,11 +446,11 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('should return an empty object when no matches', () => {
+    it('should return null when no matches', () => {
       const collection = collect([])
       const first = collection.first()
 
-      expect(first).toStrictEqual({})
+      expect(first).toBeNull()
     })
 
     it('should accept a callback', () => {
@@ -460,11 +461,11 @@ describe('Public Methods', () => {
       expect(collection).toEqual(products)
     })
 
-    it('should return an empty object when no matches on callback', () => {
+    it('should return null when no matches on callback', () => {
       const collection = collect(products)
       const first = collection.first((item) => item.price > 200)
 
-      expect(first).toStrictEqual({})
+      expect(first).toBeNull()
     })
   })
 
@@ -479,24 +480,32 @@ describe('Public Methods', () => {
 
     it('should return the first item where it matches', () => {
       const collection = collect(products)
+      const first = collection.firstWhere('manufacturer', 'IKEA') as {
+        id: number
+        product: string
+        price: number
+        manufacturer: string
+      }
 
-      expect(collection.firstWhere('manufacturer', 'IKEA').product).toEqual(
-        'Desk'
-      )
+      expect(first.product).toEqual('Desk')
     })
 
-    it('should return an empty object when no matches', () => {
+    it('should return null when no matches', () => {
       const collection = collect(products)
 
-      expect(collection.firstWhere('manufacturer', 'xoxo')).toStrictEqual({})
+      expect(collection.firstWhere('manufacturer', 'xoxo')).toBeNull()
     })
 
     it('should be possible to pass an operator', () => {
       const collection = collect(products)
+      const first = collection.firstWhere('manufacturer', '!==', 'IKEA') as {
+        id: number
+        product: string
+        price: number
+        manufacturer: string
+      }
 
-      expect(
-        collection.firstWhere('manufacturer', '!==', 'IKEA').product
-      ).toEqual('Chair')
+      expect(first.product).toEqual('Chair')
     })
   })
 
@@ -923,6 +932,10 @@ describe('Public Methods', () => {
 
       expect(last).toEqual({ id: 3 })
       expect(collection).toEqual(data)
+    })
+
+    it('should return null when collection is empty', () => {
+      expect(collect().last()).toBeNull()
     })
   })
 
@@ -1793,7 +1806,7 @@ describe('Public Methods', () => {
 
     it('should return a random item from the collection', () => {
       const collection = collect(data)
-      const random = collection.random()
+      const random = collection.random() as { id: number }
 
       expect(random.id).toBeLessThanOrEqual(5)
       expect(collection).toHaveLength(5)

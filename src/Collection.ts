@@ -2,6 +2,7 @@ import {
   buildKeyPathMap,
   clone,
   getProp,
+  getValue,
   isFunction,
   isString,
   matches,
@@ -10,7 +11,9 @@ import {
 import type {
   ClassConstructor,
   Constructor,
+  DefaultValue,
   ItemData,
+  ItemOrDefault,
   Key,
   KeyVariadic,
   Operator
@@ -259,10 +262,14 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The first method returns the first element in the collection that passes a given truth test.
    *
-   * @param {Function} [callback]
+   * @param {Function} callback
+   * @param {unknown} defaultValue
    * @return {Object}
    */
-  public first(callback?: (item: Item) => boolean): Item {
+  public first<D = null>(
+    callback: ((item: Item) => boolean) | null = null,
+    defaultValue: DefaultValue<D> = null
+  ): ItemOrDefault<Item, D> {
     if (isFunction(callback)) {
       for (let i = 0, { length } = this.items; i < length; i += 1) {
         const item = this.items[i]
@@ -271,25 +278,25 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
         }
       }
 
-      return {} as Item
+      return getValue(defaultValue)
     }
 
     if (this.items.length) {
       return this.items[0]
     }
 
-    return {} as Item
+    return getValue(defaultValue)
   }
 
   public firstWhere<V extends unknown, K extends Key>(
     key: keyof Item | K,
     value?: V
-  ): Item
+  ): Item | null
   public firstWhere<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator: Operator,
     value: V
-  ): Item
+  ): Item | null
 
   /**
    * The firstWhere method returns the first element in the collection with the given key / value pair.
@@ -303,7 +310,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     operator: V | Operator,
     value?: V
-  ): Item {
+  ): Item | null {
     return this.where(key, operator as Operator, value).first()
   }
 
@@ -338,14 +345,18 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The get method returns the item at a given key. If the key does not exist, null is returned.
    *
    * @param {number} index
+   * @param {unknown} defaultValue
    * @return {Object|null}
    */
-  get(index: number): Item | null {
+  get<D = null>(
+    index: number,
+    defaultValue: DefaultValue<D> = null
+  ): ItemOrDefault<Item, D> {
     if (this.items[index] !== undefined) {
       return this.items[index]
     }
 
-    return null
+    return getValue(defaultValue)
   }
 
   /**
@@ -466,14 +477,22 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The last method returns the last element in the collection that passes a given truth test.
    *
-   * @param {Function} [callback]
+   * @param {Function|null} callback
+   * @param {unknown} defaultValue
    * @return {Object}
    */
-  last(callback?: (item: Item) => boolean): Item {
+  last<D = null>(
+    callback: ((item: Item) => boolean) | null = null,
+    defaultValue: DefaultValue<D> = null
+  ): ItemOrDefault<Item, D> {
     let items: Item[] = clone(this.items)
 
     if (isFunction(callback)) {
       items = items.filter(callback)
+    }
+
+    if (!items.length) {
+      return getValue(defaultValue)
     }
 
     return items[items.length - 1]
@@ -799,10 +818,19 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The pull method removes and returns an item from the collection by its key.
    *
    * @param {number} index
+   * @param {unknown} defaultValue
    * @return {Object|null}
    */
-  pull(index: number): Item | null {
-    const returnValue = this.items[index] || null
+  pull<D = null>(
+    index: number,
+    defaultValue: DefaultValue<D> = null
+  ): ItemOrDefault<Item, D> {
+    let returnValue: ItemOrDefault<Item, D> = this.items[index] || null
+
+    if (!returnValue && defaultValue !== undefined) {
+      returnValue = getValue(defaultValue)
+    }
+
     this.items.splice(index, 1)
 
     return returnValue
@@ -825,16 +853,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this
   }
 
-  random(): Item
+  random(): Item | null
   random(length: number): Collection<Item>
 
   /**
    * The random method returns a random item from the collection.
    *
    * @param {number} length
-   * @return {Object|Collection}
+   * @return {Object|Collection|null}
    */
-  random(length?: number): Item | Collection<Item> {
+  random(length?: number): Item | Collection<Item> | null {
     const collection = this.newInstance<Item>(clone(this.items)).shuffle()
 
     // If not a length was specified
