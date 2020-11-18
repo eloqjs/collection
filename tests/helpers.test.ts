@@ -1,6 +1,7 @@
 import {
   clone,
   getProp,
+  getValue,
   isArray,
   isFunction,
   isNumber,
@@ -167,6 +168,16 @@ describe('Helpers', () => {
       expect(isString(func)).toBeFalsy()
       expect(isString(number)).toBeFalsy()
       expect(isString(object)).toBeFalsy()
+    })
+  })
+
+  describe('getValue()', () => {
+    it('should return the default value of the given value', () => {
+      const closure = () => ({})
+      const value = null
+
+      expect(getValue(closure)).toStrictEqual({})
+      expect(getValue(value)).toBeNull()
     })
   })
 })

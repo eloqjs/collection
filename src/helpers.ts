@@ -173,3 +173,13 @@ export function matches(
 
   return matches
 }
+
+/**
+ * Return the default value of the given value.
+ *
+ * @param {unknown} value
+ * @return {unknown}
+ */
+export function getValue<V>(value: V | (() => V)): V {
+  return isFunction(value) ? value() : value
+}
