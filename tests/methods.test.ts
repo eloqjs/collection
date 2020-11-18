@@ -2968,16 +2968,6 @@ describe('Public Methods', () => {
         { name: { firstname: 'Sadio', lastname: 'Mané' } }
       ])
     })
-
-    it('should throw an error when key is not an string', () => {
-      const errorModel = () => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        collection.where(100, 100)
-      }
-
-      expect(errorModel).toThrow('KEY must be an string.')
-    })
   })
 
   describe('whereIn()', () => {

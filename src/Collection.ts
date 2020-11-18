@@ -1307,11 +1307,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this.when(this.isNotEmpty(), callback, defaultCallback)
   }
 
-  public where<V extends unknown, K extends Key>(
+  public where<K extends KeyVariadic, V extends unknown>(
     key: keyof Item | K,
     value?: V
   ): Collection<Item>
-  public where<V extends unknown, K extends Key>(
+  public where<K extends KeyVariadic, V extends unknown>(
     key: keyof Item | K,
     operator: Operator,
     value: V
@@ -1321,31 +1321,29 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The where method filters the collection by a given key / value pair.
    *
    * @param {string} key
-   * @param {string} [operator]
+   * @param {string|*} [operator]
    * @param {*} [value]
-   * @return {Object}
+   * @return {Collection}
    */
-  public where<V extends unknown, K extends Key>(
+  public where<V extends unknown, K extends KeyVariadic>(
     key: keyof Item | K,
     operator?: V | Operator,
     value?: V
   ): Collection<Item> {
-    if (!isString(key)) {
-      throw new Error('KEY must be an string.')
-    }
-
     let comparisonOperator = operator
     let comparisonValue = value
 
     const items = this.items
 
     if (operator === undefined || operator === true) {
-      return this.newInstance(items.filter((item) => getProp(item, key as Key)))
+      return this.newInstance(
+        items.filter((item) => getProp(item, key as KeyVariadic))
+      )
     }
 
     if (operator === false) {
       return this.newInstance(
-        items.filter((item) => !getProp(item, key as Key))
+        items.filter((item) => !getProp(item, key as KeyVariadic))
       )
     }
 
@@ -1357,30 +1355,42 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = items.filter((item) => {
       switch (comparisonOperator) {
         case '==':
-          return getProp(item, key) == comparisonValue
+          return getProp(item, key as KeyVariadic) == comparisonValue
 
         default:
         case '===':
-          return getProp(item, key) === comparisonValue
+          return getProp(item, key as KeyVariadic) === comparisonValue
 
         case '!=':
         case '<>':
-          return getProp(item, key) != comparisonValue
+          return getProp(item, key as KeyVariadic) != comparisonValue
 
         case '!==':
-          return getProp(item, key) !== comparisonValue
+          return getProp(item, key as KeyVariadic) !== comparisonValue
 
         case '<':
-          return (getProp(item, key) as never) < (comparisonValue as never)
+          return (
+            (getProp(item, key as KeyVariadic) as never) <
+            (comparisonValue as never)
+          )
 
         case '<=':
-          return (getProp(item, key) as never) <= (comparisonValue as never)
+          return (
+            (getProp(item, key as KeyVariadic) as never) <=
+            (comparisonValue as never)
+          )
 
         case '>':
-          return (getProp(item, key) as never) > (comparisonValue as never)
+          return (
+            (getProp(item, key as KeyVariadic) as never) >
+            (comparisonValue as never)
+          )
 
         case '>=':
-          return (getProp(item, key) as never) >= (comparisonValue as never)
+          return (
+            (getProp(item, key as KeyVariadic) as never) >=
+            (comparisonValue as never)
+          )
       }
     })
 
