@@ -1493,6 +1493,40 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The wrap method will wrap the given value in a collection.
+   *
+   * @param {Object[]|Collection} collection
+   * @return {Collection}
+   */
+  wrap<T extends ItemData>(collection: T[] | Collection<T>): Collection<T>
+
+  /**
+   * The wrap method will wrap the given value in a collection.
+   *
+   * @param {...Object[]} items
+   * @return {Collection}
+   */
+  wrap<T extends ItemData>(...items: T[]): Collection<T>
+
+  /**
+   * The wrap method will wrap the given value in a collection.
+   *
+   * @param {...Object[]|[Object[]]|[Collection]} collection
+   * @return {Collection}
+   */
+  wrap<T extends ItemData>(
+    ...collection: T[] | [T[]] | [Collection<T>]
+  ): Collection<T> {
+    const _collection = variadic(collection)
+
+    if (_collection instanceof this.constructor) {
+      return _collection as Collection<T>
+    }
+
+    return this.newInstance<T>(_collection)
+  }
+
+  /**
    * Creates a new instance of the Collection.
    *
    * @param {...*} collection
