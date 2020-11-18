@@ -267,14 +267,25 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * If key is an array of keys, find will return all items which match the keys
    * using [whereIn()]{@link Collection#whereIn}
    *
-   * @param {string|number|string[]|number[]|Object} key
+   * @param {string[]|number[]} keys
+   * @return {Collection|this}
+   */
+  find(keys: string[] | number[]): Collection<Item> | this
+
+  /**
+   * The find method finds an item that has a given primary key.
+   * If key is an item, find will attempt to return an item matching the primary key.
+   * If key is an array of keys, find will return all items which match the keys
+   * using [whereIn()]{@link Collection#whereIn}
+   *
+   * @param {string|number|Object} key
    * @param {unknown} [defaultValue]
-   * @return {Object|Collection|this|null}
+   * @return {Object|null}
    */
   find<D = null>(
-    key: string | number | string[] | number[] | Item,
+    key: string | number | Item,
     defaultValue?: DefaultValue<D>
-  ): ItemOrDefault<Item, D> | Collection<Item> | this
+  ): ItemOrDefault<Item, D>
   find<S extends Item>(
     predicate: (
       this: void,
