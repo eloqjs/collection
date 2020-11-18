@@ -1434,6 +1434,25 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The whereNotBetween method filters the collection within a given range.
+   *
+   * @param {string|string[]} key
+   * @param {unknown[]} values
+   * @return {Collection}
+   */
+  whereNotBetween<K extends KeyVariadic, V>(
+    key: keyof Item | K,
+    values: V[]
+  ): Collection<Item> {
+    const collection = this.filter(
+      (item) =>
+        (getProp(item, key as KeyVariadic) as never) < values[0] ||
+        (getProp(item, key as KeyVariadic) as never) > values[values.length - 1]
+    )
+    return this.newInstance(collection)
+  }
+
+  /**
    * The whereNotIn method filters the collection by a given key / value not contained within the given array.
    *
    * @param {string|string[]} key
