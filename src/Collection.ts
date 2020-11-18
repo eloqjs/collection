@@ -1388,6 +1388,24 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The whereIn method filters the collection by a given key / value contained within the given array.
+   *
+   * @param {string|string[]} key
+   * @param {unknown[]} values
+   * @return {Collection}
+   */
+  whereIn<K extends KeyVariadic, V>(
+    key: keyof Item | K,
+    values: V[]
+  ): Collection<Item> {
+    const collection = this.items.filter(
+      (item) => values.indexOf(getProp(item, key as KeyVariadic) as V) !== -1
+    )
+
+    return this.newInstance(collection)
+  }
+
+  /**
    * Creates a new instance of the Collection.
    *
    * @param {...*} collection
