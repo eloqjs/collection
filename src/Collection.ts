@@ -78,7 +78,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     do {
       const items = this.items.slice(index, index + size)
-      const collection = this.newInstance(items)
+      const collection = this.newInstance<Item>(items)
 
       chunks.push(collection)
       index += size
@@ -114,7 +114,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const collection = ([] as Item[]).concat(...arrayOfCollections)
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   public contains(
@@ -213,7 +213,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       )
     })
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -311,7 +311,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   forPage(page: number, chunk: number): Collection<Item> {
     const collection = this.items.slice(page * chunk - chunk, page * chunk)
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -396,7 +396,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       )
     })
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -647,7 +647,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       .slice(offset)
       .filter((item, index) => index % step === 0)
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -661,8 +661,8 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     callback: (item: Item) => boolean
   ): [Collection<Item>, Collection<Item>] {
     const arrays: [Collection<Item>, Collection<Item>] = [
-      this.newInstance([]),
-      this.newInstance([])
+      this.newInstance<Item>([]),
+      this.newInstance<Item>([])
     ]
 
     this.items.forEach((item) => {
@@ -817,7 +817,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Object|Collection}
    */
   random(length?: number): Item | Collection<Item> {
-    const collection = this.newInstance(clone(this.items)).shuffle()
+    const collection = this.newInstance<Item>(clone(this.items)).shuffle()
 
     // If not a length was specified
     if (!length) {
@@ -835,7 +835,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   reject(callback: (item: Item) => boolean): Collection<Item> {
-    return this.newInstance(this.items).filter(
+    return this.newInstance<Item>(this.items).filter(
       (item) => !callback(item)
     ) as Collection<Item>
   }
@@ -890,7 +890,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   skip(number: number): Collection<Item> {
-    return this.newInstance(this.items.slice(number))
+    return this.newInstance<Item>(this.items.slice(number))
   }
 
   /**
@@ -916,7 +916,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return previous
     })
 
-    return this.newInstance(items)
+    return this.newInstance<Item>(items)
   }
 
   /**
@@ -942,7 +942,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return previous
     })
 
-    return this.newInstance(items)
+    return this.newInstance<Item>(items)
   }
 
   /**
@@ -985,7 +985,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return 0
     })
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -1012,7 +1012,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = []
 
     for (let iterator = 0; iterator < numberOfGroups; iterator += 1) {
-      collection.push(this.newInstance(this.items.splice(0, itemsPerGroup)))
+      collection.push(
+        this.newInstance<Item>(this.items.splice(0, itemsPerGroup))
+      )
     }
 
     return collection
@@ -1052,10 +1054,10 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   take(length: number): Collection<Item> {
     if (length < 0) {
-      return this.newInstance(this.items.slice(length))
+      return this.newInstance<Item>(this.items.slice(length))
     }
 
-    return this.newInstance(this.items.slice(0, length))
+    return this.newInstance<Item>(this.items.slice(0, length))
   }
 
   /**
@@ -1080,7 +1082,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return previous
     })
 
-    return this.newInstance(items)
+    return this.newInstance<Item>(items)
   }
 
   /**
@@ -1104,7 +1106,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return previous
     })
 
-    return this.newInstance(items)
+    return this.newInstance<Item>(items)
   }
 
   /**
@@ -1197,7 +1199,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       }
     }
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -1336,13 +1338,13 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const items = this.items
 
     if (operator === undefined || operator === true) {
-      return this.newInstance(
+      return this.newInstance<Item>(
         items.filter((item) => getProp(item, key as KeyVariadic))
       )
     }
 
     if (operator === false) {
-      return this.newInstance(
+      return this.newInstance<Item>(
         items.filter((item) => !getProp(item, key as KeyVariadic))
       )
     }
@@ -1394,7 +1396,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       }
     })
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -1430,7 +1432,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       (item) => values.indexOf(getProp(item, key as KeyVariadic) as V) !== -1
     )
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -1449,7 +1451,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
         (getProp(item, key as KeyVariadic) as never) < values[0] ||
         (getProp(item, key as KeyVariadic) as never) > values[values.length - 1]
     )
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -1467,7 +1469,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       (item) => values.indexOf(getProp(item, key as KeyVariadic) as V) === -1
     )
 
-    return this.newInstance(collection)
+    return this.newInstance<Item>(collection)
   }
 
   /**
@@ -1496,9 +1498,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {...*} collection
    * @return {Collection}
    */
-  protected newInstance(...collection: Item[] | [Item[]]): Collection<Item> {
+  protected newInstance<T extends ItemData>(
+    ...collection: T[] | [T[]]
+  ): Collection<T> {
     const items = variadic(collection)
-    const instance = this.constructor as Constructor<this>
+    const instance = this.constructor as Constructor<Collection<T>>
 
     return new instance(items)
   }
