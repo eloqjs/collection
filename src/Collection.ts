@@ -249,6 +249,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The except method returns all of the items that do not have the given primary keys.
+   *
+   * @param {string[]|number[]} keys
+   * @return {Collection}
+   */
+  except(keys: string[] | number[]): Collection<Item> {
+    return this.whereNotIn(this.primaryKey(), keys)
+  }
+
+  /**
    * The first method returns the first element in the collection that passes a given truth test.
    *
    * @param {Function} [callback]
