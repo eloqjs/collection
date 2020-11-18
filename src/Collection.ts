@@ -1,5 +1,3 @@
-import equal from 'deep-equal'
-
 import {
   buildKeyPathMap,
   clone,
@@ -926,7 +924,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const callback = isFunction(value)
       ? value
-      : (item: Item) => equal(item, value)
+      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
 
     const items = this.items.filter((item) => {
       if (previous !== true) {
@@ -952,7 +950,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const callback = isFunction(value)
       ? value
-      : (item: Item) => equal(item, value)
+      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
 
     const items = this.items.filter((item) => {
       if (previous !== true) {
@@ -1092,7 +1090,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const callback = isFunction(value)
       ? value
-      : (item: Item) => equal(item, value)
+      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
 
     const items = this.items.filter((item) => {
       if (previous !== false) {
@@ -1116,7 +1114,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const callback = isFunction(value)
       ? value
-      : (item: Item) => equal(item, value)
+      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
 
     const items = this.items.filter((item) => {
       if (previous !== false) {
