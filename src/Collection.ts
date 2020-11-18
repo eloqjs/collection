@@ -1471,6 +1471,26 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The whereNotNull method filters items where the given key is not null.
+   *
+   * @param {string|string[]} key
+   * @return {Collection}
+   */
+  whereNotNull<K extends KeyVariadic>(key: keyof Item | K): Collection<Item> {
+    return this.where(key, '!==', null)
+  }
+
+  /**
+   * The whereNull method filters items where the given key is null.
+   *
+   * @param {string|string[]} key
+   * @return {Collection}
+   */
+  whereNull<K extends KeyVariadic>(key: keyof Item | K): Collection<Item> {
+    return this.where(key, '===', null)
+  }
+
+  /**
    * Creates a new instance of the Collection.
    *
    * @param {...*} collection

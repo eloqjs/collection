@@ -3221,4 +3221,47 @@ describe('Public Methods', () => {
       expect(filtered2).toEqual(collection2)
     })
   })
+
+  describe('whereNotNull', () => {
+    it('should remove all object where name is null', () => {
+      const collection = collect([
+        {
+          name: 'Mohamed Salah'
+        },
+        {
+          name: null
+        },
+        {
+          name: 'Sadio Mané'
+        }
+      ])
+
+      expect(collection.whereNotNull('name')).toEqual([
+        {
+          name: 'Mohamed Salah'
+        },
+        {
+          name: 'Sadio Mané'
+        }
+      ])
+    })
+  })
+
+  describe('whereNull', () => {
+    it('should remove all object where name is not null', () => {
+      const collection = collect([
+        {
+          name: 'Mohamed Salah'
+        },
+        {
+          name: null
+        },
+        {
+          name: 'Sadio Mané'
+        }
+      ])
+
+      expect(collection.whereNull('name')).toEqual([{ name: null }])
+    })
+  })
 })
