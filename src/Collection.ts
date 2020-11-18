@@ -55,7 +55,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {number}
    */
-  average<K extends KeyVariadic>(key: keyof Item | K): number {
+  public average<K extends KeyVariadic>(key: keyof Item | K): number {
     return this.avg(key)
   }
 
@@ -65,7 +65,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {number}
    */
-  avg<K extends KeyVariadic>(key: keyof Item | K): number {
+  public avg<K extends KeyVariadic>(key: keyof Item | K): number {
     return this.sum(key) / this.items.length
   }
 
@@ -257,7 +257,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string[]|number[]} keys
    * @return {Collection}
    */
-  except(keys: string[] | number[]): Collection<Item> {
+  public except(keys: string[] | number[]): Collection<Item> {
     return this.whereNotIn(this.primaryKey(), keys)
   }
 
@@ -270,7 +270,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string[]|number[]} keys
    * @return {Collection|this}
    */
-  find(keys: string[] | number[]): Collection<Item> | this
+  public find(keys: string[] | number[]): Collection<Item> | this
 
   /**
    * The find method finds an item that has a given primary key.
@@ -282,11 +282,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown} [defaultValue]
    * @return {Object|null}
    */
-  find<D = null>(
+  public find<D = null>(
     key: string | number | Item,
     defaultValue?: DefaultValue<D>
   ): ItemOrDefault<Item, D>
-  find<S extends Item>(
+  public find<S extends Item>(
     predicate: (
       this: void,
       value: Item,
@@ -295,7 +295,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     ) => value is S,
     thisArg?: unknown
   ): S | undefined
-  find(
+  public find(
     predicate: (value: Item, index: number, obj: Item[]) => unknown,
     thisArg?: unknown
   ): Item | undefined
@@ -310,7 +310,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown} [defaultValueOrThisArg]
    * @return {Object|Collection|this|null}
    */
-  find<D = null>(
+  public find<D = null>(
     keyOrPredicate:
       | string
       | number
@@ -409,7 +409,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} chunk
    * @return {Collection}
    */
-  forPage(page: number, chunk: number): Collection<Item> {
+  public forPage(page: number, chunk: number): Collection<Item> {
     const collection = this.items.slice(page * chunk - chunk, page * chunk)
 
     return this.newInstance<Item>(collection)
@@ -421,7 +421,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} index
    * @return {this}
    */
-  forget(index: number): this {
+  public forget(index: number): this {
     this.items.splice(index, 1)
 
     return this
@@ -434,7 +434,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown} defaultValue
    * @return {Object|null}
    */
-  get<D = null>(
+  public get<D = null>(
     index: number,
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
@@ -451,7 +451,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function|string} key
    * @return {Object}
    */
-  groupBy<K extends KeyVariadic>(
+  public groupBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item, index: number) => Key)
   ): Record<string, unknown> {
     const collection = {}
@@ -488,7 +488,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string} key
    * @return {Collection}
    */
-  intersect<K extends Key>(
+  public intersect<K extends Key>(
     values: this,
     key: keyof Item | K = this.primaryKey()
   ): Collection<Item> {
@@ -511,7 +511,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string} glue - The "glue" string you wish to place between the values.
    * @return {string}
    */
-  implode<K extends Key>(key: keyof Item | K, glue: string): string {
+  public implode<K extends Key>(key: keyof Item | K, glue: string): string {
     return this.pluck(key).join(glue)
   }
 
@@ -520,7 +520,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @return {boolean}
    */
-  isEmpty(): boolean {
+  public isEmpty(): boolean {
     return !this.items.length
   }
 
@@ -529,7 +529,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @return {boolean}
    */
-  isNotEmpty(): boolean {
+  public isNotEmpty(): boolean {
     return !this.isEmpty()
   }
 
@@ -540,7 +540,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]|Function} key
    * @return {Object}
    */
-  keyBy<K extends KeyVariadic>(
+  public keyBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => Key)
   ): Record<Key, Item> {
     const collection: Record<Key, Item> = {}
@@ -567,7 +567,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown} defaultValue
    * @return {Object}
    */
-  last<D = null>(
+  public last<D = null>(
     callback: ((item: Item) => boolean) | null = null,
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
@@ -591,7 +591,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} [callback]
    * @return {Collection}
    */
-  mapInto<T extends Item>(
+  public mapInto<T extends Item>(
     classConstructor: ClassConstructor<T, Item>,
     callback?: (item: T) => void
   ): Collection<T> {
@@ -616,7 +616,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {Object}
    */
-  mapToGroups(
+  public mapToGroups(
     callback: (item: Item, index: number) => [Key, unknown]
   ): Record<string, unknown> {
     const collection = {}
@@ -642,7 +642,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {Object}
    */
-  mapWithKeys(
+  public mapWithKeys(
     callback: (item: Item) => [Key, unknown]
   ): Record<string, unknown> {
     const collection = {}
@@ -661,7 +661,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {number}
    */
-  max<K extends KeyVariadic>(key: keyof Item | K): number {
+  public max<K extends KeyVariadic>(key: keyof Item | K): number {
     const filtered = this.items.filter(
       (item) => getProp(item, key as KeyVariadic) !== undefined
     )
@@ -677,7 +677,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {number}
    */
-  median<K extends KeyVariadic>(key: keyof Item | K): number {
+  public median<K extends KeyVariadic>(key: keyof Item | K): number {
     const { length } = this.items
 
     if (length % 2 === 0) {
@@ -700,7 +700,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {number}
    */
-  min<K extends KeyVariadic>(key: keyof Item | K): number {
+  public min<K extends KeyVariadic>(key: keyof Item | K): number {
     const filtered = this.items.filter(
       (item) => getProp(item, key as KeyVariadic) !== undefined
     )
@@ -716,7 +716,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {number}
    */
-  mode<K extends KeyVariadic>(key: keyof Item | K): number[] | null {
+  public mode<K extends KeyVariadic>(key: keyof Item | K): number[] | null {
     const values: { key: number; count: number }[] = []
     let highestCount = 1
 
@@ -755,7 +755,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} step
    * @param {number} [offset]
    */
-  nth(step: number, offset?: number): Collection<Item> {
+  public nth(step: number, offset?: number): Collection<Item> {
     const collection = this.items
       .slice(offset)
       .filter((item, index) => index % step === 0)
@@ -769,7 +769,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string[]|number[]} keys
    * @return {Collection}
    */
-  only(keys: string[] | number[]): Collection<Item> {
+  public only(keys: string[] | number[]): Collection<Item> {
     return this.whereIn(this.primaryKey(), keys)
   }
 
@@ -780,7 +780,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {[Collection, Collection]}
    */
-  partition(
+  public partition(
     callback: (item: Item) => boolean
   ): [Collection<Item>, Collection<Item>] {
     const arrays: [Collection<Item>, Collection<Item>] = [
@@ -805,7 +805,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {*}
    */
-  pipe<U>(callback: (collection: this) => U): U {
+  public pipe<U>(callback: (collection: this) => U): U {
     return callback(this)
   }
 
@@ -815,12 +815,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} classConstructor
    * @return {Function}
    */
-  pipeInto<T>(classConstructor: ClassCollection<T, this>): T {
+  public pipeInto<T>(classConstructor: ClassCollection<T, this>): T {
     return new classConstructor(this)
   }
 
-  pluck<V extends Key>(value: keyof Item | V): unknown[]
-  pluck<V extends Key, K extends Key>(
+  public pluck<V extends Key>(value: keyof Item | V): unknown[]
+  public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key: keyof Item | K
   ): Record<string, unknown>
@@ -832,7 +832,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string} [key]
    * @return {[]|Object}
    */
-  pluck<V extends Key, K extends Key>(
+  public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key?: keyof Item | K
   ): unknown[] | Record<string, unknown> {
@@ -894,7 +894,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object} value
    * @return {this}
    */
-  prepend(value: Item): this {
+  public prepend(value: Item): this {
     this.items.unshift(value)
 
     return this
@@ -907,7 +907,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown} defaultValue
    * @return {Object|null}
    */
-  pull<D = null>(
+  public pull<D = null>(
     index: number,
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
@@ -929,7 +929,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} [index]
    * @return {this}
    */
-  put(item: Item, index?: number): this {
+  public put(item: Item, index?: number): this {
     if (index !== undefined) {
       this.items.splice(index, 1, item)
     } else {
@@ -939,8 +939,8 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return this
   }
 
-  random(): Item | null
-  random(length: number): Collection<Item>
+  public random(): Item | null
+  public random(length: number): Collection<Item>
 
   /**
    * The random method returns a random item from the collection.
@@ -948,7 +948,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} length
    * @return {Object|Collection|null}
    */
-  random(length?: number): Item | Collection<Item> | null {
+  public random(length?: number): Item | Collection<Item> | null {
     const collection = this.newInstance<Item>(clone(this.items)).shuffle()
 
     // If not a length was specified
@@ -966,7 +966,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {Collection}
    */
-  reject(callback: (item: Item) => boolean): Collection<Item> {
+  public reject(callback: (item: Item) => boolean): Collection<Item> {
     return this.newInstance<Item>(this.items).filter(
       (item) => !callback(item)
     ) as Collection<Item>
@@ -979,7 +979,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {number|boolean}
    */
-  search(callback: (item: Item, index: number) => boolean): number | false {
+  public search(
+    callback: (item: Item, index: number) => boolean
+  ): number | false {
     const result = this.items.findIndex((item, index) => {
       return callback(this.items[index], index)
     })
@@ -996,7 +998,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @return {this}
    */
-  shuffle(): this {
+  public shuffle(): this {
     const items = clone(this.items)
 
     let j
@@ -1021,7 +1023,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} number
    * @return {Collection}
    */
-  skip(number: number): Collection<Item> {
+  public skip(number: number): Collection<Item> {
     return this.newInstance<Item>(this.items.slice(number))
   }
 
@@ -1033,7 +1035,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object|Function} value
    * @return {Collection}
    */
-  skipUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
+  public skipUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
     let previous: boolean | null = null
 
     const callback = isFunction(value)
@@ -1059,7 +1061,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object|Function} value
    * @return {Collection}
    */
-  skipWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
+  public skipWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
     let previous: boolean | null = null
 
     const callback = isFunction(value)
@@ -1084,7 +1086,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]|Function} value
    * @return {Collection}
    */
-  sortBy<K extends KeyVariadic>(
+  public sortBy<K extends KeyVariadic>(
     value: keyof Item | K | ((item: Item) => number)
   ): Collection<Item> {
     const collection = clone(this.items)
@@ -1127,7 +1129,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]|Function} value
    * @return {Collection}
    */
-  sortByDesc<K extends KeyVariadic>(
+  public sortByDesc<K extends KeyVariadic>(
     value: keyof Item | K | ((item: Item) => number)
   ): Collection<Item> {
     return this.sortBy(value).reverse() as Collection<Item>
@@ -1139,7 +1141,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {number} numberOfGroups
    * @return {Collection[]}
    */
-  split(numberOfGroups: number): Collection<Item>[] {
+  public split(numberOfGroups: number): Collection<Item>[] {
     const itemsPerGroup = Math.round(this.items.length / numberOfGroups)
     const collection = []
 
@@ -1158,7 +1160,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]|Function} key
    * @return {number}
    */
-  sum<K extends KeyVariadic>(
+  public sum<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => string | number)
   ): number {
     let total = 0
@@ -1184,7 +1186,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @param {number} length
    */
-  take(length: number): Collection<Item> {
+  public take(length: number): Collection<Item> {
     if (length < 0) {
       return this.newInstance<Item>(this.items.slice(length))
     }
@@ -1199,7 +1201,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object|Function} value
    * @return {Collection}
    */
-  takeUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
+  public takeUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
     let previous: boolean | null = null
 
     const callback = isFunction(value)
@@ -1223,7 +1225,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object|Function} value
    * @return {Collection}
    */
-  takeWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
+  public takeWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
     let previous: boolean | null = null
 
     const callback = isFunction(value)
@@ -1249,7 +1251,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {this}
    */
-  tap(callback: (collection: Collection<Item>) => void): this {
+  public tap(callback: (collection: Collection<Item>) => void): this {
     callback(this)
 
     return this
@@ -1262,7 +1264,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @return {Collection}
    */
-  times<T extends Item>(
+  public times<T extends Item>(
     times: number,
     callback: (time: number) => T
   ): Collection<T> {
@@ -1278,7 +1280,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @return {Object[]}
    */
-  toArray(): Item[] {
+  public toArray(): Item[] {
     return clone(this.items)
   }
 
@@ -1287,7 +1289,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @return {string}
    */
-  toJson(): string {
+  public toJson(): string {
     return JSON.stringify(this)
   }
 
@@ -1295,7 +1297,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The transform method iterates over the collection and calls the given callback with each item in the collection.
    * The items in the collection will be replaced by the values returned by the callback.
    */
-  transform<T extends ItemData>(fn: (item: Item) => T): Collection<T> {
+  public transform<T extends ItemData>(fn: (item: Item) => T): Collection<T> {
     this.items = this.items.map(fn) as this
     return this as Collection<T>
   }
@@ -1306,7 +1308,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]|Function} key
    * @return {Collection}
    */
-  unique<K extends KeyVariadic>(
+  public unique<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => Key)
   ): Collection<Item> {
     const collection = []
@@ -1341,7 +1343,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} callback
    * @param {Function} [defaultCallback]
    */
-  unless<V>(
+  public unless<V>(
     value: V,
     callback: (collection: this, value: boolean) => void,
     defaultCallback?: (collection: this, value: boolean) => void
@@ -1356,7 +1358,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} [defaultCallback]
    * @return {this}
    */
-  unlessEmpty(
+  public unlessEmpty(
     callback: (collection: this, value: boolean) => void,
     defaultCallback?: (collection: this, value: boolean) => void
   ): this {
@@ -1370,7 +1372,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} [defaultCallback]
    * @return {this}
    */
-  unlessNotEmpty(
+  public unlessNotEmpty(
     callback: (collection: this, value: boolean) => void,
     defaultCallback?: (collection: this, value: boolean) => void
   ): this {
@@ -1383,7 +1385,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object[]|Collection} value
    * @return {Object[]}
    */
-  unwrap<T extends ItemData>(value: T[] | Collection<T>): T[] {
+  public unwrap<T extends ItemData>(value: T[] | Collection<T>): T[] {
     if (value instanceof this.constructor) {
       return (value as Collection<T>).toArray()
     }
@@ -1399,7 +1401,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} [defaultCallback]
    * @return {this}
    */
-  when<V>(
+  public when<V>(
     value: V,
     callback: (collection: this, value: V) => void,
     defaultCallback?: (collection: this, value: V) => void
@@ -1420,7 +1422,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} [defaultCallback]
    * @return {this}
    */
-  whenEmpty(
+  public whenEmpty(
     callback: (collection: this, value: boolean) => void,
     defaultCallback?: (collection: this, value: boolean) => void
   ): this {
@@ -1434,7 +1436,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Function} [defaultCallback]
    * @return {this}
    */
-  whenNotEmpty(
+  public whenNotEmpty(
     callback: (collection: this, value: boolean) => void,
     defaultCallback?: (collection: this, value: boolean) => void
   ): this {
@@ -1538,7 +1540,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereBetween<K extends KeyVariadic>(
+  public whereBetween<K extends KeyVariadic>(
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
@@ -1556,7 +1558,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereIn<K extends KeyVariadic>(
+  public whereIn<K extends KeyVariadic>(
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
@@ -1574,7 +1576,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereNotBetween<K extends KeyVariadic>(
+  public whereNotBetween<K extends KeyVariadic>(
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
@@ -1594,7 +1596,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereNotIn<K extends KeyVariadic>(
+  public whereNotIn<K extends KeyVariadic>(
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
@@ -1611,7 +1613,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {Collection}
    */
-  whereNotNull<K extends KeyVariadic>(key: keyof Item | K): Collection<Item> {
+  public whereNotNull<K extends KeyVariadic>(
+    key: keyof Item | K
+  ): Collection<Item> {
     return this.where(key, '!==', null)
   }
 
@@ -1621,7 +1625,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string|string[]} key
    * @return {Collection}
    */
-  whereNull<K extends KeyVariadic>(key: keyof Item | K): Collection<Item> {
+  public whereNull<K extends KeyVariadic>(
+    key: keyof Item | K
+  ): Collection<Item> {
     return this.where(key, '===', null)
   }
 
@@ -1631,7 +1637,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {Object[]|Collection} collection
    * @return {Collection}
    */
-  wrap<T extends ItemData>(collection: T[] | Collection<T>): Collection<T>
+  public wrap<T extends ItemData>(
+    collection: T[] | Collection<T>
+  ): Collection<T>
 
   /**
    * The wrap method will wrap the given value in a collection.
@@ -1639,7 +1647,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {...Object[]} items
    * @return {Collection}
    */
-  wrap<T extends ItemData>(...items: T[]): Collection<T>
+  public wrap<T extends ItemData>(...items: T[]): Collection<T>
 
   /**
    * The wrap method will wrap the given value in a collection.
@@ -1647,7 +1655,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {...Object[]|[Object[]]|[Collection]} collection
    * @return {Collection}
    */
-  wrap<T extends ItemData>(
+  public wrap<T extends ItemData>(
     ...collection: T[] | [T[]] | [Collection<T>]
   ): Collection<T> {
     const _collection = variadic(collection)
