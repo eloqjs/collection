@@ -1406,9 +1406,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereBetween<K extends KeyVariadic, V>(
+  whereBetween<K extends KeyVariadic>(
     key: keyof Item | K,
-    values: V[]
+    values: unknown[]
   ): Collection<Item> {
     return this.where(key, '>=', values[0]).where(
       key,
@@ -1424,12 +1424,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereIn<K extends KeyVariadic, V>(
+  whereIn<K extends KeyVariadic>(
     key: keyof Item | K,
-    values: V[]
+    values: unknown[]
   ): Collection<Item> {
     const collection = this.items.filter(
-      (item) => values.indexOf(getProp(item, key as KeyVariadic) as V) !== -1
+      (item) => values.indexOf(getProp(item, key as KeyVariadic)) !== -1
     )
 
     return this.newInstance<Item>(collection)
@@ -1442,14 +1442,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereNotBetween<K extends KeyVariadic, V>(
+  whereNotBetween<K extends KeyVariadic>(
     key: keyof Item | K,
-    values: V[]
+    values: unknown[]
   ): Collection<Item> {
     const collection = this.filter(
       (item) =>
-        (getProp(item, key as KeyVariadic) as never) < values[0] ||
-        (getProp(item, key as KeyVariadic) as never) > values[values.length - 1]
+        (getProp(item, key as KeyVariadic) as never) < (values[0] as never) ||
+        (getProp(item, key as KeyVariadic) as never) >
+          (values[values.length - 1] as never)
     )
     return this.newInstance<Item>(collection)
   }
@@ -1461,12 +1462,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {unknown[]} values
    * @return {Collection}
    */
-  whereNotIn<K extends KeyVariadic, V>(
+  whereNotIn<K extends KeyVariadic>(
     key: keyof Item | K,
-    values: V[]
+    values: unknown[]
   ): Collection<Item> {
     const collection = this.items.filter(
-      (item) => values.indexOf(getProp(item, key as KeyVariadic) as V) === -1
+      (item) => values.indexOf(getProp(item, key as KeyVariadic)) === -1
     )
 
     return this.newInstance<Item>(collection)
