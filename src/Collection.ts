@@ -195,24 +195,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The diff method compares the collection against another collection or a plain array based on its values.
    * This method will return the values in the original collection that are not present in the given collection.
    *
-   * @param {Collection} values
-   * @param {string} key
+   * @param {Collection} collection
    * @return {Collection}
    */
-  public diff<K extends Key>(
-    values: this,
-    key: keyof Item | K = this.primaryKey()
-  ): Collection<Item> {
-    const collection = this.items.filter((item) => {
-      return (
-        values.findIndex((value) => {
-          const _key = key.toString()
-          return value[_key] === item[_key]
-        }) === -1
-      )
-    })
+  public diff(collection: Collection<Item>): Collection<Item> {
+    const dictionary = this.getDictionary(collection)
+    const _collection = this.items.filter(
+      (item) => !dictionary[this.getPrimaryKey(item)]
+    )
 
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(_collection)
   }
 
   /**
