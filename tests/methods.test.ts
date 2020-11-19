@@ -49,6 +49,17 @@ describe('Protected Methods', () => {
       expect(collection.newQuery(user)).toEqual(user)
     })
   })
+
+  describe('getFresh()', () => {
+    it('should  return a dictionary of the given items keyed by primary keys when not overridden', () => {
+      const user = { id: 1, name: 'Joe Doe' }
+      const collection = collect([user])
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      expect(collection.getFresh([])).toEqual({ '1': user })
+    })
+  })
 })
 
 describe('Public Methods', () => {
@@ -680,6 +691,28 @@ describe('Public Methods', () => {
 
       expect(forget).toEqual([{ id: 1 }, { id: 2 }, { id: 4 }, { id: 5 }])
       expect(collection).toEqual([{ id: 1 }, { id: 2 }, { id: 4 }, { id: 5 }])
+    })
+  })
+
+  describe('fresh()', () => {
+    it('should return a fresh item instance for all the items.', () => {
+      const products = [
+        { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
+        { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
+        { id: 3, product: 'Bookcase', price: 150, manufacturer: 'IKEA' },
+        { id: 4, product: 'Table', price: 150, manufacturer: 'IKEA' },
+        { id: 5, product: 'Bed', price: 200, manufacturer: 'Herman Miller' }
+      ]
+
+      const collection = collect(products)
+
+      expect(collection.fresh()).toEqual(products)
+    })
+
+    it('should return itself when collection is empty', () => {
+      const collection = collect()
+
+      expect(collection.fresh()).toEqual(collection)
     })
   })
 

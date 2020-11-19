@@ -434,6 +434,30 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The fresh method reloads a fresh item instance from the database for all the items.
+   *
+   * @param {...*} include
+   * @return this
+   */
+  public fresh(...include: string[] | [string[]]): this {
+    const _include = variadic(include)
+
+    if (this.isEmpty()) {
+      return this
+    }
+
+    const freshItems = this.getFresh(_include)
+
+    return this.map((item) => {
+      const freshItem = freshItems[this.getPrimaryKey(item)]
+
+      if (!!item[this.primaryKey()] && !!freshItem) {
+        return freshItem
+      }
+    }) as this
+  }
+
+  /**
    * The get method returns the item at a given key. If the key does not exist, null is returned.
    *
    * @param {number} index
@@ -1765,5 +1789,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   protected newQuery(item: Item): Item {
     return item
+  }
+
+  /**
+   * Get fresh items.
+   *
+   * @param {string[]} include
+   * @return {Object}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected getFresh(include: string[]): Record<string, Item> {
+    return this.getDictionary()
   }
 }
