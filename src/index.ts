@@ -17,3 +17,4 @@ function collect<
 
 export default collect
 export { collect, Collection }
+export * from './types'
