@@ -1323,6 +1323,29 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The toQuery method converts the collection into a Query Builder.
+   *
+   * @return {Object}
+   */
+  public toQuery(): Item {
+    const item = this.first()
+
+    if (!item) {
+      throw new Error('Unable to create query for empty collection.')
+    }
+
+    const isMixed = (this.filter((_item) => {
+      return !(_item instanceof item.constructor)
+    }) as Collection<Item>).isNotEmpty()
+
+    if (isMixed) {
+      throw new Error('Unable to create query for collection with mixed types.')
+    }
+
+    return this.newQuery(item)
+  }
+
+  /**
    * The transform method iterates over the collection and calls the given callback with each item in the collection.
    * The items in the collection will be replaced by the values returned by the callback.
    */
@@ -1732,5 +1755,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()] as string | number
+  }
+
+  /**
+   * Creates a new query from item.
+   *
+   * @param {Object} item
+   * @return {Object}
+   */
+  protected newQuery(item: Item): Item {
+    return item
   }
 }
