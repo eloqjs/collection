@@ -463,6 +463,23 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The getDictionary method returns a dictionary keyed by primary keys.
+   *
+   * @param {Collection} [collection]
+   * @return {Object}
+   */
+  public getDictionary(collection?: Collection<Item>): Record<string, Item> {
+    const items = collection || this.items
+    const dictionary = {}
+
+    for (const item of items) {
+      dictionary[this.getPrimaryKey(item)] = item
+    }
+
+    return dictionary
+  }
+
+  /**
    * The groupBy method groups the collection's items by a given key.
    *
    * @param {Function|string} key
