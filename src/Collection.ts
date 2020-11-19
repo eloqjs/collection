@@ -132,7 +132,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param [value]
    * @return {boolean}
    */
-  public contains<V, K extends Key>(
+  public contains<V, K extends KeyVariadic>(
     key: keyof Item | K | Item | ((item: Item, index: number) => unknown),
     value?: V
   ): boolean {
@@ -140,18 +140,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this.items.filter((item, index) => key(item, index)).length > 0
     }
 
-    if (isString(key)) {
-      if (value) {
-        return (
-          this.items.filter((items) => !!items[key] && items[key] === value)
-            .length > 0
-        )
-      }
-
-      return false
+    if (isObject(key)) {
+      return this.findIndexBy(key as Item) !== -1
     }
 
-    return this.findIndexBy(key as Item) !== -1
+    if (value) {
+      return this.findIndexBy(value, key as KeyVariadic) !== -1
+    }
+
+    return false
   }
 
   /**
