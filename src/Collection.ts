@@ -518,19 +518,16 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * that are not present in the given array or collection.
    * The resulting collection will preserve the original collection's keys.
    *
-   * @param {Collection} values
-   * @param {string} key
+   * @param {Collection} collection
    * @return {Collection}
    */
-  public intersect<K extends Key>(
-    values: this,
-    key: keyof Item | K = this.primaryKey()
-  ): Collection<Item> {
-    const collection = this.items.filter((item) => {
-      return values.findIndexBy(item, key.toString()) !== -1
-    })
+  public intersect(collection: Collection<Item>): Collection<Item> {
+    const dictionary = this.getDictionary(collection)
+    const _collection = this.items.filter(
+      (item) => !!dictionary[this.getPrimaryKey(item)]
+    )
 
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(_collection)
   }
 
   /**
