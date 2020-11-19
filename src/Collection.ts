@@ -1328,35 +1328,39 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   /**
    * The unique method returns all of the unique items in the collection.
    *
-   * @param {string|string[]|Function} key
+   * @param {string|string[]|Function} [key]
    * @return {Collection}
    */
   public unique<K extends KeyVariadic>(
-    key: keyof Item | K | ((item: Item) => Key)
+    key?: keyof Item | K | ((item: Item) => Key)
   ): Collection<Item> {
-    const collection = []
-    const usedKeys: Key[] = []
+    if (key) {
+      const collection = []
+      const usedKeys: Key[] = []
 
-    for (
-      let iterator = 0, { length } = this.items;
-      iterator < length;
-      iterator += 1
-    ) {
-      let uniqueKey: Key
+      for (
+        let iterator = 0, { length } = this.items;
+        iterator < length;
+        iterator += 1
+      ) {
+        let uniqueKey: Key
 
-      if (isFunction(key)) {
-        uniqueKey = key(this.items[iterator])
-      } else {
-        uniqueKey = getProp(this.items[iterator], key as KeyVariadic) as Key
+        if (isFunction(key)) {
+          uniqueKey = key(this.items[iterator])
+        } else {
+          uniqueKey = getProp(this.items[iterator], key as KeyVariadic) as Key
+        }
+
+        if (usedKeys.indexOf(uniqueKey) === -1) {
+          collection.push(this.items[iterator])
+          usedKeys.push(uniqueKey)
+        }
       }
 
-      if (usedKeys.indexOf(uniqueKey) === -1) {
-        collection.push(this.items[iterator])
-        usedKeys.push(uniqueKey)
-      }
+      return this.newInstance<Item>(collection)
     }
 
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(Object.values(this.getDictionary()))
   }
 
   /**
