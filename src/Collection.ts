@@ -151,11 +151,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return false
     }
 
-    return (
-      this.items.findIndex((item) => {
-        return item[this.primaryKey()] === key[this.primaryKey()]
-      }) !== -1
-    )
+    return this.findIndexBy(key as Item) !== -1
   }
 
   /**
@@ -346,6 +342,27 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The findIndexBy method finds an index based on value of the given key, and returns -1 when not found.
+   * The primary key will be used by default.
+   *
+   * @param {unknown} value
+   * @param {string|string[]} [key=primaryKey]
+   * @return {number}
+   */
+  public findIndexBy<V>(
+    value: Item | V,
+    key: KeyVariadic = this.primaryKey()
+  ): number {
+    return this.findIndex((item) => {
+      const _value = isObject(value)
+        ? getProp(value as Item, key)
+        : (value as V)
+
+      return getProp(item, key) === _value
+    })
+  }
+
+  /**
    * The first method returns the first element in the collection that passes a given truth test.
    *
    * @param {Function} callback
@@ -493,12 +510,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K = this.primaryKey()
   ): Collection<Item> {
     const collection = this.items.filter((item) => {
-      return (
-        values.findIndex((value) => {
-          const _key = key.toString()
-          return value[_key] === item[_key]
-        }) !== -1
-      )
+      return values.findIndexBy(item, key.toString()) !== -1
     })
 
     return this.newInstance<Item>(collection)
@@ -914,10 +926,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     let item: ItemOrDefault<Item, D> = this.find(primaryKey)
 
     if (item) {
-      const index = this.items.findIndex(
-        (_item) =>
-          _item[this.primaryKey()] === (item as Item)[this.primaryKey()]
-      )
+      const index = this.findIndexBy(item as Item)
 
       if (index !== -1) {
         this.items.splice(index, 1)
@@ -936,9 +945,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {this}
    */
   public put(item: Item): this {
-    const index = this.items.findIndex(
-      (_item) => _item[this.primaryKey()] === item[this.primaryKey()]
-    )
+    const index = this.findIndexBy(item)
 
     if (index !== -1) {
       this.items.splice(index, 1, item)
