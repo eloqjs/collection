@@ -765,6 +765,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
+   * The modelKeys method returns an array of primary keys.
+   *
+   * @return {string[]|number[]}
+   */
+  public modelKeys(): (string | number)[] {
+    return this.items.map((item) => this.getPrimaryKey(item))
+  }
+
+  /**
    * The nth method creates a new collection consisting of every n-th element.
    *
    * @param {number} step
