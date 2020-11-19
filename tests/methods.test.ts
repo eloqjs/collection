@@ -1802,22 +1802,25 @@ describe('Public Methods', () => {
   describe('pull()', () => {
     const players = [
       {
+        id: 1,
         firstname: 'John',
         lastname: 'Doe'
       },
       {
+        id: 2,
         firstname: 'Joe',
         lastname: 'Doe'
       }
     ]
 
-    it('should return the item at a given key and remove it from the collection', () => {
+    it('should return the item at a given primary key and remove it from the collection', () => {
       const a = collect(players)
       const b = collect(players)
 
-      expect(a.pull(0)?.firstname).toEqual('John')
+      expect(a.pull(1)?.firstname).toEqual('John')
       expect(a).toEqual([
         {
+          id: 2,
           firstname: 'Joe',
           lastname: 'Doe'
         }
@@ -1825,37 +1828,37 @@ describe('Public Methods', () => {
       expect(b).toEqual(players)
     })
 
-    it('should return null if the key does not exist', () => {
+    it('should return null if the item does not exist', () => {
       const collection = collect(players)
-      expect(collection.pull(2)).toBeNull()
+      expect(collection.pull(3)).toBeNull()
     })
   })
 
   describe('put()', () => {
     const data = [
-      { name: 'Alex Doe' },
-      { name: 'Joe Doe' },
-      { name: 'John Doe' }
+      { id: 1, name: 'Alex Doe' },
+      { id: 2, name: 'Joe Doe' },
+      { id: 3, name: 'John Doe' }
     ]
 
-    it('should set the given key and value in the collection', () => {
+    it('should override an item in the collection when the primary key matches any existing item', () => {
       const collection = collect(data)
-      const modified = collection.put({ name: 'Mary Doe' }, 1)
+      const modified = collection.put({ id: 2, name: 'Mary Doe' })
 
       expect(collection).toEqual(modified)
       expect(collection).toEqual([
-        { name: 'Alex Doe' },
-        { name: 'Mary Doe' },
-        { name: 'John Doe' }
+        { id: 1, name: 'Alex Doe' },
+        { id: 2, name: 'Mary Doe' },
+        { id: 3, name: 'John Doe' }
       ])
     })
 
-    it('should push the value into the collection if key was not provided', () => {
+    it('should push the item into the collection when the primary key does not match any existing item', () => {
       const collection = collect(data)
-      const modified = collection.put({ name: 'Mary Doe' })
+      const modified = collection.put({ id: 4, name: 'Mary Doe' })
 
       expect(collection).toEqual(modified)
-      expect(collection).toEqual([...data, { name: 'Mary Doe' }])
+      expect(collection).toEqual([...data, { id: 4, name: 'Mary Doe' }])
     })
   })
 

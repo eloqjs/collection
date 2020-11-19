@@ -901,36 +901,46 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   /**
-   * The pull method removes and returns an item from the collection by its key.
+   * The pull method removes and returns an item from the collection by its primary key.
    *
-   * @param {number} index
+   * @param {string|number} primaryKey
    * @param {unknown} defaultValue
    * @return {Object|null}
    */
   public pull<D = null>(
-    index: number,
+    primaryKey: string | number,
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
-    let returnValue: ItemOrDefault<Item, D> = this.items[index] || null
+    let item: ItemOrDefault<Item, D> = this.find(primaryKey)
 
-    if (!returnValue && defaultValue !== undefined) {
-      returnValue = getValue(defaultValue)
+    if (item) {
+      const index = this.items.findIndex(
+        (_item) =>
+          _item[this.primaryKey()] === (item as Item)[this.primaryKey()]
+      )
+
+      if (index !== -1) {
+        this.items.splice(index, 1)
+      }
+    } else if (defaultValue !== undefined) {
+      item = getValue(defaultValue)
     }
 
-    this.items.splice(index, 1)
-
-    return returnValue
+    return item
   }
 
   /**
-   * The put method sets the given key and value in the collection.
+   * The put method sets or overrides an item in the collection based on its primary key.
    *
    * @param {Object} item
-   * @param {number} [index]
    * @return {this}
    */
-  public put(item: Item, index?: number): this {
-    if (index !== undefined) {
+  public put(item: Item): this {
+    const index = this.items.findIndex(
+      (_item) => _item[this.primaryKey()] === item[this.primaryKey()]
+    )
+
+    if (index !== -1) {
       this.items.splice(index, 1, item)
     } else {
       this.items.push(item)
