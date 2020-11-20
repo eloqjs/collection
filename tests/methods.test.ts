@@ -1562,10 +1562,14 @@ describe('Public Methods', () => {
 
   describe('pipeInto()', () => {
     class ResourceCollection {
-      public collection: { name: string }[]
+      public collection: Collection<{ name: string }>
 
-      constructor(collection: { name: string }[]) {
+      constructor(collection: Collection<{ name: string }>) {
         this.collection = collection
+      }
+
+      doSomething() {
+        return this.collection.first()
       }
     }
 
@@ -1576,6 +1580,7 @@ describe('Public Methods', () => {
 
       expect(data).toBeInstanceOf(ResourceCollection)
       expect(data.collection).toEqual(collection)
+      expect(data.doSomething()).toEqual({ name: 'Firmino' })
     })
   })
 
