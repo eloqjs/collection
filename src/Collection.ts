@@ -11,6 +11,7 @@ import {
   variadic
 } from './helpers'
 import type {
+  ClassCollection,
   ClassConstructor,
   Constructor,
   DefaultValue,
@@ -20,7 +21,6 @@ import type {
   KeyVariadic,
   Operator
 } from './types'
-import { ClassCollection } from './types'
 
 export default class Collection<Item extends ItemData = ItemData> extends Array<
   Item
