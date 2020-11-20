@@ -1,0 +1,16 @@
+{
+  "version": "2",
+  "checks": {
+    "file-lines": {
+      "enabled": false
+    },
+    "method-count": {
+      "enabled": false
+    },
+    "similar-code": {
+      "config": {
+        "threshold": 100
+      }
+    }
+  }
+}
