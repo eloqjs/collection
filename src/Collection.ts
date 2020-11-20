@@ -481,7 +481,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this
     }
 
-    const freshItems = this.getFresh(_include)
+    const freshItems = this.wrap<Item>(
+      Collection.getFresh({ collection: this, include: _include })
+    ).getDictionary()
 
     return this.map((item) => {
       const freshItem = freshItems[this.getPrimaryKey(item)]
@@ -1403,7 +1405,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       throw new Error('Unable to create query for collection with mixed types.')
     }
 
-    return this.newQuery(item)
+    return Collection.newQuery({ collection: this, item })
   }
 
   /**
@@ -1817,28 +1819,5 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()] as string | number
-  }
-
-  /**
-   * Creates a new query from item.
-   *
-   * @param {Object} item
-   * @return {Object}
-   */
-  protected newQuery(item: Item): Item {
-    return Collection.newQuery({ collection: this, item })
-  }
-
-  /**
-   * Get fresh items.
-   *
-   * @param {string[]} include
-   * @return {Object}
-   */
-  protected getFresh(include: string[]): Record<string, Item> {
-    const collection = this.wrap<Item>(
-      Collection.getFresh({ collection: this, include })
-    )
-    return collection.getDictionary()
   }
 }

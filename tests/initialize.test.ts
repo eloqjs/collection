@@ -88,28 +88,10 @@ describe('Initialize Collection', () => {
         },
         { id: 4, slug: 'my-incredible-post', title: 'My Incredible Post' }
       ])
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.newQuery()).toEqual({
+      expect(collection.toQuery()).toEqual({
         id: 3,
         slug: 'my-incredible-post',
         title: 'My Incredible Post'
-      })
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.getFresh()).toEqual({
-        'my-awesome-post': {
-          id: 1,
-          slug: 'my-awesome-post',
-          title: 'My Awesome Post'
-        },
-        'my-super-awesome-post': {
-          id: 2,
-          slug: 'my-super-awesome-post',
-          title: 'My Super Awesome Post'
-        }
       })
     })
   })

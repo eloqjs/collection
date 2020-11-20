@@ -38,28 +38,6 @@ describe('Protected Methods', () => {
       expect(collection.getPrimaryKey(collection.first())).toBe(1)
     })
   })
-
-  describe('newQuery()', () => {
-    it('should return the item when not overridden', () => {
-      const user = { id: 1, name: 'Joe Doe' }
-      const collection = collect([user])
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.newQuery(user)).toEqual(user)
-    })
-  })
-
-  describe('getFresh()', () => {
-    it('should  return a dictionary of the given items keyed by primary keys when not overridden', () => {
-      const user = { id: 1, name: 'Joe Doe' }
-      const collection = collect([user])
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.getFresh([])).toEqual({ '1': user })
-    })
-  })
 })
 
 describe('Public Methods', () => {
@@ -2608,7 +2586,7 @@ describe('Public Methods', () => {
   })
 
   describe('toQuery()', () => {
-    it('should return the first item when not overridden', () => {
+    it('should return the first item in collection when getFresh() is not overridden', () => {
       const user = { id: 1, name: 'Joe Doe' }
       const collection = collect([user])
 
