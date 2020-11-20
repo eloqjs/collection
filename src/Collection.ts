@@ -49,6 +49,37 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     this.splice(0, this.length, ...collection)
   }
 
+  public static primaryKey<T extends ItemData>({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    collection
+  }: {
+    collection: Collection<T>
+  }): string {
+    return 'id'
+  }
+
+  public static newQuery<T extends ItemData>({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    collection,
+    item
+  }: {
+    collection: Collection<T>
+    item: T
+  }): T {
+    return item
+  }
+
+  public static getFresh<T extends ItemData>({
+    collection,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    include
+  }: {
+    collection: Collection<T>
+    include: string[]
+  }): T[] | Collection<T> {
+    return collection.items
+  }
+
   /**
    * Alias for the avg() method.
    *
@@ -123,6 +154,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   public contains(
     item: Item | ((item: Item, index: number) => boolean)
   ): boolean
+
   public contains<V, K extends Key>(key: keyof Item | K, value: V): boolean
 
   /**
@@ -271,6 +303,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: string | number | Item,
     defaultValue?: DefaultValue<D>
   ): ItemOrDefault<Item, D>
+
   public find<S extends Item>(
     predicate: (
       this: void,
@@ -280,6 +313,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     ) => value is S,
     thisArg?: unknown
   ): S | undefined
+
   public find(
     predicate: (value: Item, index: number, obj: Item[]) => unknown,
     thisArg?: unknown
@@ -384,6 +418,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     value?: V
   ): Item | null
+
   public firstWhere<V extends unknown, K extends Key>(
     key: keyof Item | K,
     operator: Operator,
@@ -868,6 +903,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   public pluck<V extends Key>(value: keyof Item | V): unknown[]
+
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key: keyof Item | K
@@ -993,6 +1029,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   }
 
   public random(): Item | null
+
   public random(length: number): Collection<Item>
 
   /**
@@ -1527,6 +1564,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     value?: V
   ): Collection<Item>
+
   public where<K extends KeyVariadic, V extends unknown>(
     key: keyof Item | K,
     operator: Operator,
@@ -1768,7 +1806,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {string}
    */
   protected primaryKey(): string {
-    return 'id'
+    return Collection.primaryKey<Item>({ collection: this })
   }
 
   /**
@@ -1788,7 +1826,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Object}
    */
   protected newQuery(item: Item): Item {
-    return item
+    return Collection.newQuery({ collection: this, item })
   }
 
   /**
@@ -1797,8 +1835,10 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @param {string[]} include
    * @return {Object}
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getFresh(include: string[]): Record<string, Item> {
-    return this.getDictionary()
+    const collection = this.wrap<Item>(
+      Collection.getFresh({ collection: this, include })
+    )
+    return collection.getDictionary()
   }
 }
