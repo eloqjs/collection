@@ -1128,19 +1128,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public skipUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== true) {
-        previous = callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, true, false)
 
     return this.newInstance<Item>(items)
   }
@@ -1154,19 +1142,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public skipWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== true) {
-        previous = !callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, true, true)
 
     return this.newInstance<Item>(items)
   }
@@ -1294,19 +1270,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public takeUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== false) {
-        previous = !callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, false, true)
 
     return this.newInstance<Item>(items)
   }
@@ -1318,19 +1282,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public takeWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== false) {
-        previous = callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, false, false)
 
     return this.newInstance<Item>(items)
   }
@@ -1819,5 +1771,34 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()] as string | number
+  }
+
+  /**
+   * The filterUntil method filters the items until callback respond with the value determined by response argument.
+   *
+   * @param {Object|Function} itemOrCallback
+   * @param {boolean} response - Filter until callback respond with the determined value.
+   * @param {boolean} negateCallback - Negate the callback response.
+   * @return {Object[]}
+   */
+  private filterUntil(
+    itemOrCallback: Item | ((item: Item) => boolean),
+    response: boolean,
+    negateCallback: boolean
+  ): Collection<Item> {
+    let previous: boolean | null = null
+
+    const callback = isFunction(itemOrCallback)
+      ? itemOrCallback
+      : (item: Item) =>
+          item[this.primaryKey()] === itemOrCallback[this.primaryKey()]
+
+    return this.items.filter((item) => {
+      if (previous !== response) {
+        previous = negateCallback ? !callback(item) : callback(item)
+      }
+
+      return previous
+    }) as Collection<Item>
   }
 }
