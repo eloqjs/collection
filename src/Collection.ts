@@ -30,9 +30,9 @@ import type {
   Operator
 } from './types'
 
-export default class Collection<Item extends ItemData = ItemData> extends Array<
-  Item
-> {
+export default class Collection<
+  Item extends ItemData = ItemData
+> extends Array<Item> {
   constructor(collection: Item[])
   constructor(...items: Item[])
   constructor(...collection: Item[] | [Item[]]) {
