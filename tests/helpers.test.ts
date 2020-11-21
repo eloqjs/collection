@@ -9,6 +9,7 @@ import {
   isString
 } from '../src/helpers/is'
 import resolveValue from '../src/helpers/resolveValue'
+import { sortGreaterOrLessThan, sortNullish } from '../src/helpers/sort'
 import variadic from '../src/helpers/variadic'
 import { compareValues, whereHasValues } from '../src/helpers/where'
 
@@ -226,6 +227,36 @@ describe('Helpers', () => {
         { id: 3, product: 'Bookcase', price: 150 },
         { id: 4, product: 'Door', price: 100 }
       ])
+    })
+  })
+
+  describe('sortNullish()', () => {
+    it('should return 0 when values are defined', () => {
+      expect(sortNullish(1, 2)).toBe(0)
+    })
+
+    it('should return 1 when valueA is undefined or null', () => {
+      expect(sortNullish(undefined, 2)).toBe(1)
+      expect(sortNullish(null, 2)).toBe(1)
+    })
+
+    it('should return -1 when valueB is undefined or null', () => {
+      expect(sortNullish(1, undefined)).toBe(-1)
+      expect(sortNullish(1, null)).toBe(-1)
+    })
+  })
+
+  describe('sortGreaterOrLessThan()', () => {
+    it('should return 0 when valueA and valueB are equal', () => {
+      expect(sortGreaterOrLessThan(1, 1)).toBe(0)
+    })
+
+    it('should return -1 when valueB is greater than valueA', () => {
+      expect(sortGreaterOrLessThan(1, 2)).toBe(-1)
+    })
+
+    it('should return 1 when valueA is greater than valueB', () => {
+      expect(sortGreaterOrLessThan(2, 1)).toBe(1)
     })
   })
 })
