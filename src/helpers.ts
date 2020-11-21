@@ -49,11 +49,15 @@ export function getProp(
 /**
  * Variadic helper function.
  *
- * @param args
+ * @param {unknown[]} args
+ * @param {number} length
  * @return {*}
  */
-export function variadic<T>(args: T[] | [T[]]): T[] {
-  if (Array.isArray(args[0])) {
+export function variadic<T>(
+  args: T[] | [T[]],
+  length: number = args.length
+): T[] {
+  if (Array.isArray(args[0]) && args.length === length) {
     return args[0]
   }
 
