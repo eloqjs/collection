@@ -333,23 +333,18 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return super.find(keyOrPredicate, defaultValueOrThisArg)
     }
 
-    let key = keyOrPredicate
     const defaultValue = defaultValueOrThisArg || null
 
-    if (isObject(key)) {
-      key = this.getPrimaryKey(key)
-    }
-
-    if (isArray(key)) {
+    if (isArray(keyOrPredicate)) {
       if (this.isEmpty()) {
         return this
       }
 
-      return this.whereIn(this.primaryKey(), key)
+      return this.whereIn(this.primaryKey(), keyOrPredicate)
     }
 
     return (
-      this.first((item) => this.getPrimaryKey(item) === key) ||
+      this.first((item) => this.isItem(item, keyOrPredicate)) ||
       getValue(defaultValue)
     )
   }
@@ -1751,9 +1746,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const callback = isFunction(itemOrCallback)
       ? itemOrCallback
-      : (item: Item) =>
-          item[this.primaryKey()] === itemOrCallback[this.primaryKey()]
-
+      : (item: Item) => this.isItem(item, itemOrCallback)
     return this.items.filter((item) => {
       if (previous !== response) {
         previous = negateCallback ? !callback(item) : callback(item)
@@ -1761,5 +1754,19 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
       return previous
     }) as Collection<Item>
+  }
+
+  /**
+   * The isItem method compares the primary key of two items.
+   *
+   * @param {Object} item1
+   * @param {Object} item2
+   * @return {boolean}
+   */
+  private isItem<V>(item1: Item, item2: Item | V) {
+    return (
+      this.getPrimaryKey(item1) ===
+      (isObject(item2) ? this.getPrimaryKey(item2 as Item) : (item2 as V))
+    )
   }
 }
