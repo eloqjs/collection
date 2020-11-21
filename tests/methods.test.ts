@@ -3,44 +3,7 @@ import { collect, Collection } from '../src'
 // @ts-ignore
 import { hoax } from './utils'
 
-describe('Protected Methods', () => {
-  describe('newInstance()', () => {
-    it('should create a new instance of Collection', () => {
-      const array = [{ id: 1 }, { id: 2 }, { id: 3 }]
-      const collection = collect(array)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const newInstance = collection.newInstance(array)
-
-      expect(newInstance).toBeInstanceOf(Collection)
-      expect(newInstance).toEqual(collection)
-    })
-  })
-
-  describe('primaryKey()', () => {
-    it('should get the primary key for the item', () => {
-      const collection = collect()
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.primaryKey()).toBe('id')
-    })
-  })
-
-  describe('getPrimaryKey()', () => {
-    it("should get the value of the item's primary key", () => {
-      const array = [{ id: 1 }, { id: 2 }, { id: 3 }]
-      const collection = collect(array)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.getPrimaryKey(collection.first())).toBe(1)
-    })
-  })
-})
-
-describe('Public Methods', () => {
+describe('Methods', () => {
   const products = [
     { name: 'Chair', price: 600 },
     { name: 'Desk', price: 900 },
