@@ -621,17 +621,10 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): Record<Key, Item> {
     const collection: Record<Key, Item> = {}
 
-    if (isFunction(key)) {
-      this.items.forEach((item) => {
-        collection[key(item) as Key] = item
-      })
-    } else {
-      this.items.forEach((item) => {
-        const keyValue = (getProp(item, key as KeyVariadic) as Key) || ''
-
-        collection[keyValue] = item
-      })
-    }
+    this.items.forEach((item) => {
+      const _key: Key = (getValue(key, item) as Key) || ''
+      collection[_key] = item
+    })
 
     return collection
   }
@@ -1146,17 +1139,10 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     value: keyof Item | K | ((item: Item) => number)
   ): Collection<Item> {
     const collection = clone(this.items)
-    const getValue = (item: Item): number => {
-      if (isFunction(value)) {
-        return value(item)
-      }
-
-      return getProp(item, value as KeyVariadic) as number
-    }
 
     collection.sort((a, b) => {
-      const valueA = getValue(a)
-      const valueB = getValue(b)
+      const valueA = getValue(value, a) as number
+      const valueB = getValue(value, b) as number
 
       if (valueA === null || valueA === undefined) {
         return 1
@@ -1222,9 +1208,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     let total = 0
 
     for (const item of this.items) {
-      const value = isFunction(key)
-        ? key(item)
-        : (getProp(item, key as KeyVariadic) as string | number)
+      const value = getValue(key, item) as string | number
       total += isString(value) ? parseFloat(value) : value
     }
 
@@ -1362,27 +1346,17 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key?: keyof Item | K | ((item: Item) => Key)
   ): Collection<Item> {
     if (key) {
-      const collection = []
+      const collection: Item[] = []
       const usedKeys: Key[] = []
 
-      for (
-        let iterator = 0, { length } = this.items;
-        iterator < length;
-        iterator += 1
-      ) {
-        let uniqueKey: Key
-
-        if (isFunction(key)) {
-          uniqueKey = key(this.items[iterator])
-        } else {
-          uniqueKey = getProp(this.items[iterator], key as KeyVariadic) as Key
-        }
+      this.items.forEach((item) => {
+        const uniqueKey = getValue(key, item) as Key
 
         if (usedKeys.indexOf(uniqueKey) === -1) {
-          collection.push(this.items[iterator])
+          collection.push(item)
           usedKeys.push(uniqueKey)
         }
-      }
+      })
 
       return this.newInstance<Item>(collection)
     }
