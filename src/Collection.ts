@@ -1,8 +1,9 @@
 import {
   buildKeyPathMap,
   clone,
+  getDefaultValue,
   getProp,
-  getValue,
+  getValueFromItem,
   isArray,
   isFunction,
   isObject,
@@ -345,7 +346,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     return (
       this.first((item) => this.isItem(item, keyOrPredicate)) ||
-      getValue(defaultValue)
+      getDefaultValue(defaultValue)
     )
   }
 
@@ -391,7 +392,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this.items[0]
     }
 
-    return getValue(defaultValue)
+    return getDefaultValue(defaultValue)
   }
 
   public firstWhere<V extends unknown, K extends Key>(
@@ -489,7 +490,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this.items[index]
     }
 
-    return getValue(defaultValue)
+    return getDefaultValue(defaultValue)
   }
 
   /**
@@ -602,7 +603,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection: Record<Key, Item> = {}
 
     this.items.forEach((item) => {
-      const _key: Key = (getValue(key, item) as Key) || ''
+      const _key: Key = (getValueFromItem(item, key) as Key) || ''
       collection[_key] = item
     })
 
@@ -627,7 +628,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     }
 
     if (!items.length) {
-      return getValue(defaultValue)
+      return getDefaultValue(defaultValue)
     }
 
     return items[items.length - 1]
@@ -968,7 +969,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       }
     }
 
-    return item || getValue(defaultValue)
+    return item || getDefaultValue(defaultValue)
   }
 
   /**
@@ -1119,8 +1120,8 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = clone(this.items)
 
     collection.sort((a, b) => {
-      const valueA = getValue(value, a) as number
-      const valueB = getValue(value, b) as number
+      const valueA = getValueFromItem(a, value) as number
+      const valueB = getValueFromItem(b, value) as number
 
       if (valueA === null || valueA === undefined) {
         return 1
@@ -1186,7 +1187,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     let total = 0
 
     for (const item of this.items) {
-      const value = getValue(key, item) as string | number
+      const value = getValueFromItem(item, key) as string | number
       total += isString(value) ? parseFloat(value) : value
     }
 
@@ -1328,7 +1329,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       const usedKeys: Key[] = []
 
       this.items.forEach((item) => {
-        const uniqueKey = getValue(key, item) as Key
+        const uniqueKey = getValueFromItem(item, key) as Key
 
         if (usedKeys.indexOf(uniqueKey) === -1) {
           collection.push(item)
