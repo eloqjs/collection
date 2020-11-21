@@ -1,17 +1,16 @@
+import clone from '../src/helpers/clone'
+import getDefaultValue from '../src/helpers/getDefaultValue'
+import getProp from '../src/helpers/getProp'
+import getValueFromItem from '../src/helpers/getValueFromItem'
 import {
-  clone,
-  compareValues,
-  getDefaultValue,
-  getProp,
-  getValueFromItem,
   isArray,
   isFunction,
   isNumber,
   isObject,
-  isString,
-  variadic,
-  whereHasValues
-} from '../src/helpers'
+  isString
+} from '../src/helpers/is'
+import variadic from '../src/helpers/variadic'
+import { compareValues, whereHasValues } from '../src/helpers/where'
 
 describe('Helpers', () => {
   describe('clone()', () => {

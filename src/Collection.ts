@@ -1,19 +1,15 @@
+import clone from './helpers/clone'
+import getDefaultValue from './helpers/getDefaultValue'
+import getProp from './helpers/getProp'
+import getValueFromItem from './helpers/getValueFromItem'
+import { isArray, isFunction, isObject, isString } from './helpers/is'
 import {
-  clone,
-  compareValues,
-  getDefaultValue,
   getDictionaryFromKey,
   getDictionaryFromMatches,
-  getMatches,
-  getProp,
-  getValueFromItem,
-  isArray,
-  isFunction,
-  isObject,
-  isString,
-  variadic,
-  whereHasValues
-} from './helpers'
+  getMatches
+} from './helpers/pluck'
+import variadic from './helpers/variadic'
+import { compareValues, whereHasValues } from './helpers/where'
 import type {
   ClassCollection,
   ClassConstructor,
