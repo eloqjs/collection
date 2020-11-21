@@ -9,7 +9,8 @@ import {
   isNumber,
   isObject,
   isString,
-  variadic
+  variadic,
+  whereHasValues
 } from '../src/helpers'
 
 describe('Helpers', () => {
@@ -211,6 +212,23 @@ describe('Helpers', () => {
     it('should compare two values', () => {
       expect(compareValues(1, 1, '===')).toBeTruthy()
       expect(compareValues(1, 2, '===')).toBeFalsy()
+    })
+  })
+
+  describe('whereHasValues()', () => {
+    it('should return a filtered collection of items, where each item has the given values', () => {
+      const data = [
+        { id: 1, product: 'Desk', price: 200 },
+        { id: 2, product: 'Chair', price: 100 },
+        { id: 3, product: 'Bookcase', price: 150 },
+        { id: 4, product: 'Door', price: 100 }
+      ]
+
+      expect(whereHasValues(data, 'price', [100, 150])).toEqual([
+        { id: 2, product: 'Chair', price: 100 },
+        { id: 3, product: 'Bookcase', price: 150 },
+        { id: 4, product: 'Door', price: 100 }
+      ])
     })
   })
 })

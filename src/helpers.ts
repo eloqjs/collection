@@ -279,3 +279,24 @@ export function compareValues(
       return (value1 as never) >= (value2 as never)
   }
 }
+
+/**
+ * Return a filtered collection of items, where each item has the given values.
+ *
+ * @param {Collection} items
+ * @param {string|string[]} key
+ * @param {unknown[]} values
+ * @param {boolean} [negate]
+ * @return {boolean}
+ */
+export function whereHasValues<Item extends ItemData, K extends KeyVariadic>(
+  items: Item[],
+  key: keyof Item | K,
+  values: unknown[],
+  negate = false
+): Item[] {
+  return items.filter((item) => {
+    const hasItem = values.indexOf(getProp(item, key as KeyVariadic)) !== -1
+    return negate ? !hasItem : hasItem
+  })
+}

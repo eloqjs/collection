@@ -10,7 +10,8 @@ import {
   isObject,
   isString,
   matches,
-  variadic
+  variadic,
+  whereHasValues
 } from './helpers'
 import type {
   ClassCollection,
@@ -1528,11 +1529,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
-    const collection = this.items.filter(
-      (item) => values.indexOf(getProp(item, key as KeyVariadic)) !== -1
-    )
-
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(whereHasValues(this, key, values))
   }
 
   /**
@@ -1566,11 +1563,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
-    const collection = this.items.filter(
-      (item) => values.indexOf(getProp(item, key as KeyVariadic)) === -1
-    )
-
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(whereHasValues(this, key, values, true))
   }
 
   /**
