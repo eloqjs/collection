@@ -1471,33 +1471,30 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): Collection<Item> {
     let comparisonOperator = operator
     let comparisonValue = value
-
-    const items = this.items
+    let collection
 
     if (operator === undefined || operator === true) {
-      return this.newInstance<Item>(
-        items.filter((item) => getProp(item, key as KeyVariadic))
+      collection = this.items.filter((item) =>
+        getProp(item, key as KeyVariadic)
       )
-    }
-
-    if (operator === false) {
-      return this.newInstance<Item>(
-        items.filter((item) => !getProp(item, key as KeyVariadic))
+    } else if (operator === false) {
+      collection = this.items.filter(
+        (item) => !getProp(item, key as KeyVariadic)
       )
-    }
+    } else {
+      if (value === undefined) {
+        comparisonValue = operator as V
+        comparisonOperator = '==='
+      }
 
-    if (value === undefined) {
-      comparisonValue = operator as V
-      comparisonOperator = '==='
+      collection = this.items.filter((item) => {
+        return compareValues(
+          getProp(item, key as KeyVariadic),
+          comparisonValue as V,
+          comparisonOperator as Operator
+        )
+      })
     }
-
-    const collection = items.filter((item) => {
-      return compareValues(
-        getProp(item, key as KeyVariadic),
-        comparisonValue as V,
-        comparisonOperator as Operator
-      )
-    })
 
     return this.newInstance<Item>(collection)
   }
