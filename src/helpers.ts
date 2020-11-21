@@ -4,7 +4,7 @@
  * @param items
  * @return {[*]}
  */
-import { ExtractFunction, Key, KeyVariadic } from './types'
+import { ExtractFunction, ItemData, Key, KeyVariadic } from './types'
 
 export function clone<T extends unknown[]>(items: T): T {
   return [...items] as T
@@ -174,12 +174,27 @@ export function matches(
   return matches
 }
 
+export function getValue<V>(value: V | (() => V)): V
+
+export function getValue<Item extends ItemData, K extends KeyVariadic>(
+  value: keyof Item | K | ((item: Item) => unknown),
+  item: Item
+): unknown
+
 /**
  * Return the default value of the given value.
  *
  * @param {unknown} value
+ * @param {Object} [item]
  * @return {unknown}
  */
-export function getValue<V>(value: V | (() => V)): V {
-  return isFunction(value) ? value() : value
+export function getValue<V, Item extends ItemData, K extends KeyVariadic>(
+  value: keyof Item | K | V | ((item?: Item) => V | unknown),
+  item?: Item
+): V | unknown {
+  if (isFunction(value)) {
+    return value(item)
+  } else {
+    return item ? getProp(item, value as KeyVariadic) : (value as V)
+  }
 }
