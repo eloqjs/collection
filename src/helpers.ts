@@ -155,11 +155,11 @@ export function buildKeyPathMap(
  * @param {[]|Object} pathMap
  * @return {[]}
  */
-export function matches(
-  key: Key,
+export function matches<K extends Key>(
+  key: K,
   pathMap: unknown[] | Record<string, unknown>
-): unknown[] {
-  const matches: unknown[] = []
+): K[] {
+  const matches: K[] = []
   const regex = new RegExp(`0.${key}`, 'g')
   const numberOfLevels = `0.${key}`.split('.').length
 
