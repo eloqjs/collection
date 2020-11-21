@@ -8,6 +8,7 @@ import {
   getMatches
 } from './helpers/pluck'
 import resolveValue from './helpers/resolveValue'
+import { sortGreaterOrLessThan, sortNullish } from './helpers/sort'
 import variadic from './helpers/variadic'
 import { compareValues, whereHasValues } from './helpers/where'
 import type {
@@ -1072,24 +1073,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = clone(this.items)
 
     collection.sort((a, b) => {
-      const valueA = resolveValue(a, value) as number
-      const valueB = resolveValue(b, value) as number
+      const valueA = resolveValue(a, value) as string | number
+      const valueB = resolveValue(b, value) as string | number
 
-      if (valueA === null || valueA === undefined) {
-        return 1
-      }
-      if (valueB === null || valueB === undefined) {
-        return -1
-      }
-
-      if (valueA < valueB) {
-        return -1
-      }
-      if (valueA > valueB) {
-        return 1
-      }
-
-      return 0
+      return (
+        sortNullish(valueA, valueB) || sortGreaterOrLessThan(valueA, valueB)
+      )
     })
 
     return this.newInstance<Item>(collection)
