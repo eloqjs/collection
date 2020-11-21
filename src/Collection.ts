@@ -1,15 +1,16 @@
 import {
-  buildKeyPathMap,
   clone,
   compareValues,
   getDefaultValue,
+  getDictionaryFromKey,
+  getDictionaryFromMatches,
+  getMatches,
   getProp,
   getValueFromItem,
   isArray,
   isFunction,
   isObject,
   isString,
-  matches,
   variadic,
   whereHasValues
 } from './helpers'
@@ -875,39 +876,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key?: keyof Item | K
   ): unknown[] | Record<string, unknown> {
     if ((value as string).indexOf('*') !== -1) {
-      const keyPathMap = buildKeyPathMap(this.items)
-      const keyMatches: unknown[] = key
-        ? [...matches(key as Key, keyPathMap)]
-        : []
-      const valueMatches: unknown[] = [...matches(value as Key, keyPathMap)]
+      const [keyMatches, valueMatches]: [K[], V[]] = getMatches(
+        this.items,
+        value,
+        key
+      )
 
-      if (key) {
-        const collection = {}
-
-        this.items.forEach((item, index) => {
-          const _key: Key = (keyMatches[index] as Key) || ''
-          collection[_key] = valueMatches
-        })
-
-        return collection
-      }
-
-      return [valueMatches]
+      return key
+        ? getDictionaryFromMatches(this.items, keyMatches, valueMatches)
+        : [valueMatches]
     }
 
-    if (key) {
-      const collection = {}
-
-      this.items.forEach((item) => {
-        const _value = getProp(item, value as Key)
-        const _key = (item[key as Key] as Key) || ''
-        collection[_key] = _value ?? null
-      })
-
-      return collection
-    }
-
-    return clone(this.map((item) => getProp(item, value as Key) ?? null))
+    return key
+      ? getDictionaryFromKey(this.items, value, key)
+      : clone(this.map((item) => getProp(item, value as K) ?? null))
   }
 
   /**
