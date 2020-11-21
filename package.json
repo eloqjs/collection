@@ -17,6 +17,9 @@
   "keywords": [],
   "author": "João Pedro Antunes Silva",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "jest": {
     "clearMocks": true,
     "collectCoverage": true,
