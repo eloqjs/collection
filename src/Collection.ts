@@ -958,7 +958,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     primaryKey: string | number,
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
-    let item: ItemOrDefault<Item, D> = this.find(primaryKey)
+    const item = this.find(primaryKey)
 
     if (item) {
       const index = this.findIndexBy(item as Item)
@@ -966,11 +966,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       if (index !== -1) {
         this.items.splice(index, 1)
       }
-    } else if (defaultValue !== undefined) {
-      item = getValue(defaultValue)
     }
 
-    return item
+    return item || getValue(defaultValue)
   }
 
   /**
