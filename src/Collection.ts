@@ -882,20 +882,17 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): unknown[] | Record<string, unknown> {
     if ((value as string).indexOf('*') !== -1) {
       const keyPathMap = buildKeyPathMap(this.items)
-      const keyMatches: unknown[] = []
-
-      if (key) {
-        keyMatches.push(...matches(key as Key, keyPathMap))
-      }
-
-      const valueMatches: unknown[] = []
-      valueMatches.push(...matches(value as Key, keyPathMap))
+      const keyMatches: unknown[] = key
+        ? [...matches(key as Key, keyPathMap)]
+        : []
+      const valueMatches: unknown[] = [...matches(value as Key, keyPathMap)]
 
       if (key) {
         const collection = {}
 
         this.items.forEach((item, index) => {
-          collection[(keyMatches[index] as Key) || ''] = valueMatches
+          const _key: Key = (keyMatches[index] as Key) || ''
+          collection[_key] = valueMatches
         })
 
         return collection
@@ -908,28 +905,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       const collection = {}
 
       this.items.forEach((item) => {
-        if (getProp(item, value as Key) !== undefined) {
-          collection[(item[key as Key] as Key) || ''] = getProp(
-            item,
-            value as Key
-          )
-        } else {
-          collection[(item[key as Key] as Key) || ''] = null
-        }
+        const _value = getProp(item, value as Key)
+        const _key = (item[key as Key] as Key) || ''
+        collection[_key] = _value ?? null
       })
 
       return collection
     }
 
-    return clone(
-      this.map((item) => {
-        if (getProp(item, value as Key) !== undefined) {
-          return getProp(item, value as Key)
-        }
-
-        return null
-      })
-    )
+    return clone(this.map((item) => getProp(item, value as Key) ?? null))
   }
 
   /**
