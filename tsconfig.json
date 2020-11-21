@@ -1,4 +1,3 @@
-
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
@@ -6,6 +5,8 @@
     /* Basic Options */
     "target": "ES6",
     "declaration": true,
+    "declarationMap": true,
+    "rootDir": "src",
     "outDir": "build",
     /* Strict Type-Checking Options */
     "strict": true,
@@ -15,7 +16,8 @@
     "esModuleInterop": true,
     /* Advanced Options */
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true
   },
-  "exclude": ["coverage", "**/__tests__"]
+  "exclude": ["coverage", "tests"]
 }
