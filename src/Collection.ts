@@ -257,13 +257,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   public each(
     callback: (item: Item, index: number, items: Item[]) => false | void
   ): this {
-    let stop = false
-
-    const { length } = this.items
-
-    for (let index = 0; index < length && !stop; index += 1) {
-      stop = callback(this.items[index], index, this.items) === false
-    }
+    this.items.every((item, index) => {
+      return callback(this.items[index], index, this.items) !== false
+    })
 
     return this
   }
