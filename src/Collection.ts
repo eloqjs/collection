@@ -1233,16 +1233,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): number {
     let total = 0
 
-    if (isFunction(key)) {
-      for (const item of this.items) {
-        const value = key(item)
-        total += isString(value) ? parseFloat(value) : value
-      }
-    } else {
-      for (const item of this.items) {
-        const value = getProp(item, key as KeyVariadic) as string | number
-        total += isString(value) ? parseFloat(value) : value
-      }
+    for (const item of this.items) {
+      const value = isFunction(key)
+        ? key(item)
+        : (getProp(item, key as KeyVariadic) as string | number)
+      total += isString(value) ? parseFloat(value) : value
     }
 
     return parseFloat(total.toPrecision(12))
