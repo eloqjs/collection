@@ -195,42 +195,58 @@ export function getDefaultValue<V>(value: V | (() => V)): V {
 /**
  * Return the value from the given item.
  *
- * @param {Object} item
+ * @param {Object|unknown} item
  * @param {unknown} keyOrCallback
  * @return {unknown}
  */
-export function getValueFromItem<Item extends ItemData, K extends KeyVariadic>(
-  item: Item,
+export function getValueFromItem<
+  Item extends ItemData,
+  K extends KeyVariadic,
+  V
+>(
+  item: Item | V,
   keyOrCallback: keyof Item | K | ((item: Item) => unknown)
-): unknown
+): V | unknown
 
 /**
  * Return the value from the given item.
  *
- * @param {Object} item
+ * @param {Object|unknown} item
  * @param {unknown} keyOrCallback
  * @param {number} index
  * @return {unknown}
  */
-export function getValueFromItem<Item extends ItemData, K extends KeyVariadic>(
-  item: Item,
+export function getValueFromItem<
+  Item extends ItemData,
+  K extends KeyVariadic,
+  V
+>(
+  item: Item | V,
   keyOrCallback: keyof Item | K | ((item: Item, index: number) => unknown),
   index: number
-): unknown
+): V | unknown
 
 /**
  * Return the value from the given item.
  *
- * @param {Object} item
+ * @param {Object|unknown} item
  * @param {unknown} keyOrCallback
  * @param {number} index
  * @return {unknown}
  */
-export function getValueFromItem<Item extends ItemData, K extends KeyVariadic>(
-  item: Item,
+export function getValueFromItem<
+  Item extends ItemData,
+  K extends KeyVariadic,
+  V
+>(
+  item: Item | V,
   keyOrCallback: keyof Item | K | ((item: Item, index?: number) => unknown),
   index?: number
-): unknown {
+): V | unknown {
+  if (!isObject(item)) {
+    return item
+  }
+
   if (isFunction(keyOrCallback)) {
     return keyOrCallback(item, index)
   }
