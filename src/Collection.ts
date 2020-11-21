@@ -382,17 +382,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
     if (isFunction(callback)) {
-      for (let i = 0, { length } = this.items; i < length; i += 1) {
-        const item = this.items[i]
+      for (const item of this.items) {
         if (callback(item)) {
           return item
         }
       }
-
-      return getValue(defaultValue)
-    }
-
-    if (this.items.length) {
+    } else if (this.isNotEmpty()) {
       return this.items[0]
     }
 
