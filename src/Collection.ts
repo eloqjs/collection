@@ -339,16 +339,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const defaultValue = defaultValueOrThisArg || null
 
     if (isArray(keyOrPredicate)) {
-      if (this.isEmpty()) {
-        return this
-      }
-
-      return this.whereIn(this.primaryKey(), keyOrPredicate)
+      return this.isEmpty()
+        ? this
+        : this.whereIn(this.primaryKey(), keyOrPredicate)
     }
 
-    const key = isObject(keyOrPredicate)
-      ? this.getPrimaryKey(keyOrPredicate)
-      : keyOrPredicate
+    const key = getValueFromItem(keyOrPredicate, this.primaryKey())
 
     return (
       this.first((item) => this.getPrimaryKey(item) === key) ||
@@ -369,9 +365,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: KeyVariadic = this.primaryKey()
   ): number {
     return this.findIndex((item) => {
-      const _value = isObject(value)
-        ? getProp(value as Item, key)
-        : (value as V)
+      const _value = getValueFromItem(value, key)
 
       return getProp(item, key) === _value
     })
