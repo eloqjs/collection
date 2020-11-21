@@ -344,8 +344,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this.whereIn(this.primaryKey(), keyOrPredicate)
     }
 
+    const key = isObject(keyOrPredicate)
+      ? this.getPrimaryKey(keyOrPredicate)
+      : keyOrPredicate
+
     return (
-      this.first((item) => this.compareItems(item, keyOrPredicate)) ||
+      this.first((item) => this.getPrimaryKey(item) === key) ||
       getDefaultValue(defaultValue)
     )
   }
@@ -1730,7 +1734,8 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
     const callback = isFunction(itemOrCallback)
       ? itemOrCallback
-      : (item: Item) => this.compareItems(item, itemOrCallback)
+      : (item: Item) =>
+          this.getPrimaryKey(item) === this.getPrimaryKey(itemOrCallback)
     return this.items.filter((item) => {
       if (previous !== response) {
         previous = negateCallback ? !callback(item) : callback(item)
@@ -1738,19 +1743,5 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
 
       return previous
     }) as Collection<Item>
-  }
-
-  /**
-   * The compareItems method compares the primary key of two items.
-   *
-   * @param {Object} item1
-   * @param {Object} item2
-   * @return {boolean}
-   */
-  private compareItems<V>(item1: Item, item2: Item | V) {
-    return (
-      this.getPrimaryKey(item1) ===
-      (isObject(item2) ? this.getPrimaryKey(item2 as Item) : (item2 as V))
-    )
   }
 }
