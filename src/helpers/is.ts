@@ -3,53 +3,55 @@ import type { ExtractFunction } from '../types'
 /**
  * The isArray() method determines whether the passed value is an Array.
  *
- * @param {*} item
+ * @param {*} value
  * @return {boolean}
  */
-export function isArray(item: unknown): item is Array<unknown> {
-  return Array.isArray(item)
+export function isArray(value: unknown): value is Array<unknown> {
+  return Array.isArray(value)
 }
 
 /**
  * The isObject() method determines whether the passed value is an Object.
  *
- * @param {*} item
+ * @param {*} value
  * @return {boolean}
  */
-export function isObject(item: unknown): item is Record<string, unknown> {
+export function isObject(value: unknown): value is Record<string, unknown> {
   return (
-    typeof item === 'object' && Array.isArray(item) === false && item !== null
+    typeof value === 'object' &&
+    Array.isArray(value) === false &&
+    value !== null
   )
 }
 
 /**
  * The isFunction() method determines whether the passed value is a Function.
  *
- * @param {*} item
+ * @param {*} value
  * @return {boolean}
  */
-export function isFunction<T>(item: T): item is ExtractFunction<T> {
-  return typeof item === 'function'
+export function isFunction<T>(value: T): value is ExtractFunction<T> {
+  return typeof value === 'function'
 }
 
 /**
  * The isString() method determines whether the passed value is a String.
  *
- * @param {*} item
+ * @param {*} value
  * @return {boolean}
  */
-export function isString(item: unknown): item is string {
-  return typeof item === 'string'
+export function isString(value: unknown): value is string {
+  return typeof value === 'string'
 }
 
 /**
  * The isNumber() method determines whether the passed value is a Number.
  *
- * @param {*} item
+ * @param {*} value
  * @return {boolean}
  */
-export function isNumber(item: unknown): item is number {
-  return typeof item === 'number'
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number'
 }
 
 /**
