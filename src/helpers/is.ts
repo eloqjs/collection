@@ -51,3 +51,13 @@ export function isString(item: unknown): item is string {
 export function isNumber(item: unknown): item is number {
   return typeof item === 'number'
 }
+
+/**
+ * The isWrapped() method determines whether the passed value is a  a wrapped in "data" key.
+ *
+ * @param {Object} value
+ * @return {boolean}
+ */
+export function isWrapped(value: Record<string, unknown>): boolean {
+  return !!value && 'data' in value
+}

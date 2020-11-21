@@ -6,8 +6,10 @@ import {
   isFunction,
   isNumber,
   isObject,
-  isString
+  isString,
+  isWrapped
 } from '../src/helpers/is'
+import resolveItems from '../src/helpers/resolveItems'
 import resolveValue from '../src/helpers/resolveValue'
 import { sortGreaterOrLessThan, sortNullish } from '../src/helpers/sort'
 import variadic from '../src/helpers/variadic'
@@ -171,6 +173,33 @@ describe('Helpers', () => {
       expect(isString(func)).toBeFalsy()
       expect(isString(number)).toBeFalsy()
       expect(isString(object)).toBeFalsy()
+    })
+  })
+
+  describe('isWrapped()', () => {
+    it('should return true if the passed value is wrapped in "data" key', () => {
+      expect(isWrapped({ data: { id: 1, name: 'Joe Doe' } })).toBeTruthy()
+    })
+
+    it('should return false if the passed value is not wrapped in "data" key', () => {
+      expect(isWrapped({ id: 1, name: 'Joe Doe' })).toBeFalsy()
+    })
+  })
+
+  describe('resolveItems()', () => {
+    it('should map items back to their original state based on isWrapped argument', () => {
+      const items = [
+        { id: 1, name: 'Joe Doe' },
+        { id: 2, name: 'John Doe' },
+        { id: 3, name: 'Alex Doe' }
+      ]
+
+      expect(resolveItems(items, false)).toEqual(items)
+      expect(resolveItems(items, true)).toEqual([
+        { data: { id: 1, name: 'Joe Doe' } },
+        { data: { id: 2, name: 'John Doe' } },
+        { data: { id: 3, name: 'Alex Doe' } }
+      ])
     })
   })
 
