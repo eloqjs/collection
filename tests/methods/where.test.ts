@@ -184,4 +184,16 @@ describe('where()', () => {
       { name: { firstname: 'Sadio', lastname: 'Mané' } }
     ])
   })
+
+  it('should work when items are wrapped in "data" key', () => {
+    const collection2 = collect([
+      { data: { name: { firstname: 'Mohamed', lastname: 'Salah' } } },
+      { data: { name: { firstname: 'Sadio', lastname: 'Mané' } } },
+      { data: { name: { firstname: 'Roberto', lastname: 'Firmino' } } }
+    ])
+
+    expect(collection2.where('name.lastname', 'Mané')).toEqual([
+      { data: { name: { firstname: 'Sadio', lastname: 'Mané' } } }
+    ])
+  })
 })
