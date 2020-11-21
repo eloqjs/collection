@@ -179,6 +179,77 @@ export function matches<K extends Key>(
 }
 
 /**
+ * Get keys and values matches from KeyPath.
+ *
+ * @param {Object[]} items
+ * @param {string} value
+ * @param {string} [key]
+ * @return {[string[], string[]]}
+ */
+export function getMatches<Item extends ItemData, V extends Key, K extends Key>(
+  items: Item[],
+  value: keyof Item | V,
+  key?: keyof Item | K
+): [K[], V[]] {
+  const keyPathMap = buildKeyPathMap(items)
+  const keyMatches: K[] = key ? [...matches(key as K, keyPathMap)] : []
+  const valueMatches: V[] = [...matches(value as V, keyPathMap)]
+
+  return [keyMatches, valueMatches]
+}
+
+/**
+ * Get dictionary from matches.
+ *
+ * @param {Object[]} items
+ * @param {string[]} keys
+ * @param {string[]} values
+ * @return {Object}
+ */
+export function getDictionaryFromMatches<
+  Item extends ItemData,
+  K extends Key,
+  V
+>(items: Item[], keys: K[], values: V[]): Record<string, V> {
+  const collection = {}
+
+  items.forEach((item, index) => {
+    const key: Key = keys[index] || ''
+    collection[key] = values
+  })
+
+  return collection
+}
+
+/**
+ * Get dictionary from key.
+ *
+ * @param {Object[]} items
+ * @param {string} value
+ * @param {string} key
+ * @return {Object}
+ */
+export function getDictionaryFromKey<
+  Item extends ItemData,
+  V extends Key,
+  K extends Key
+>(
+  items: Item[],
+  value: keyof Item | V,
+  key: keyof Item | K
+): Record<string, unknown> {
+  const collection = {}
+
+  items.forEach((item) => {
+    const _value = getProp(item, value as V)
+    const _key = (item[key] as Key) || ''
+    collection[_key] = _value ?? null
+  })
+
+  return collection
+}
+
+/**
  * Return the default value of the given value.
  *
  * @param {unknown} value
