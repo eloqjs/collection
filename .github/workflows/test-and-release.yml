@@ -5,10 +5,24 @@ name: Test and Release
 
 on:
   push:
-    branches: [ master, dev ]
+    branches: [
+      master,
+      dev,
+      alpha,
+      beta,
+      next,
+      next-major
+    ]
 
   pull_request:
-    branches: [ master, dev ]
+    branches: [
+      master,
+      dev,
+      alpha,
+      beta,
+      next,
+      next-major
+    ]
 
 jobs:
   test:
