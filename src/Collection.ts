@@ -738,13 +738,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {number}
    */
   public max<K extends KeyVariadic>(key: keyof Item | K): number {
-    const filtered = this.items.filter(
-      (item) => getProp(item, key as KeyVariadic) !== undefined
-    )
-
-    return Math.max(
-      ...filtered.map((item) => getProp(item, key as KeyVariadic) as number)
-    )
+    return Math.max(...(this.getValuesByKey(key) as number[]))
   }
 
   /**
@@ -777,13 +771,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {number}
    */
   public min<K extends KeyVariadic>(key: keyof Item | K): number {
-    const filtered = this.items.filter(
-      (item) => getProp(item, key as KeyVariadic) !== undefined
-    )
-
-    return Math.min(
-      ...filtered.map((item) => getProp(item, key as KeyVariadic) as number)
-    )
+    return Math.min(...(this.getValuesByKey(key) as number[]))
   }
 
   /**
@@ -1766,6 +1754,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()] as string | number
+  }
+
+  /**
+   * The getValuesByKey method returns an array of values of a given key.
+   *
+   * @param {string|string[]} key
+   * @return {unknown[]}
+   */
+  private getValuesByKey<K>(key: keyof Item | K): unknown[] {
+    const filtered = this.items.filter(
+      (item) => getProp(item, key as KeyVariadic) !== undefined
+    )
+
+    return filtered.map((item) => getProp(item, key as KeyVariadic))
   }
 
   /**
