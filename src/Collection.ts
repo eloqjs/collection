@@ -1,13 +1,13 @@
 import clone from './helpers/clone'
-import getDefaultValue from './helpers/getDefaultValue'
 import getProp from './helpers/getProp'
-import getValueFromItem from './helpers/getValueFromItem'
+import getValue from './helpers/getValue'
 import { isArray, isFunction, isObject, isString } from './helpers/is'
 import {
   getDictionaryFromKey,
   getDictionaryFromMatches,
   getMatches
 } from './helpers/pluck'
+import resolveValue from './helpers/resolveValue'
 import variadic from './helpers/variadic'
 import { compareValues, whereHasValues } from './helpers/where'
 import type {
@@ -341,11 +341,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
         : this.whereIn(this.primaryKey(), keyOrPredicate)
     }
 
-    const key = getValueFromItem(keyOrPredicate, this.primaryKey())
+    const key = resolveValue(keyOrPredicate, this.primaryKey())
 
     return (
       this.first((item) => this.getPrimaryKey(item) === key) ||
-      getDefaultValue(defaultValue)
+      getValue(defaultValue)
     )
   }
 
@@ -362,7 +362,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: KeyVariadic = this.primaryKey()
   ): number {
     return this.findIndex((item) => {
-      const _value = getValueFromItem(value, key)
+      const _value = resolveValue(value, key)
 
       return getProp(item, key) === _value
     })
@@ -389,7 +389,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this.items[0]
     }
 
-    return getDefaultValue(defaultValue)
+    return getValue(defaultValue)
   }
 
   public firstWhere<V extends unknown, K extends Key>(
@@ -487,7 +487,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return this.items[index]
     }
 
-    return getDefaultValue(defaultValue)
+    return getValue(defaultValue)
   }
 
   /**
@@ -519,7 +519,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = {}
 
     this.items.forEach((item, index) => {
-      const resolvedKey: Key = (getValueFromItem(item, key, index) as Key) ?? ''
+      const resolvedKey: Key = (resolveValue(item, key, index) as Key) ?? ''
 
       if (collection[resolvedKey] === undefined) {
         collection[resolvedKey] = []
@@ -590,7 +590,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection: Record<Key, Item> = {}
 
     this.items.forEach((item) => {
-      const _key: Key = (getValueFromItem(item, key) as Key) || ''
+      const _key: Key = (resolveValue(item, key) as Key) || ''
       collection[_key] = item
     })
 
@@ -615,7 +615,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     }
 
     if (!items.length) {
-      return getDefaultValue(defaultValue)
+      return getValue(defaultValue)
     }
 
     return items[items.length - 1]
@@ -921,7 +921,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       }
     }
 
-    return item || getDefaultValue(defaultValue)
+    return item || getValue(defaultValue)
   }
 
   /**
@@ -1072,8 +1072,8 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = clone(this.items)
 
     collection.sort((a, b) => {
-      const valueA = getValueFromItem(a, value) as number
-      const valueB = getValueFromItem(b, value) as number
+      const valueA = resolveValue(a, value) as number
+      const valueB = resolveValue(b, value) as number
 
       if (valueA === null || valueA === undefined) {
         return 1
@@ -1139,7 +1139,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     let total = 0
 
     for (const item of this.items) {
-      const value = getValueFromItem(item, key) as string | number
+      const value = resolveValue(item, key) as string | number
       total += isString(value) ? parseFloat(value) : value
     }
 
@@ -1281,7 +1281,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       const usedKeys: Key[] = []
 
       this.items.forEach((item) => {
-        const uniqueKey = getValueFromItem(item, key) as Key
+        const uniqueKey = resolveValue(item, key) as Key
 
         if (usedKeys.indexOf(uniqueKey) === -1) {
           collection.push(item)

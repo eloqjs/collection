@@ -1,7 +1,6 @@
 import clone from '../src/helpers/clone'
-import getDefaultValue from '../src/helpers/getDefaultValue'
 import getProp from '../src/helpers/getProp'
-import getValueFromItem from '../src/helpers/getValueFromItem'
+import getValue from '../src/helpers/getValue'
 import {
   isArray,
   isFunction,
@@ -9,6 +8,7 @@ import {
   isObject,
   isString
 } from '../src/helpers/is'
+import resolveValue from '../src/helpers/resolveValue'
 import variadic from '../src/helpers/variadic'
 import { compareValues, whereHasValues } from '../src/helpers/where'
 
@@ -173,32 +173,30 @@ describe('Helpers', () => {
     })
   })
 
-  describe('getDefaultValue()', () => {
+  describe('getValue()', () => {
     it('should return the default value of the given value', () => {
       const closure = () => ({})
       const value = null
 
-      expect(getDefaultValue(closure)).toStrictEqual({})
-      expect(getDefaultValue(value)).toBeNull()
+      expect(getValue(closure)).toStrictEqual({})
+      expect(getValue(value)).toBeNull()
     })
   })
 
-  describe('getValueFromItem()', () => {
+  describe('resolveValue()', () => {
     it('should return the value of the given key of the item', () => {
-      expect(getValueFromItem({ id: 1, name: 'Joe Doe' }, 'name')).toBe(
-        'Joe Doe'
-      )
+      expect(resolveValue({ id: 1, name: 'Joe Doe' }, 'name')).toBe('Joe Doe')
     })
 
     it('should return the value of the given callback', () => {
       expect(
-        getValueFromItem({ id: 1, name: 'Joe Doe' }, (item) => item.name)
+        resolveValue({ id: 1, name: 'Joe Doe' }, (item) => item.name)
       ).toBe('Joe Doe')
     })
 
     it('should be able to access index in callback when provided', () => {
       expect(
-        getValueFromItem(
+        resolveValue(
           { id: 1, name: 'Joe Doe' },
           (item, index) => item.name + ' ' + index,
           1

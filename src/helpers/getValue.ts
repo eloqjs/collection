@@ -6,7 +6,7 @@ import { isFunction } from './is'
  * @param {unknown} value
  * @return {unknown}
  */
-function getDefaultValue<V>(value: V | (() => V)): V {
+function getValue<V>(value: V | (() => V)): V {
   if (isFunction(value)) {
     return value()
   }
@@ -14,4 +14,4 @@ function getDefaultValue<V>(value: V | (() => V)): V {
   return value
 }
 
-export default getDefaultValue
+export default getValue

@@ -9,7 +9,7 @@ import { isFunction, isObject } from './is'
  * @param {unknown} keyOrCallback
  * @return {unknown}
  */
-function getValueFromItem<Item extends ItemData, K extends KeyVariadic, V>(
+function resolveValue<Item extends ItemData, K extends KeyVariadic, V>(
   item: Item | V,
   keyOrCallback: keyof Item | K | ((item: Item) => unknown)
 ): V | unknown
@@ -22,7 +22,7 @@ function getValueFromItem<Item extends ItemData, K extends KeyVariadic, V>(
  * @param {number} index
  * @return {unknown}
  */
-function getValueFromItem<Item extends ItemData, K extends KeyVariadic, V>(
+function resolveValue<Item extends ItemData, K extends KeyVariadic, V>(
   item: Item | V,
   keyOrCallback: keyof Item | K | ((item: Item, index: number) => unknown),
   index: number
@@ -36,7 +36,7 @@ function getValueFromItem<Item extends ItemData, K extends KeyVariadic, V>(
  * @param {number} index
  * @return {unknown}
  */
-function getValueFromItem<Item extends ItemData, K extends KeyVariadic, V>(
+function resolveValue<Item extends ItemData, K extends KeyVariadic, V>(
   item: Item | V,
   keyOrCallback: keyof Item | K | ((item: Item, index?: number) => unknown),
   index?: number
@@ -52,4 +52,4 @@ function getValueFromItem<Item extends ItemData, K extends KeyVariadic, V>(
   return getProp(item, keyOrCallback as K)
 }
 
-export default getValueFromItem
+export default resolveValue
