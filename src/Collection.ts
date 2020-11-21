@@ -522,17 +522,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = {}
 
     this.items.forEach((item, index) => {
-      let resolvedKey: Key = ''
-
-      if (isFunction(key)) {
-        resolvedKey = key(item, index)
-      } else {
-        const value = getProp(item, key as KeyVariadic) as Key
-
-        if (value !== undefined) {
-          resolvedKey = value
-        }
-      }
+      const resolvedKey: Key = (getValueFromItem(item, key, index) as Key) ?? ''
 
       if (collection[resolvedKey] === undefined) {
         collection[resolvedKey] = []
