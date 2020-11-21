@@ -127,13 +127,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public collapse(...array: Array<Item[]> | [Array<Item[]>]): Collection<Item> {
-    let arrayOfCollections: Array<Item[]>
-
-    if (array.length === 1 && Array.isArray(array[0])) {
-      arrayOfCollections = array[0] as Array<Item[]>
-    } else {
-      arrayOfCollections = array as Array<Item[]>
-    }
+    const arrayOfCollections = variadic(array, 1)
 
     if (
       arrayOfCollections.length < 2 ||
