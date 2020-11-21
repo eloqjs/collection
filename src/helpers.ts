@@ -4,7 +4,7 @@
  * @param items
  * @return {[*]}
  */
-import { ExtractFunction, ItemData, Key, KeyVariadic } from './types'
+import { ExtractFunction, ItemData, Key, KeyVariadic, Operator } from './types'
 
 export function clone<T extends unknown[]>(items: T): T {
   return [...items] as T
@@ -236,4 +236,46 @@ export function getValueFromItem<Item extends ItemData, K extends KeyVariadic>(
   }
 
   return getProp(item, keyOrCallback as K)
+}
+
+/**
+ * Compare two values using the given operator.
+ *
+ * @param {[Object, string|string[]]|unknown} value1
+ * @param {unknown} value2
+ * @param {string} operator
+ * @return {boolean}
+ */
+export function compareValues(
+  value1: unknown,
+  value2: unknown,
+  operator: Operator
+): boolean {
+  switch (operator) {
+    case '==':
+      return value1 == value2
+
+    default:
+    case '===':
+      return value1 === value2
+
+    case '!=':
+    case '<>':
+      return value1 != value2
+
+    case '!==':
+      return value1 !== value2
+
+    case '<':
+      return (value1 as never) < (value2 as never)
+
+    case '<=':
+      return (value1 as never) <= (value2 as never)
+
+    case '>':
+      return (value1 as never) > (value2 as never)
+
+    case '>=':
+      return (value1 as never) >= (value2 as never)
+  }
 }

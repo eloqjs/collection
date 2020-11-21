@@ -1,5 +1,6 @@
 import {
   clone,
+  compareValues,
   getDefaultValue,
   getProp,
   getValueFromItem,
@@ -203,6 +204,13 @@ describe('Helpers', () => {
           1
         )
       ).toBe('Joe Doe 1')
+    })
+  })
+
+  describe('compareValues()', () => {
+    it('should compare two values', () => {
+      expect(compareValues(1, 1, '===')).toBeTruthy()
+      expect(compareValues(1, 2, '===')).toBeFalsy()
     })
   })
 })

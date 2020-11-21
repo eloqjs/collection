@@ -1,6 +1,7 @@
 import {
   buildKeyPathMap,
   clone,
+  compareValues,
   getDefaultValue,
   getProp,
   getValueFromItem,
@@ -1491,45 +1492,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     }
 
     const collection = items.filter((item) => {
-      switch (comparisonOperator) {
-        case '==':
-          return getProp(item, key as KeyVariadic) == comparisonValue
-
-        default:
-        case '===':
-          return getProp(item, key as KeyVariadic) === comparisonValue
-
-        case '!=':
-        case '<>':
-          return getProp(item, key as KeyVariadic) != comparisonValue
-
-        case '!==':
-          return getProp(item, key as KeyVariadic) !== comparisonValue
-
-        case '<':
-          return (
-            (getProp(item, key as KeyVariadic) as never) <
-            (comparisonValue as never)
-          )
-
-        case '<=':
-          return (
-            (getProp(item, key as KeyVariadic) as never) <=
-            (comparisonValue as never)
-          )
-
-        case '>':
-          return (
-            (getProp(item, key as KeyVariadic) as never) >
-            (comparisonValue as never)
-          )
-
-        case '>=':
-          return (
-            (getProp(item, key as KeyVariadic) as never) >=
-            (comparisonValue as never)
-          )
-      }
+      return compareValues(
+        getProp(item, key as KeyVariadic),
+        comparisonValue as V,
+        comparisonOperator as Operator
+      )
     })
 
     return this.newInstance<Item>(collection)
