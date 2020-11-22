@@ -1,7 +1,7 @@
 import { collect } from '../../src'
 
 describe('fresh()', () => {
-  it('should return a fresh item instance for all the items.', () => {
+  it('should return a fresh item instance for all the items.', async () => {
     const products = [
       { id: 1, product: 'Desk', price: 200, manufacturer: 'IKEA' },
       { id: 2, product: 'Chair', price: 100, manufacturer: 'Herman Miller' },
@@ -12,12 +12,12 @@ describe('fresh()', () => {
 
     const collection = collect(products)
 
-    expect(collection.fresh()).toEqual(products)
+    expect(await collection.fresh()).toEqual(products)
   })
 
-  it('should return itself when collection is empty', () => {
+  it('should return itself when collection is empty', async () => {
     const collection = collect()
 
-    expect(collection.fresh()).toEqual(collection)
+    expect(await collection.fresh()).toEqual(collection)
   })
 })
