@@ -4,8 +4,8 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
 [![Code Climate maintainability][code-climate-maintainability-src]][code-climate-maintainability-href]
-[![Code Climate coverage][code-climate-coverage-src]][code-climate-coverage-href]
 [![Codecov][codecov-src]][codecov-href]
+[![Contributions][contributions-src]][contributions-href]
 [![License][license-src]][license-href]
 
 > The collection for your resources. Made specifically to work with arrays of objects from your API Responses.
@@ -63,6 +63,9 @@ Copyright (c) João Pedro Antunes Silva
 
 [codecov-src]: https://img.shields.io/codecov/c/github/eloqjs/collection.svg?logo=codecov&style=flat-square
 [codecov-href]: https://codecov.io/gh/eloqjs/collection
+
+[contributions-src]: https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square
+[contributions-href]: https://github.com/eloqjs/collection/issues
 
 [license-src]: https://img.shields.io/github/license/eloqjs/collection?style=flat-square
 [license-href]: https://github.com/eloqjs/collection/blob/dev/LICENSE.md
