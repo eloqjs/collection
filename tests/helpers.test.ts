@@ -1,14 +1,19 @@
+import clone from '../src/helpers/clone'
+import getProp from '../src/helpers/getProp'
+import getValue from '../src/helpers/getValue'
 import {
-  clone,
-  getProp,
-  getValue,
   isArray,
   isFunction,
   isNumber,
   isObject,
   isString,
-  variadic
-} from '../src/helpers'
+  isWrapped
+} from '../src/helpers/is'
+import resolveItems from '../src/helpers/resolveItems'
+import resolveValue from '../src/helpers/resolveValue'
+import { sortGreaterOrLessThan, sortNullish } from '../src/helpers/sort'
+import variadic from '../src/helpers/variadic'
+import { compareValues, whereHasValues } from '../src/helpers/where'
 
 describe('Helpers', () => {
   describe('clone()', () => {
@@ -171,6 +176,33 @@ describe('Helpers', () => {
     })
   })
 
+  describe('isWrapped()', () => {
+    it('should return true if the passed value is wrapped in "data" key', () => {
+      expect(isWrapped({ data: { id: 1, name: 'Joe Doe' } })).toBeTruthy()
+    })
+
+    it('should return false if the passed value is not wrapped in "data" key', () => {
+      expect(isWrapped({ id: 1, name: 'Joe Doe' })).toBeFalsy()
+    })
+  })
+
+  describe('resolveItems()', () => {
+    it('should map items back to their original state based on isWrapped argument', () => {
+      const items = [
+        { id: 1, name: 'Joe Doe' },
+        { id: 2, name: 'John Doe' },
+        { id: 3, name: 'Alex Doe' }
+      ]
+
+      expect(resolveItems(items, false)).toEqual(items)
+      expect(resolveItems(items, true)).toEqual([
+        { data: { id: 1, name: 'Joe Doe' } },
+        { data: { id: 2, name: 'John Doe' } },
+        { data: { id: 3, name: 'Alex Doe' } }
+      ])
+    })
+  })
+
   describe('getValue()', () => {
     it('should return the default value of the given value', () => {
       const closure = () => ({})
@@ -178,6 +210,82 @@ describe('Helpers', () => {
 
       expect(getValue(closure)).toStrictEqual({})
       expect(getValue(value)).toBeNull()
+    })
+  })
+
+  describe('resolveValue()', () => {
+    it('should return the value of the given key of the item', () => {
+      expect(resolveValue({ id: 1, name: 'Joe Doe' }, 'name')).toBe('Joe Doe')
+    })
+
+    it('should return the value of the given callback', () => {
+      expect(
+        resolveValue({ id: 1, name: 'Joe Doe' }, (item) => item.name)
+      ).toBe('Joe Doe')
+    })
+
+    it('should be able to access index in callback when provided', () => {
+      expect(
+        resolveValue(
+          { id: 1, name: 'Joe Doe' },
+          (item, index) => item.name + ' ' + index,
+          1
+        )
+      ).toBe('Joe Doe 1')
+    })
+  })
+
+  describe('compareValues()', () => {
+    it('should compare two values', () => {
+      expect(compareValues(1, 1, '===')).toBeTruthy()
+      expect(compareValues(1, 2, '===')).toBeFalsy()
+    })
+  })
+
+  describe('whereHasValues()', () => {
+    it('should return a filtered collection of items, where each item has the given values', () => {
+      const data = [
+        { id: 1, product: 'Desk', price: 200 },
+        { id: 2, product: 'Chair', price: 100 },
+        { id: 3, product: 'Bookcase', price: 150 },
+        { id: 4, product: 'Door', price: 100 }
+      ]
+
+      expect(whereHasValues(data, 'price', [100, 150])).toEqual([
+        { id: 2, product: 'Chair', price: 100 },
+        { id: 3, product: 'Bookcase', price: 150 },
+        { id: 4, product: 'Door', price: 100 }
+      ])
+    })
+  })
+
+  describe('sortNullish()', () => {
+    it('should return 0 when values are defined', () => {
+      expect(sortNullish(1, 2)).toBe(0)
+    })
+
+    it('should return 1 when valueA is undefined or null', () => {
+      expect(sortNullish(undefined, 2)).toBe(1)
+      expect(sortNullish(null, 2)).toBe(1)
+    })
+
+    it('should return -1 when valueB is undefined or null', () => {
+      expect(sortNullish(1, undefined)).toBe(-1)
+      expect(sortNullish(1, null)).toBe(-1)
+    })
+  })
+
+  describe('sortGreaterOrLessThan()', () => {
+    it('should return 0 when valueA and valueB are equal', () => {
+      expect(sortGreaterOrLessThan(1, 1)).toBe(0)
+    })
+
+    it('should return -1 when valueB is greater than valueA', () => {
+      expect(sortGreaterOrLessThan(1, 2)).toBe(-1)
+    })
+
+    it('should return 1 when valueA is greater than valueB', () => {
+      expect(sortGreaterOrLessThan(2, 1)).toBe(1)
     })
   })
 })

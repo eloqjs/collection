@@ -1,16 +1,25 @@
+import clone from './helpers/clone'
+import getProp from './helpers/getProp'
+import getValue from './helpers/getValue'
 import {
-  buildKeyPathMap,
-  clone,
-  getProp,
-  getValue,
   isArray,
   isFunction,
   isObject,
   isString,
-  matches,
-  variadic
-} from './helpers'
+  isWrapped
+} from './helpers/is'
+import {
+  getDictionaryFromKey,
+  getDictionaryFromMatches,
+  getMatches
+} from './helpers/pluck'
+import resolveItems from './helpers/resolveItems'
+import resolveValue from './helpers/resolveValue'
+import { sortGreaterOrLessThan, sortNullish } from './helpers/sort'
+import variadic from './helpers/variadic'
+import { compareValues, whereHasValues } from './helpers/where'
 import type {
+  ClassCollection,
   ClassConstructor,
   Constructor,
   DefaultValue,
@@ -20,11 +29,10 @@ import type {
   KeyVariadic,
   Operator
 } from './types'
-import { ClassCollection } from './types'
 
-export default class Collection<Item extends ItemData = ItemData> extends Array<
-  Item
-> {
+export default class Collection<
+  Item extends ItemData = ItemData
+> extends Array<Item> {
   constructor(collection: Item[])
   constructor(...items: Item[])
   constructor(...collection: Item[] | [Item[]]) {
@@ -38,14 +46,17 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    *
    * @return {this}
    */
-  protected get items(): this {
-    return this
+  protected get items(): Item[] {
+    return this.map((item) => {
+      return 'data' in item ? item.data : item
+    }) as Item[]
   }
 
   /**
    * Set the items of the array.
    */
-  protected set items(collection: this) {
+  protected set items(items: Item[]) {
+    const collection = resolveItems(items, isWrapped(this[0])) as this
     this.splice(0, this.length, ...collection)
   }
 
@@ -69,15 +80,22 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     return item
   }
 
-  public static getFresh<T extends ItemData>({
+  public static async getFresh<T extends ItemData>({
     collection,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     include
   }: {
     collection: Collection<T>
     include: string[]
-  }): T[] | Collection<T> {
-    return collection.items
+  }): Promise<T[] | Collection<T>> {
+    return await new Promise((resolve) => {
+      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+      // In this example, we use setTimeout(...) to simulate async code.
+      // In reality, you will probably be using something like XHR or an HTML5 API.
+      setTimeout(() => {
+        resolve(collection)
+      }, 250)
+    })
   }
 
   /**
@@ -127,13 +145,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public collapse(...array: Array<Item[]> | [Array<Item[]>]): Collection<Item> {
-    let arrayOfCollections: Array<Item[]>
-
-    if (array.length === 1 && Array.isArray(array[0])) {
-      arrayOfCollections = array[0] as Array<Item[]>
-    } else {
-      arrayOfCollections = array as Array<Item[]>
-    }
+    const arrayOfCollections = variadic(array, 1)
 
     if (
       arrayOfCollections.length < 2 ||
@@ -257,13 +269,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   public each(
     callback: (item: Item, index: number, items: Item[]) => false | void
   ): this {
-    let stop = false
-
-    const { length } = this.items
-
-    for (let index = 0; index < length && !stop; index += 1) {
-      stop = callback(this.items[index], index, this.items) === false
-    }
+    this.items.every((item, index) => {
+      return callback(this.items[index], index, this.items) !== false
+    })
 
     return this
   }
@@ -343,20 +351,15 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
       return super.find(keyOrPredicate, defaultValueOrThisArg)
     }
 
-    let key = keyOrPredicate
     const defaultValue = defaultValueOrThisArg || null
 
-    if (isObject(key)) {
-      key = this.getPrimaryKey(key)
+    if (isArray(keyOrPredicate)) {
+      return this.isEmpty()
+        ? this
+        : this.whereIn(this.primaryKey(), keyOrPredicate)
     }
 
-    if (isArray(key)) {
-      if (this.isEmpty()) {
-        return this
-      }
-
-      return this.whereIn(this.primaryKey(), key)
-    }
+    const key = resolveValue(keyOrPredicate, this.primaryKey())
 
     return (
       this.first((item) => this.getPrimaryKey(item) === key) ||
@@ -377,9 +380,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: KeyVariadic = this.primaryKey()
   ): number {
     return this.findIndex((item) => {
-      const _value = isObject(value)
-        ? getProp(value as Item, key)
-        : (value as V)
+      const _value = resolveValue(value, key)
 
       return getProp(item, key) === _value
     })
@@ -397,17 +398,12 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
     if (isFunction(callback)) {
-      for (let i = 0, { length } = this.items; i < length; i += 1) {
-        const item = this.items[i]
+      for (const item of this.items) {
         if (callback(item)) {
           return item
         }
       }
-
-      return getValue(defaultValue)
-    }
-
-    if (this.items.length) {
+    } else if (this.isNotEmpty()) {
       return this.items[0]
     }
 
@@ -463,7 +459,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {this}
    */
   public forget(index: number): this {
-    this.items.splice(index, 1)
+    this.splice(index, 1)
 
     return this
   }
@@ -472,9 +468,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * The fresh method reloads a fresh item instance from the database for all the items.
    *
    * @param {...*} include
-   * @return this
+   * @return {Promise<this>}
    */
-  public fresh(...include: string[] | [string[]]): this {
+  public async fresh(...include: string[] | [string[]]): Promise<this> {
     const _include = variadic(include)
 
     if (this.isEmpty()) {
@@ -482,7 +478,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     }
 
     const freshItems = this.wrap<Item>(
-      Collection.getFresh({ collection: this, include: _include })
+      await Collection.getFresh({ collection: this, include: _include })
     ).getDictionary()
 
     return this.map((item) => {
@@ -541,17 +537,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const collection = {}
 
     this.items.forEach((item, index) => {
-      let resolvedKey: Key = ''
-
-      if (isFunction(key)) {
-        resolvedKey = key(item, index)
-      } else {
-        const value = getProp(item, key as KeyVariadic) as Key
-
-        if (value !== undefined) {
-          resolvedKey = value
-        }
-      }
+      const resolvedKey: Key = (resolveValue(item, key, index) as Key) ?? ''
 
       if (collection[resolvedKey] === undefined) {
         collection[resolvedKey] = []
@@ -621,17 +607,10 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): Record<Key, Item> {
     const collection: Record<Key, Item> = {}
 
-    if (isFunction(key)) {
-      this.items.forEach((item) => {
-        collection[key(item) as Key] = item
-      })
-    } else {
-      this.items.forEach((item) => {
-        const keyValue = (getProp(item, key as KeyVariadic) as Key) || ''
-
-        collection[keyValue] = item
-      })
-    }
+    this.items.forEach((item) => {
+      const _key: Key = (resolveValue(item, key) as Key) || ''
+      collection[_key] = item
+    })
 
     return collection
   }
@@ -738,13 +717,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {number}
    */
   public max<K extends KeyVariadic>(key: keyof Item | K): number {
-    const filtered = this.items.filter(
-      (item) => getProp(item, key as KeyVariadic) !== undefined
-    )
-
-    return Math.max(
-      ...filtered.map((item) => getProp(item, key as KeyVariadic) as number)
-    )
+    return Math.max(...(this.getValuesByKey(key) as number[]))
   }
 
   /**
@@ -777,13 +750,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {number}
    */
   public min<K extends KeyVariadic>(key: keyof Item | K): number {
-    const filtered = this.items.filter(
-      (item) => getProp(item, key as KeyVariadic) !== undefined
-    )
-
-    return Math.min(
-      ...filtered.map((item) => getProp(item, key as KeyVariadic) as number)
-    )
+    return Math.min(...(this.getValuesByKey(key) as number[]))
   }
 
   /**
@@ -923,55 +890,20 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key?: keyof Item | K
   ): unknown[] | Record<string, unknown> {
     if ((value as string).indexOf('*') !== -1) {
-      const keyPathMap = buildKeyPathMap(this.items)
-      const keyMatches: unknown[] = []
+      const [keyMatches, valueMatches]: [K[], V[]] = getMatches(
+        this.items,
+        value,
+        key
+      )
 
-      if (key) {
-        keyMatches.push(...matches(key as Key, keyPathMap))
-      }
-
-      const valueMatches: unknown[] = []
-      valueMatches.push(...matches(value as Key, keyPathMap))
-
-      if (key) {
-        const collection = {}
-
-        this.items.forEach((item, index) => {
-          collection[(keyMatches[index] as Key) || ''] = valueMatches
-        })
-
-        return collection
-      }
-
-      return [valueMatches]
+      return key
+        ? getDictionaryFromMatches(this.items, keyMatches, valueMatches)
+        : [valueMatches]
     }
 
-    if (key) {
-      const collection = {}
-
-      this.items.forEach((item) => {
-        if (getProp(item, value as Key) !== undefined) {
-          collection[(item[key as Key] as Key) || ''] = getProp(
-            item,
-            value as Key
-          )
-        } else {
-          collection[(item[key as Key] as Key) || ''] = null
-        }
-      })
-
-      return collection
-    }
-
-    return clone(
-      this.map((item) => {
-        if (getProp(item, value as Key) !== undefined) {
-          return getProp(item, value as Key)
-        }
-
-        return null
-      })
-    )
+    return key
+      ? getDictionaryFromKey(this.items, value, key)
+      : clone(this.map((item) => getProp(item, value as K) ?? null))
   }
 
   /**
@@ -981,7 +913,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {this}
    */
   public prepend(value: Item): this {
-    this.items.unshift(value)
+    this.unshift(value)
 
     return this
   }
@@ -997,19 +929,17 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     primaryKey: string | number,
     defaultValue: DefaultValue<D> = null
   ): ItemOrDefault<Item, D> {
-    let item: ItemOrDefault<Item, D> = this.find(primaryKey)
+    const item = this.find(primaryKey)
 
     if (item) {
       const index = this.findIndexBy(item as Item)
 
       if (index !== -1) {
-        this.items.splice(index, 1)
+        this.splice(index, 1)
       }
-    } else if (defaultValue !== undefined) {
-      item = getValue(defaultValue)
     }
 
-    return item
+    return item || getValue(defaultValue)
   }
 
   /**
@@ -1022,9 +952,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     const index = this.findIndexBy(item)
 
     if (index !== -1) {
-      this.items.splice(index, 1, item)
+      this.splice(index, 1, item)
     } else {
-      this.items.push(item)
+      this.push(item)
     }
 
     return this
@@ -1128,19 +1058,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public skipUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== true) {
-        previous = callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, true, false)
 
     return this.newInstance<Item>(items)
   }
@@ -1154,19 +1072,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public skipWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== true) {
-        previous = !callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, true, true)
 
     return this.newInstance<Item>(items)
   }
@@ -1182,33 +1088,14 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     value: keyof Item | K | ((item: Item) => number)
   ): Collection<Item> {
     const collection = clone(this.items)
-    const getValue = (item: Item): number => {
-      if (isFunction(value)) {
-        return value(item)
-      }
-
-      return getProp(item, value as KeyVariadic) as number
-    }
 
     collection.sort((a, b) => {
-      const valueA = getValue(a)
-      const valueB = getValue(b)
+      const valueA = resolveValue(a, value) as string | number
+      const valueB = resolveValue(b, value) as string | number
 
-      if (valueA === null || valueA === undefined) {
-        return 1
-      }
-      if (valueB === null || valueB === undefined) {
-        return -1
-      }
-
-      if (valueA < valueB) {
-        return -1
-      }
-      if (valueA > valueB) {
-        return 1
-      }
-
-      return 0
+      return (
+        sortNullish(valueA, valueB) || sortGreaterOrLessThan(valueA, valueB)
+      )
     })
 
     return this.newInstance<Item>(collection)
@@ -1234,13 +1121,11 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection[]}
    */
   public split(numberOfGroups: number): Collection<Item>[] {
-    const itemsPerGroup = Math.round(this.items.length / numberOfGroups)
+    const itemsPerGroup = Math.round(this.length / numberOfGroups)
     const collection = []
 
     for (let iterator = 0; iterator < numberOfGroups; iterator += 1) {
-      collection.push(
-        this.newInstance<Item>(this.items.splice(0, itemsPerGroup))
-      )
+      collection.push(this.newInstance<Item>(this.splice(0, itemsPerGroup)))
     }
 
     return collection
@@ -1257,16 +1142,9 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): number {
     let total = 0
 
-    if (isFunction(key)) {
-      for (const item of this.items) {
-        const value = key(item)
-        total += isString(value) ? parseFloat(value) : value
-      }
-    } else {
-      for (const item of this.items) {
-        const value = getProp(item, key as KeyVariadic) as string | number
-        total += isString(value) ? parseFloat(value) : value
-      }
+    for (const item of this.items) {
+      const value = resolveValue(item, key) as string | number
+      total += isString(value) ? parseFloat(value) : value
     }
 
     return parseFloat(total.toPrecision(12))
@@ -1294,19 +1172,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public takeUntil(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== false) {
-        previous = !callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, false, true)
 
     return this.newInstance<Item>(items)
   }
@@ -1318,19 +1184,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    * @return {Collection}
    */
   public takeWhile(value: Item | ((item: Item) => boolean)): Collection<Item> {
-    let previous: boolean | null = null
-
-    const callback = isFunction(value)
-      ? value
-      : (item: Item) => item[this.primaryKey()] === value[this.primaryKey()]
-
-    const items = this.items.filter((item) => {
-      if (previous !== false) {
-        previous = callback(item)
-      }
-
-      return previous
-    })
+    const items = this.filterUntil(value, false, false)
 
     return this.newInstance<Item>(items)
   }
@@ -1361,7 +1215,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     callback: (time: number) => T
   ): Collection<T> {
     for (let iterator = 1; iterator <= times; iterator += 1) {
-      this.items.push(callback(iterator))
+      this.push(callback(iterator))
     }
 
     return this as Collection<T>
@@ -1427,27 +1281,17 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key?: keyof Item | K | ((item: Item) => Key)
   ): Collection<Item> {
     if (key) {
-      const collection = []
+      const collection: Item[] = []
       const usedKeys: Key[] = []
 
-      for (
-        let iterator = 0, { length } = this.items;
-        iterator < length;
-        iterator += 1
-      ) {
-        let uniqueKey: Key
-
-        if (isFunction(key)) {
-          uniqueKey = key(this.items[iterator])
-        } else {
-          uniqueKey = getProp(this.items[iterator], key as KeyVariadic) as Key
-        }
+      this.items.forEach((item) => {
+        const uniqueKey = resolveValue(item, key) as Key
 
         if (usedKeys.indexOf(uniqueKey) === -1) {
-          collection.push(this.items[iterator])
+          collection.push(item)
           usedKeys.push(uniqueKey)
         }
-      }
+      })
 
       return this.newInstance<Item>(collection)
     }
@@ -1588,67 +1432,30 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   ): Collection<Item> {
     let comparisonOperator = operator
     let comparisonValue = value
-
-    const items = this.items
+    let collection
 
     if (operator === undefined || operator === true) {
-      return this.newInstance<Item>(
-        items.filter((item) => getProp(item, key as KeyVariadic))
+      collection = this.items.filter((item) =>
+        getProp(item, key as KeyVariadic)
       )
-    }
-
-    if (operator === false) {
-      return this.newInstance<Item>(
-        items.filter((item) => !getProp(item, key as KeyVariadic))
+    } else if (operator === false) {
+      collection = this.items.filter(
+        (item) => !getProp(item, key as KeyVariadic)
       )
-    }
-
-    if (value === undefined) {
-      comparisonValue = operator as V
-      comparisonOperator = '==='
-    }
-
-    const collection = items.filter((item) => {
-      switch (comparisonOperator) {
-        case '==':
-          return getProp(item, key as KeyVariadic) == comparisonValue
-
-        default:
-        case '===':
-          return getProp(item, key as KeyVariadic) === comparisonValue
-
-        case '!=':
-        case '<>':
-          return getProp(item, key as KeyVariadic) != comparisonValue
-
-        case '!==':
-          return getProp(item, key as KeyVariadic) !== comparisonValue
-
-        case '<':
-          return (
-            (getProp(item, key as KeyVariadic) as never) <
-            (comparisonValue as never)
-          )
-
-        case '<=':
-          return (
-            (getProp(item, key as KeyVariadic) as never) <=
-            (comparisonValue as never)
-          )
-
-        case '>':
-          return (
-            (getProp(item, key as KeyVariadic) as never) >
-            (comparisonValue as never)
-          )
-
-        case '>=':
-          return (
-            (getProp(item, key as KeyVariadic) as never) >=
-            (comparisonValue as never)
-          )
+    } else {
+      if (value === undefined) {
+        comparisonValue = operator as V
+        comparisonOperator = '==='
       }
-    })
+
+      collection = this.items.filter((item) => {
+        return compareValues(
+          getProp(item, key as KeyVariadic),
+          comparisonValue as V,
+          comparisonOperator as Operator
+        )
+      })
+    }
 
     return this.newInstance<Item>(collection)
   }
@@ -1682,11 +1489,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
-    const collection = this.items.filter(
-      (item) => values.indexOf(getProp(item, key as KeyVariadic)) !== -1
-    )
-
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(whereHasValues(this, key, values))
   }
 
   /**
@@ -1720,11 +1523,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
     key: keyof Item | K,
     values: unknown[]
   ): Collection<Item> {
-    const collection = this.items.filter(
-      (item) => values.indexOf(getProp(item, key as KeyVariadic)) === -1
-    )
-
-    return this.newInstance<Item>(collection)
+    return this.newInstance<Item>(whereHasValues(this, key, values, true))
   }
 
   /**
@@ -1796,7 +1595,7 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
   protected newInstance<T extends ItemData>(
     ...collection: T[] | [T[]]
   ): Collection<T> {
-    const items = variadic(collection)
+    const items = resolveItems(variadic(collection), isWrapped(this[0]))
     const instance = this.constructor as Constructor<Collection<T>>
 
     return new instance(items)
@@ -1819,5 +1618,47 @@ export default class Collection<Item extends ItemData = ItemData> extends Array<
    */
   protected getPrimaryKey(item: Item): string | number {
     return item[this.primaryKey()] as string | number
+  }
+
+  /**
+   * The getValuesByKey method returns an array of values of a given key.
+   *
+   * @param {string|string[]} key
+   * @return {unknown[]}
+   */
+  private getValuesByKey<K>(key: keyof Item | K): unknown[] {
+    const filtered = this.items.filter(
+      (item) => getProp(item, key as KeyVariadic) !== undefined
+    )
+
+    return filtered.map((item) => getProp(item, key as KeyVariadic))
+  }
+
+  /**
+   * The filterUntil method filters the items until callback respond with the value determined by response argument.
+   *
+   * @param {Object|Function} itemOrCallback
+   * @param {boolean} response - Filter until callback respond with the determined value.
+   * @param {boolean} negateCallback - Negate the callback response.
+   * @return {Object[]}
+   */
+  private filterUntil(
+    itemOrCallback: Item | ((item: Item) => boolean),
+    response: boolean,
+    negateCallback: boolean
+  ): Collection<Item> {
+    let previous: boolean | null = null
+
+    const callback = isFunction(itemOrCallback)
+      ? itemOrCallback
+      : (item: Item) =>
+          this.getPrimaryKey(item) === this.getPrimaryKey(itemOrCallback)
+    return this.items.filter((item) => {
+      if (previous !== response) {
+        previous = negateCallback ? !callback(item) : callback(item)
+      }
+
+      return previous
+    }) as Collection<Item>
   }
 }

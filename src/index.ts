@@ -1,5 +1,5 @@
 import Collection from './Collection'
-import { variadic } from './helpers'
+import variadic from './helpers/variadic'
 
 function collect<Item extends Record<string, unknown>>(
   collection: Item[]

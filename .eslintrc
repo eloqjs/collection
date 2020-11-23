@@ -32,7 +32,8 @@
   "ignorePatterns": "build",
   "rules": {
     "prettier/prettier": "error",
-    "simple-import-sort/sort": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
 
     /* Others */
     "no-console": "error"

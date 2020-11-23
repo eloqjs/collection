@@ -4,6 +4,7 @@
 
     /* Basic Options */
     "target": "ES6",
+    "module": "CommonJS",
     "declaration": true,
     "declarationMap": true,
     "rootDir": "src",
