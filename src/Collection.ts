@@ -179,7 +179,7 @@ export default class Collection<
     }
 
     if (value) {
-      return this.findIndexBy(value, key as KeyVariadic) !== -1
+      return this.findIndexBy(value, key) !== -1
     }
 
     return false
@@ -721,16 +721,13 @@ export default class Collection<
 
     if (length % 2 === 0) {
       return (
-        ((getProp(this.items[length / 2 - 1], key as KeyVariadic) as number) +
-          (getProp(this.items[length / 2], key as KeyVariadic) as number)) /
+        ((getProp(this.items[length / 2 - 1], key) as number) +
+          (getProp(this.items[length / 2], key) as number)) /
         2
       )
     }
 
-    return getProp(
-      this.items[Math.floor(length / 2)],
-      key as KeyVariadic
-    ) as number
+    return getProp(this.items[Math.floor(length / 2)], key) as number
   }
 
   /**
@@ -759,12 +756,12 @@ export default class Collection<
 
     this.items.forEach((item) => {
       const tempValues = values.filter((value) => {
-        return value.key === getProp(item, key as KeyVariadic)
+        return value.key === getProp(item, key)
       })
 
       if (!tempValues.length) {
         values.push({
-          key: getProp(item, key as KeyVariadic) as number,
+          key: getProp(item, key) as number,
           count: 1
         })
       } else {
@@ -1427,13 +1424,9 @@ export default class Collection<
     let collection
 
     if (operator === undefined || operator === true) {
-      collection = this.items.filter((item) =>
-        getProp(item, key as KeyVariadic)
-      )
+      collection = this.items.filter((item) => getProp(item, key))
     } else if (operator === false) {
-      collection = this.items.filter(
-        (item) => !getProp(item, key as KeyVariadic)
-      )
+      collection = this.items.filter((item) => !getProp(item, key))
     } else {
       if (value === undefined) {
         comparisonValue = operator as V
@@ -1442,7 +1435,7 @@ export default class Collection<
 
       collection = this.items.filter((item) => {
         return compareValues(
-          getProp(item, key as KeyVariadic),
+          getProp(item, key),
           comparisonValue as V,
           comparisonOperator as Operator
         )
@@ -1497,9 +1490,8 @@ export default class Collection<
   ): Collection<Item> {
     const collection = this.filter(
       (item) =>
-        (getProp(item, key as KeyVariadic) as never) < (values[0] as never) ||
-        (getProp(item, key as KeyVariadic) as never) >
-          (values[values.length - 1] as never)
+        (getProp(item, key) as never) < (values[0] as never) ||
+        (getProp(item, key) as never) > (values[values.length - 1] as never)
     )
     return this.newInstance<Item>(collection)
   }
@@ -1618,12 +1610,14 @@ export default class Collection<
    * @param {string|string[]} key
    * @return {unknown[]}
    */
-  private getValuesByKey<K>(key: keyof Item | K): unknown[] {
+  private getValuesByKey<K extends KeyVariadic>(
+    key: keyof Item | K
+  ): unknown[] {
     const filtered = this.items.filter(
-      (item) => getProp(item, key as KeyVariadic) !== undefined
+      (item) => getProp(item, key) !== undefined
     )
 
-    return filtered.map((item) => getProp(item, key as KeyVariadic))
+    return filtered.map((item) => getProp(item, key))
   }
 
   /**
