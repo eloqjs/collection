@@ -1,14 +1,3 @@
-import type {
-  ClassCollection,
-  ClassConstructor,
-  Constructor,
-  DefaultValue,
-  ItemData,
-  ItemOrDefault,
-  Key,
-  KeyVariadic,
-  Operator
-} from '../types'
 import clone from './helpers/clone'
 import getProp from './helpers/getProp'
 import getValue from './helpers/getValue'
@@ -29,6 +18,17 @@ import resolveValue from './helpers/resolveValue'
 import { sortGreaterOrLessThan, sortNullish } from './helpers/sort'
 import variadic from './helpers/variadic'
 import { compareValues, whereHasValues } from './helpers/where'
+import type {
+  ClassCollection,
+  ClassConstructor,
+  Constructor,
+  DefaultValue,
+  ItemData,
+  ItemOrDefault,
+  Key,
+  KeyVariadic,
+  Operator
+} from './types'
 
 export default class Collection<
   Item extends ItemData = ItemData

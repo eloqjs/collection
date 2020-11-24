@@ -1,4 +1,4 @@
-import type { ItemData, KeyVariadic } from '../../types'
+import type { ItemData, KeyVariadic } from '../types'
 import getProp from './getProp'
 import { isFunction, isObject } from './is'
 

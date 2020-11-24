@@ -1,5 +1,4 @@
-import { collect, Collection } from '../src'
-import type { ItemData } from '../types'
+import { collect, Collection, ItemData } from '../src'
 
 describe('Initialize Collection', () => {
   describe('collect()', () => {
