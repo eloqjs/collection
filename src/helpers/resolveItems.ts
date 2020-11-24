@@ -1,4 +1,4 @@
-import { ItemData } from '../../types'
+import { ItemData } from '../types'
 
 /**
  * The resolveItems() method maps the items back to their original state based on isWrapped argument.
