@@ -3,9 +3,10 @@
   "version": "0.0.0-development",
   "description": "The collection for your resources. Made specifically to work with arrays of objects from your API Responses.",
   "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "types": "types/index.d.ts",
   "files": [
-    "build"
+    "build",
+    "types"
   ],
   "scripts": {
     "build": "rimraf ./build && tsc",
