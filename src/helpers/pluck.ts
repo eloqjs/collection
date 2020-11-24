@@ -1,4 +1,4 @@
-import type { ItemData, Key } from '../../types'
+import type { ItemData, Key } from '../types'
 import getProp from './getProp'
 import { isArray, isObject } from './is'
 
