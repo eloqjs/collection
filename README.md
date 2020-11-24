@@ -58,9 +58,6 @@ Copyright (c) João Pedro Antunes Silva
 [code-climate-maintainability-src]: https://img.shields.io/codeclimate/maintainability/eloqjs/collection?logo=code-climate&style=flat-square
 [code-climate-maintainability-href]: https://codeclimate.com/github/eloqjs/collection/maintainability
 
-[code-climate-coverage-src]: https://img.shields.io/codeclimate/coverage/eloqjs/collection?logo=code-climate&style=flat-square
-[code-climate-coverage-href]: https://codeclimate.com/github/eloqjs/collection/test_coverage
-
 [codecov-src]: https://img.shields.io/codecov/c/github/eloqjs/collection.svg?logo=codecov&style=flat-square
 [codecov-href]: https://codecov.io/gh/eloqjs/collection
 
