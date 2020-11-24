@@ -1,4 +1,4 @@
-import type { KeyVariadic } from '../types'
+import type { KeyVariadic } from '../../types'
 import clone from './clone'
 import { isArray, isObject, isString } from './is'
 

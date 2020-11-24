@@ -1,11 +1,12 @@
 {
   "name": "@eloqjs/collection",
   "version": "0.0.0-development",
-  "description": "",
+  "description": "The collection for your resources. Made specifically to work with arrays of objects from your API Responses.",
   "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "types": "types/index.d.ts",
   "files": [
-    "build"
+    "build",
+    "types"
   ],
   "scripts": {
     "build": "rimraf ./build && tsc",
@@ -14,9 +15,19 @@
     "test": "jest"
   },
   "repository": "github:eloqjs/collection",
-  "keywords": [],
+  "keywords": [
+    "collection",
+    "collect",
+    "eloquent",
+    "resources",
+    "array",
+    "map",
+    "filter",
+    "laravel"
+  ],
   "author": "João Pedro Antunes Silva",
   "license": "MIT",
+  "homepage": "https://collection.eloqjs.com",
   "publishConfig": {
     "access": "public"
   },

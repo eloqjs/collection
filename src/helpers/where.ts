@@ -1,4 +1,4 @@
-import type { ItemData, KeyVariadic, Operator } from '../types'
+import type { ItemData, KeyVariadic, Operator } from '../../types'
 import getProp from './getProp'
 
 /**

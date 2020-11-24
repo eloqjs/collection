@@ -1,4 +1,5 @@
-import { collect, Collection, ItemData } from '../src'
+import { collect, Collection } from '../src'
+import type { ItemData } from '../types'
 
 describe('Initialize Collection', () => {
   describe('collect()', () => {
@@ -94,15 +95,22 @@ describe('Initialize Collection', () => {
           title: 'My Incredible Post'
         } as unknown) as T
       }
-      Collection.getFresh = <T extends ItemData>() => {
-        return ([
-          { id: 1, slug: 'my-awesome-post', title: 'My Awesome Post' },
-          {
-            id: 2,
-            slug: 'my-super-awesome-post',
-            title: 'My Super Awesome Post'
-          }
-        ] as unknown) as T[]
+      Collection.getFresh = async <T extends ItemData>(): Promise<
+        T[] | Collection<T>
+      > => {
+        return await new Promise((resolve) => {
+          setTimeout(() => {
+            const items = ([
+              { id: 1, slug: 'my-awesome-post', title: 'My Awesome Post' },
+              {
+                id: 2,
+                slug: 'my-super-awesome-post',
+                title: 'My Super Awesome Post'
+              }
+            ] as unknown) as T[]
+            resolve(items)
+          }, 250)
+        })
       }
 
       const collection = collect([

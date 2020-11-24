@@ -1,3 +1,14 @@
+import type {
+  ClassCollection,
+  ClassConstructor,
+  Constructor,
+  DefaultValue,
+  ItemData,
+  ItemOrDefault,
+  Key,
+  KeyVariadic,
+  Operator
+} from '../types'
 import clone from './helpers/clone'
 import getProp from './helpers/getProp'
 import getValue from './helpers/getValue'
@@ -18,17 +29,6 @@ import resolveValue from './helpers/resolveValue'
 import { sortGreaterOrLessThan, sortNullish } from './helpers/sort'
 import variadic from './helpers/variadic'
 import { compareValues, whereHasValues } from './helpers/where'
-import type {
-  ClassCollection,
-  ClassConstructor,
-  Constructor,
-  DefaultValue,
-  ItemData,
-  ItemOrDefault,
-  Key,
-  KeyVariadic,
-  Operator
-} from './types'
 
 export default class Collection<
   Item extends ItemData = ItemData
@@ -80,15 +80,22 @@ export default class Collection<
     return item
   }
 
-  public static getFresh<T extends ItemData>({
+  public static async getFresh<T extends ItemData>({
     collection,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     include
   }: {
     collection: Collection<T>
     include: string[]
-  }): T[] | Collection<T> {
-    return collection.items
+  }): Promise<T[] | Collection<T>> {
+    return await new Promise((resolve) => {
+      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+      // In this example, we use setTimeout(...) to simulate async code.
+      // In reality, you will probably be using something like XHR or an HTML5 API.
+      setTimeout(() => {
+        resolve(collection)
+      }, 250)
+    })
   }
 
   /**
@@ -461,9 +468,9 @@ export default class Collection<
    * The fresh method reloads a fresh item instance from the database for all the items.
    *
    * @param {...*} include
-   * @return this
+   * @return {Promise<this>}
    */
-  public fresh(...include: string[] | [string[]]): this {
+  public async fresh(...include: string[] | [string[]]): Promise<this> {
     const _include = variadic(include)
 
     if (this.isEmpty()) {
@@ -471,7 +478,7 @@ export default class Collection<
     }
 
     const freshItems = this.wrap<Item>(
-      Collection.getFresh({ collection: this, include: _include })
+      await Collection.getFresh({ collection: this, include: _include })
     ).getDictionary()
 
     return this.map((item) => {

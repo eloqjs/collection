@@ -4,24 +4,39 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
 [![Code Climate maintainability][code-climate-maintainability-src]][code-climate-maintainability-href]
-[![Code Climate coverage][code-climate-coverage-src]][code-climate-coverage-href]
 [![Codecov][codecov-src]][codecov-href]
+[![Contributions][contributions-src]][contributions-href]
 [![License][license-src]][license-href]
 
+> The collection for your resources. Made specifically to work with arrays of objects from your API Responses.
+
 - [✨ &nbsp;Release Notes](https://collection.eloqjs.com/releases)
-- [📖 &nbsp;Documentation](https://collection.eloqjs.com)
+- [📖 &nbsp;Read the Documentation](https://collection.eloqjs.com)
+
+## Features
+- Made specifically to work with arrays of objects
+- Handle objects wrapped in a `data` key 
+- Extends the Array class
+- Names and conventions that makes sense
+- Models support, fully compatible with [vue-api-query](https://github.com/robsontenorio/vue-api-query), 
+  [sarala](https://github.com/milroyfraser/sarala/) and [coloquent](https://github.com/DavidDuwaer/Coloquent)
+- Integrable `fresh` and `toQuery`
+- TypeScript support
+
+[📖 &nbsp;Read the Documentation](https://collection.eloqjs.com)
 
 ## Development
 
 1. Clone this repository
 2. Install dependencies using `yarn install`
-3. Start development server using `yarn dev`
+3. Test using `yarn test`
 
 ## Thanks
 
-This package is heavily based on [collect.js](https://github.com/ecrmnn/collect.js). 
-Thank you so much [Daniel Eckermann](https://github.com/ecrmnn) for this amazing package!
+ - 🔥 Inspiration from [Laravel Eloquent Collections](https://laravel.com/docs/eloquent-collections).
 
+ - 💎 Based on [collect.js](https://github.com/ecrmnn/collect.js) by [Daniel Eckermann](https://github.com/ecrmnn).
+   Thank you so much for your amazing package!
 
 ## 📑 License
 
@@ -48,6 +63,9 @@ Copyright (c) João Pedro Antunes Silva
 
 [codecov-src]: https://img.shields.io/codecov/c/github/eloqjs/collection.svg?logo=codecov&style=flat-square
 [codecov-href]: https://codecov.io/gh/eloqjs/collection
+
+[contributions-src]: https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square
+[contributions-href]: https://github.com/eloqjs/collection/issues
 
 [license-src]: https://img.shields.io/github/license/eloqjs/collection?style=flat-square
 [license-href]: https://github.com/eloqjs/collection/blob/dev/LICENSE.md

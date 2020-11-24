@@ -1,4 +1,4 @@
-import type { ExtractFunction } from '../types'
+import type { ExtractFunction } from '../../types'
 
 /**
  * The isArray() method determines whether the passed value is an Array.
