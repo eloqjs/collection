@@ -20,23 +20,6 @@ describe('Initialize Collection', () => {
       expect(collection).toEqual(array)
     })
 
-    it('should return unwrapped items using items property', () => {
-      const array1 = [{}, {}, {}]
-      const array2 = [{ data: {} }, { data: {} }, { data: {} }]
-      const collection1 = collect(array1)
-      const collection2 = collect(array2)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection1.items).toEqual(array1)
-      expect(collection1).toEqual(array1)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection2.items).toEqual(array1)
-      expect(collection2).toEqual(array2)
-    })
-
     it('should mutate itself using items property', () => {
       const array1 = [{}, {}, {}]
       const array2 = [{}, {}, {}, {}, {}, {}]
@@ -55,34 +38,6 @@ describe('Initialize Collection', () => {
       // @ts-ignore
       expect(collection.items).toEqual(array2)
       expect(collection).toEqual(array2)
-    })
-
-    it('should map items back to their original state using items property', () => {
-      const array1 = [{}, {}, {}]
-      const array2 = [{}, {}, {}, {}, {}, {}]
-      const array3 = [{ data: {} }, { data: {} }, { data: {} }]
-      const collection = collect(array3)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.items).toEqual(array1)
-      expect(collection).toEqual(array3)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      collection.items = collect(array2)
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      expect(collection.items).toEqual(array2)
-      expect(collection).toEqual([
-        { data: {} },
-        { data: {} },
-        { data: {} },
-        { data: {} },
-        { data: {} },
-        { data: {} }
-      ])
     })
 
     it('should be extendable', () => {

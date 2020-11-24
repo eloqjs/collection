@@ -1,19 +1,12 @@
 import clone from './helpers/clone'
 import getProp from './helpers/getProp'
 import getValue from './helpers/getValue'
-import {
-  isArray,
-  isFunction,
-  isObject,
-  isString,
-  isWrapped
-} from './helpers/is'
+import { isArray, isFunction, isObject, isString } from './helpers/is'
 import {
   getDictionaryFromKey,
   getDictionaryFromMatches,
   getMatches
 } from './helpers/pluck'
-import resolveItems from './helpers/resolveItems'
 import resolveValue from './helpers/resolveValue'
 import { sortGreaterOrLessThan, sortNullish } from './helpers/sort'
 import variadic from './helpers/variadic'
@@ -46,17 +39,14 @@ export default class Collection<
    *
    * @return {this}
    */
-  protected get items(): Item[] {
-    return this.map((item) => {
-      return 'data' in item ? item.data : item
-    }) as Item[]
+  protected get items(): this {
+    return this
   }
 
   /**
    * Set the items of the array.
    */
-  protected set items(items: Item[]) {
-    const collection = resolveItems(items, isWrapped(this[0])) as this
+  protected set items(collection: this) {
     this.splice(0, this.length, ...collection)
   }
 
@@ -459,7 +449,7 @@ export default class Collection<
    * @return {this}
    */
   public forget(index: number): this {
-    this.splice(index, 1)
+    this.items.splice(index, 1)
 
     return this
   }
@@ -913,7 +903,7 @@ export default class Collection<
    * @return {this}
    */
   public prepend(value: Item): this {
-    this.unshift(value)
+    this.items.unshift(value)
 
     return this
   }
@@ -935,7 +925,7 @@ export default class Collection<
       const index = this.findIndexBy(item as Item)
 
       if (index !== -1) {
-        this.splice(index, 1)
+        this.items.splice(index, 1)
       }
     }
 
@@ -952,9 +942,9 @@ export default class Collection<
     const index = this.findIndexBy(item)
 
     if (index !== -1) {
-      this.splice(index, 1, item)
+      this.items.splice(index, 1, item)
     } else {
-      this.push(item)
+      this.items.push(item)
     }
 
     return this
@@ -1121,11 +1111,13 @@ export default class Collection<
    * @return {Collection[]}
    */
   public split(numberOfGroups: number): Collection<Item>[] {
-    const itemsPerGroup = Math.round(this.length / numberOfGroups)
+    const itemsPerGroup = Math.round(this.items.length / numberOfGroups)
     const collection = []
 
     for (let iterator = 0; iterator < numberOfGroups; iterator += 1) {
-      collection.push(this.newInstance<Item>(this.splice(0, itemsPerGroup)))
+      collection.push(
+        this.newInstance<Item>(this.items.splice(0, itemsPerGroup))
+      )
     }
 
     return collection
@@ -1215,7 +1207,7 @@ export default class Collection<
     callback: (time: number) => T
   ): Collection<T> {
     for (let iterator = 1; iterator <= times; iterator += 1) {
-      this.push(callback(iterator))
+      this.items.push(callback(iterator))
     }
 
     return this as Collection<T>
@@ -1595,7 +1587,7 @@ export default class Collection<
   protected newInstance<T extends ItemData>(
     ...collection: T[] | [T[]]
   ): Collection<T> {
-    const items = resolveItems(variadic(collection), isWrapped(this[0]))
+    const items = variadic(collection)
     const instance = this.constructor as Constructor<Collection<T>>
 
     return new instance(items)
@@ -1617,7 +1609,7 @@ export default class Collection<
    * @return {string|number}
    */
   protected getPrimaryKey(item: Item): string | number {
-    return item[this.primaryKey()] as string | number
+    return getProp(item, this.primaryKey()) as string | number
   }
 
   /**

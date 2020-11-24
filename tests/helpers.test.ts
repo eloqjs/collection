@@ -55,6 +55,103 @@ describe('Helpers', () => {
       expect(result).toBe(holder.a)
     })
 
+    it('should get property when wrapped in "data" key', () => {
+      const post = {
+        data: {
+          id: 1,
+          title: 'My awesome post',
+          text: 'Something...',
+          relationships: {
+            author: {
+              data: {
+                id: 1,
+                name: 'Joe Doe'
+              }
+            }
+          }
+        }
+      }
+
+      const title1 = getProp(post, 'id')
+      const title2 = getProp(post, 'data.id')
+
+      expect(title1).toBe(1)
+      expect(title2).toBe(1)
+
+      const name1 = getProp(post, 'relationships.author.name')
+      const name2 = getProp(post, 'data.relationships.author.data.name')
+
+      expect(name1).toBe('Joe Doe')
+      expect(name2).toBe('Joe Doe')
+    })
+
+    it('should get property when wrapped in "attributes" key', () => {
+      const post = {
+        id: 1,
+        attributes: {
+          title: 'My awesome post',
+          text: 'Something...'
+        },
+        relationships: {
+          author: {
+            id: 1,
+            attributes: {
+              name: 'Joe Doe'
+            }
+          }
+        }
+      }
+
+      const title1 = getProp(post, 'title')
+      const title2 = getProp(post, 'attributes.title')
+
+      expect(title1).toBe('My awesome post')
+      expect(title2).toBe('My awesome post')
+
+      const name1 = getProp(post, 'relationships.author.name')
+      const name2 = getProp(post, 'relationships.author.attributes.name')
+
+      expect(name1).toBe('Joe Doe')
+      expect(name2).toBe('Joe Doe')
+    })
+
+    it('should get property when wrapped in "attributes" and "data" keys', () => {
+      const post = {
+        data: {
+          id: 1,
+          attributes: {
+            title: 'My awesome post',
+            text: 'Something...'
+          },
+          relationships: {
+            author: {
+              data: {
+                id: 1,
+                attributes: {
+                  name: 'Joe Doe'
+                }
+              }
+            }
+          }
+        }
+      }
+
+      const title1 = getProp(post, 'title')
+      const title2 = getProp(post, 'data.attributes.title')
+
+      expect(title1).toBe('My awesome post')
+      expect(title2).toBe('My awesome post')
+
+      const name1 = getProp(post, 'relationships.author.name')
+      const name2 = getProp(
+        post,
+        'data.relationships.author.data.attributes.name'
+      )
+
+      expect(name1).toBe('Joe Doe')
+      expect(name2).toBe('Joe Doe')
+    })
+
     it('should return holder when key is not defined.', () => {
       const key = ''
       const result = getProp(holder, key)
