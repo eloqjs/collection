@@ -39,6 +39,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
           paths_ignore: '["**/*.md", ".codeclimate.json", ".editorconfig", ".gitignore", ".eslintignore", ".prettierignore", "**/docs/**"]'
+          do_not_skip: '["workflow_dispatch", "schedule", "push"]'
 
   test:
     name: Test
