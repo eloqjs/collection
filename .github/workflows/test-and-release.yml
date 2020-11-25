@@ -38,14 +38,15 @@ jobs:
         uses: fkirc/skip-duplicate-actions@master
         with:
           github_token: ${{ github.token }}
-          paths_ignore: '["**/*.md", ".codeclimate.json", ".editorconfig", ".gitignore", ".eslintignore", ".prettierignore", "**/docs/**"]'
+          paths_ignore: '["**/*.md", ".codeclimate.json", ".editorconfig", ".gitignore", ".eslintignore", ".prettierignore", "docs/**", ".github/**"]'
+          do_not_skip: '["workflow_dispatch", "schedule"]'
 
   test:
     name: Test
 
     needs: pre_job
 
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    if: needs.pre_job.outputs.should_skip != 'true' || (github.ref != 'refs/heads/dev' && github.head_ref != 'dev')
 
     runs-on: ${{ matrix.os }}
 

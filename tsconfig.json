@@ -6,8 +6,6 @@
     "target": "ES6",
     "module": "CommonJS",
     "declaration": true,
-    "declarationMap": true,
-    "rootDir": "src",
     "outDir": "build",
     /* Strict Type-Checking Options */
     "strict": true,
@@ -18,7 +16,8 @@
     /* Advanced Options */
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "keyofStringsOnly": true
   },
-  "exclude": ["coverage", "tests"]
+  "include": ["src"]
 }
