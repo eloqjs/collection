@@ -49,12 +49,24 @@ type Config = {
 export default class Collection<
   Item extends ItemData = ItemData
 > extends Array<Item> {
+  public static config: Config
+  private static _config: Required<Config>
+
   constructor(collection: Item[])
   constructor(...items: Item[])
   constructor(...collection: Item[] | [Item[]]) {
     const items = variadic(collection)
 
     super(...items)
+
+    Collection._config = {
+      ...{
+        fresh: defaults.fresh,
+        primaryKey: defaults.primaryKey,
+        toQuery: defaults.toQuery
+      },
+      ...Collection.config
+    }
   }
 
   /**
@@ -71,20 +83,6 @@ export default class Collection<
    */
   protected set items(collection: this) {
     this.splice(0, this.length, ...collection)
-  }
-
-  public static config(): Config {
-    return {}
-  }
-
-  public static _config(): Required<Config> {
-    const _defaults = {
-      fresh: defaults.fresh,
-      primaryKey: defaults.primaryKey,
-      toQuery: defaults.toQuery
-    }
-
-    return { ..._defaults, ...Collection.config() }
   }
 
   /**
@@ -467,7 +465,7 @@ export default class Collection<
     }
 
     const freshItems = this.wrap<Item>(
-      await Collection._config().fresh({ collection: this, include: _include })
+      await Collection._config.fresh({ collection: this, include: _include })
     ).getDictionary()
 
     return this.map((item) => {
@@ -1247,7 +1245,7 @@ export default class Collection<
       throw new Error('Unable to create query for collection with mixed types.')
     }
 
-    return Collection._config().toQuery({ collection: this, item })
+    return Collection._config.toQuery({ collection: this, item })
   }
 
   /**
@@ -1590,7 +1588,7 @@ export default class Collection<
    * @return {string}
    */
   protected primaryKey(): string {
-    return Collection._config().primaryKey<Item>({
+    return Collection._config.primaryKey<Item>({
       collection: this
     })
   }
