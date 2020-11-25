@@ -55,6 +55,18 @@ describe('Helpers', () => {
       expect(result).toBe(holder.a)
     })
 
+    it('should get property when passing array index', () => {
+      const holder2 = {
+        a: [{ b: 1 }, 2]
+      }
+
+      const result1 = getProp(holder2, 'a.0.b')
+      const result2 = getProp(holder2, 'a.1')
+
+      expect(result1).toBe(1)
+      expect(result2).toBe(2)
+    })
+
     it('should get property when wrapped in "data" key', () => {
       const post = {
         data: {
@@ -150,6 +162,14 @@ describe('Helpers', () => {
 
       expect(name1).toBe('Joe Doe')
       expect(name2).toBe('Joe Doe')
+    })
+
+    it('should strip null from keys', () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const result = getProp(holder, ['a', null, 'b', 'c'])
+
+      expect(result).toBe(1)
     })
 
     it('should return holder when key is not defined.', () => {
