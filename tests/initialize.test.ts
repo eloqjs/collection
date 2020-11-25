@@ -41,30 +41,36 @@ describe('Initialize Collection', () => {
     })
 
     it('should be extendable', () => {
-      Collection.primaryKey = () => 'slug'
-      Collection.newQuery = <T extends ItemData>() => {
-        return ({
-          id: 3,
-          slug: 'my-incredible-post',
-          title: 'My Incredible Post'
-        } as unknown) as T
-      }
-      Collection.getFresh = async <T extends ItemData>(): Promise<
-        T[] | Collection<T>
-      > => {
-        return await new Promise((resolve) => {
-          setTimeout(() => {
-            const items = ([
-              { id: 1, slug: 'my-awesome-post', title: 'My Awesome Post' },
-              {
-                id: 2,
-                slug: 'my-super-awesome-post',
-                title: 'My Super Awesome Post'
-              }
-            ] as unknown) as T[]
-            resolve(items)
-          }, 250)
-        })
+      Collection.config = () => {
+        return {
+          async fresh<T extends ItemData>(): Promise<T[] | Collection<T>> {
+            return await new Promise((resolve) => {
+              setTimeout(() => {
+                const items = ([
+                  { id: 1, slug: 'my-awesome-post', title: 'My Awesome Post' },
+                  {
+                    id: 2,
+                    slug: 'my-super-awesome-post',
+                    title: 'My Super Awesome Post'
+                  }
+                ] as unknown) as T[]
+                resolve(items)
+              }, 250)
+            })
+          },
+
+          primaryKey(): string {
+            return 'slug'
+          },
+
+          toQuery<T extends ItemData>(): T {
+            return ({
+              id: 3,
+              slug: 'my-incredible-post',
+              title: 'My Incredible Post'
+            } as unknown) as T
+          }
+        }
       }
 
       const collection = collect([

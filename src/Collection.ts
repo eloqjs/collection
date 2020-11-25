@@ -1,3 +1,4 @@
+import defaults from './defaults'
 import clone from './helpers/clone'
 import getProp from './helpers/getProp'
 import getValue from './helpers/getValue'
@@ -22,6 +23,28 @@ import type {
   KeyVariadic,
   Operator
 } from './types'
+
+type Config = {
+  fresh?<T extends ItemData>({
+    collection,
+    include
+  }: {
+    collection: Collection<T>
+    include: string[]
+  }): Promise<T[] | Collection<T>>
+  primaryKey?<T extends ItemData>({
+    collection
+  }: {
+    collection: Collection<T>
+  }): string
+  toQuery?<T extends ItemData>({
+    collection,
+    item
+  }: {
+    collection: Collection<T>
+    item: T
+  }): T
+}
 
 export default class Collection<
   Item extends ItemData = ItemData
@@ -50,42 +73,18 @@ export default class Collection<
     this.splice(0, this.length, ...collection)
   }
 
-  public static primaryKey<T extends ItemData>({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    collection
-  }: {
-    collection: Collection<T>
-  }): string {
-    return 'id'
+  public static config(): Config {
+    return {}
   }
 
-  public static newQuery<T extends ItemData>({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    collection,
-    item
-  }: {
-    collection: Collection<T>
-    item: T
-  }): T {
-    return item
-  }
+  public static _config(): Required<Config> {
+    const _defaults = {
+      fresh: defaults.fresh,
+      primaryKey: defaults.primaryKey,
+      toQuery: defaults.toQuery
+    }
 
-  public static async getFresh<T extends ItemData>({
-    collection,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    include
-  }: {
-    collection: Collection<T>
-    include: string[]
-  }): Promise<T[] | Collection<T>> {
-    return await new Promise((resolve) => {
-      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-      // In this example, we use setTimeout(...) to simulate async code.
-      // In reality, you will probably be using something like XHR or an HTML5 API.
-      setTimeout(() => {
-        resolve(collection)
-      }, 250)
-    })
+    return { ..._defaults, ...Collection.config() }
   }
 
   /**
@@ -468,7 +467,7 @@ export default class Collection<
     }
 
     const freshItems = this.wrap<Item>(
-      await Collection.getFresh({ collection: this, include: _include })
+      await Collection._config().fresh({ collection: this, include: _include })
     ).getDictionary()
 
     return this.map((item) => {
@@ -1248,7 +1247,7 @@ export default class Collection<
       throw new Error('Unable to create query for collection with mixed types.')
     }
 
-    return Collection.newQuery({ collection: this, item })
+    return Collection._config().toQuery({ collection: this, item })
   }
 
   /**
@@ -1591,7 +1590,9 @@ export default class Collection<
    * @return {string}
    */
   protected primaryKey(): string {
-    return Collection.primaryKey<Item>({ collection: this })
+    return Collection._config().primaryKey<Item>({
+      collection: this
+    })
   }
 
   /**
