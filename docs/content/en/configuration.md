@@ -17,7 +17,7 @@ Collection.config = {
 }
 ```
 
-## Configuring on Frameworks
+## Frameworks
 
 ### Nuxt
 

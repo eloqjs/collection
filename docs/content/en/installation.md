@@ -36,12 +36,10 @@ Collection.config = {
 }
 ```
 
-## Installing on Nuxt
 
-The module globally injects `$collect` instance, meaning that you can access it anywhere
-using `this.$collect`. For plugins, asyncData, nuxtServerInit and Middleware, you can access it from `context.$collect`.
+## Frameworks
 
-### Module
+### Nuxt
 
 Add `@eloqjs/nuxt-collection` dependency to your project:
 
@@ -76,7 +74,7 @@ Then, add `@eloqjs/nuxt-collection` to the `modules` section of `nuxt.config.js`
 }
 ```
 
-### TypeScript
+#### TypeScript
 
 Add the types to your "types" array in tsconfig.json after the `@nuxt/types` (Nuxt 2.9.0+) or `@nuxt/vue-app` entry.
 
@@ -92,12 +90,7 @@ Add the types to your "types" array in tsconfig.json after the `@nuxt/types` (Nu
 ```
 
 
-## Installing on Vue
-
-The plugin globally injects `$collect` instance, meaning that you can access it anywhere
-using `this.$collect`.
-
-### Plugin
+### Vue
 
 Add `@eloqjs/collection` dependency to your project:
 
