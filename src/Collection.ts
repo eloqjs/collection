@@ -1,19 +1,13 @@
+import defaults from './defaults'
 import clone from './helpers/clone'
 import getProp from './helpers/getProp'
 import getValue from './helpers/getValue'
-import {
-  isArray,
-  isFunction,
-  isObject,
-  isString,
-  isWrapped
-} from './helpers/is'
+import { isArray, isFunction, isObject, isString } from './helpers/is'
 import {
   getDictionaryFromKey,
   getDictionaryFromMatches,
   getMatches
 } from './helpers/pluck'
-import resolveItems from './helpers/resolveItems'
 import resolveValue from './helpers/resolveValue'
 import { sortGreaterOrLessThan, sortNullish } from './helpers/sort'
 import variadic from './helpers/variadic'
@@ -29,6 +23,28 @@ import type {
   KeyVariadic,
   Operator
 } from './types'
+
+type Config = {
+  fresh?<T extends ItemData>({
+    collection,
+    include
+  }: {
+    collection: Collection<T>
+    include: string[]
+  }): Promise<T[] | Collection<T>>
+  primaryKey?<T extends ItemData>({
+    collection
+  }: {
+    collection: Collection<T>
+  }): string
+  toQuery?<T extends ItemData>({
+    collection,
+    item
+  }: {
+    collection: Collection<T>
+    item: T
+  }): T
+}
 
 export default class Collection<
   Item extends ItemData = ItemData
@@ -46,56 +62,29 @@ export default class Collection<
    *
    * @return {this}
    */
-  protected get items(): Item[] {
-    return this.map((item) => {
-      return 'data' in item ? item.data : item
-    }) as Item[]
+  protected get items(): this {
+    return this
   }
 
   /**
    * Set the items of the array.
    */
-  protected set items(items: Item[]) {
-    const collection = resolveItems(items, isWrapped(this[0])) as this
+  protected set items(collection: this) {
     this.splice(0, this.length, ...collection)
   }
 
-  public static primaryKey<T extends ItemData>({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    collection
-  }: {
-    collection: Collection<T>
-  }): string {
-    return 'id'
+  public static config(): Config {
+    return {}
   }
 
-  public static newQuery<T extends ItemData>({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    collection,
-    item
-  }: {
-    collection: Collection<T>
-    item: T
-  }): T {
-    return item
-  }
+  public static _config(): Required<Config> {
+    const _defaults = {
+      fresh: defaults.fresh,
+      primaryKey: defaults.primaryKey,
+      toQuery: defaults.toQuery
+    }
 
-  public static async getFresh<T extends ItemData>({
-    collection,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    include
-  }: {
-    collection: Collection<T>
-    include: string[]
-  }): Promise<T[] | Collection<T>> {
-    return await new Promise((resolve) => {
-      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-      // In this example, we use setTimeout(...) to simulate async code.
-      // In reality, you will probably be using something like XHR or an HTML5 API.
-      setTimeout(() => {
-        resolve(collection)
-      }, 250)
-    })
+    return { ..._defaults, ...Collection.config() }
   }
 
   /**
@@ -189,7 +178,7 @@ export default class Collection<
     }
 
     if (value) {
-      return this.findIndexBy(value, key as KeyVariadic) !== -1
+      return this.findIndexBy(value, key) !== -1
     }
 
     return false
@@ -459,7 +448,7 @@ export default class Collection<
    * @return {this}
    */
   public forget(index: number): this {
-    this.splice(index, 1)
+    this.items.splice(index, 1)
 
     return this
   }
@@ -478,7 +467,7 @@ export default class Collection<
     }
 
     const freshItems = this.wrap<Item>(
-      await Collection.getFresh({ collection: this, include: _include })
+      await Collection._config().fresh({ collection: this, include: _include })
     ).getDictionary()
 
     return this.map((item) => {
@@ -731,16 +720,13 @@ export default class Collection<
 
     if (length % 2 === 0) {
       return (
-        ((getProp(this.items[length / 2 - 1], key as KeyVariadic) as number) +
-          (getProp(this.items[length / 2], key as KeyVariadic) as number)) /
+        ((getProp(this.items[length / 2 - 1], key) as number) +
+          (getProp(this.items[length / 2], key) as number)) /
         2
       )
     }
 
-    return getProp(
-      this.items[Math.floor(length / 2)],
-      key as KeyVariadic
-    ) as number
+    return getProp(this.items[Math.floor(length / 2)], key) as number
   }
 
   /**
@@ -769,12 +755,12 @@ export default class Collection<
 
     this.items.forEach((item) => {
       const tempValues = values.filter((value) => {
-        return value.key === getProp(item, key as KeyVariadic)
+        return value.key === getProp(item, key)
       })
 
       if (!tempValues.length) {
         values.push({
-          key: getProp(item, key as KeyVariadic) as number,
+          key: getProp(item, key) as number,
           count: 1
         })
       } else {
@@ -913,7 +899,7 @@ export default class Collection<
    * @return {this}
    */
   public prepend(value: Item): this {
-    this.unshift(value)
+    this.items.unshift(value)
 
     return this
   }
@@ -935,7 +921,7 @@ export default class Collection<
       const index = this.findIndexBy(item as Item)
 
       if (index !== -1) {
-        this.splice(index, 1)
+        this.items.splice(index, 1)
       }
     }
 
@@ -952,9 +938,9 @@ export default class Collection<
     const index = this.findIndexBy(item)
 
     if (index !== -1) {
-      this.splice(index, 1, item)
+      this.items.splice(index, 1, item)
     } else {
-      this.push(item)
+      this.items.push(item)
     }
 
     return this
@@ -1121,11 +1107,13 @@ export default class Collection<
    * @return {Collection[]}
    */
   public split(numberOfGroups: number): Collection<Item>[] {
-    const itemsPerGroup = Math.round(this.length / numberOfGroups)
+    const itemsPerGroup = Math.round(this.items.length / numberOfGroups)
     const collection = []
 
     for (let iterator = 0; iterator < numberOfGroups; iterator += 1) {
-      collection.push(this.newInstance<Item>(this.splice(0, itemsPerGroup)))
+      collection.push(
+        this.newInstance<Item>(this.items.splice(0, itemsPerGroup))
+      )
     }
 
     return collection
@@ -1215,7 +1203,7 @@ export default class Collection<
     callback: (time: number) => T
   ): Collection<T> {
     for (let iterator = 1; iterator <= times; iterator += 1) {
-      this.push(callback(iterator))
+      this.items.push(callback(iterator))
     }
 
     return this as Collection<T>
@@ -1259,7 +1247,7 @@ export default class Collection<
       throw new Error('Unable to create query for collection with mixed types.')
     }
 
-    return Collection.newQuery({ collection: this, item })
+    return Collection._config().toQuery({ collection: this, item })
   }
 
   /**
@@ -1435,13 +1423,9 @@ export default class Collection<
     let collection
 
     if (operator === undefined || operator === true) {
-      collection = this.items.filter((item) =>
-        getProp(item, key as KeyVariadic)
-      )
+      collection = this.items.filter((item) => getProp(item, key))
     } else if (operator === false) {
-      collection = this.items.filter(
-        (item) => !getProp(item, key as KeyVariadic)
-      )
+      collection = this.items.filter((item) => !getProp(item, key))
     } else {
       if (value === undefined) {
         comparisonValue = operator as V
@@ -1450,7 +1434,7 @@ export default class Collection<
 
       collection = this.items.filter((item) => {
         return compareValues(
-          getProp(item, key as KeyVariadic),
+          getProp(item, key),
           comparisonValue as V,
           comparisonOperator as Operator
         )
@@ -1505,9 +1489,8 @@ export default class Collection<
   ): Collection<Item> {
     const collection = this.filter(
       (item) =>
-        (getProp(item, key as KeyVariadic) as never) < (values[0] as never) ||
-        (getProp(item, key as KeyVariadic) as never) >
-          (values[values.length - 1] as never)
+        (getProp(item, key) as never) < (values[0] as never) ||
+        (getProp(item, key) as never) > (values[values.length - 1] as never)
     )
     return this.newInstance<Item>(collection)
   }
@@ -1595,7 +1578,7 @@ export default class Collection<
   protected newInstance<T extends ItemData>(
     ...collection: T[] | [T[]]
   ): Collection<T> {
-    const items = resolveItems(variadic(collection), isWrapped(this[0]))
+    const items = variadic(collection)
     const instance = this.constructor as Constructor<Collection<T>>
 
     return new instance(items)
@@ -1607,7 +1590,9 @@ export default class Collection<
    * @return {string}
    */
   protected primaryKey(): string {
-    return Collection.primaryKey<Item>({ collection: this })
+    return Collection._config().primaryKey<Item>({
+      collection: this
+    })
   }
 
   /**
@@ -1617,7 +1602,7 @@ export default class Collection<
    * @return {string|number}
    */
   protected getPrimaryKey(item: Item): string | number {
-    return item[this.primaryKey()] as string | number
+    return getProp(item, this.primaryKey()) as string | number
   }
 
   /**
@@ -1626,12 +1611,14 @@ export default class Collection<
    * @param {string|string[]} key
    * @return {unknown[]}
    */
-  private getValuesByKey<K>(key: keyof Item | K): unknown[] {
+  private getValuesByKey<K extends KeyVariadic>(
+    key: keyof Item | K
+  ): unknown[] {
     const filtered = this.items.filter(
-      (item) => getProp(item, key as KeyVariadic) !== undefined
+      (item) => getProp(item, key) !== undefined
     )
 
-    return filtered.map((item) => getProp(item, key as KeyVariadic))
+    return filtered.map((item) => getProp(item, key))
   }
 
   /**
