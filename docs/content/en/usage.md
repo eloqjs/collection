@@ -55,3 +55,32 @@ const collection = this.$collect(posts)
 ```
 
 ## Methods
+
+### `average()`
+
+Alias for the [`avg()`](/usage#avg) method.
+
+### `avg()`
+
+The `avg` method returns the [average value](https://en.wikipedia.org/wiki/Average) of a given key:
+
+<code-group>
+  <code-block label="Usage" active>
+
+  ```js
+  collect([
+    { name: 'Chair', price: 600 },
+    { name: 'Desk', price: 900 },
+    { name: 'Lamp', price: 150 }
+  ]).avg('price');
+  ```
+
+  </code-block>
+  <code-block label="Returns">
+
+  ```js
+  550
+  ```
+
+  </code-block>
+</code-group>
