@@ -15,12 +15,12 @@
 
 ## Features
 - Made specifically to work with arrays of objects
-- Handle objects wrapped in a `data` key 
+- JSON API specification support
 - Extends the Array class
 - Names and conventions that makes sense
 - Models support, fully compatible with [vue-api-query](https://github.com/robsontenorio/vue-api-query), 
   [sarala](https://github.com/milroyfraser/sarala/) and [coloquent](https://github.com/DavidDuwaer/Coloquent)
-- Integrable `fresh` and `toQuery`
+- Integrable `primaryKey`, `fresh` and `toQuery`
 - TypeScript support
 
 [📖 &nbsp;Read the Documentation](https://collection.eloqjs.com)
