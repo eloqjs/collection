@@ -33,14 +33,15 @@ export default {
 
 ### Vue
 
-You can configure `@eloqjs/collection` with the `Collection.config` property in `src/main.js`.
+You can configure `@eloqjs/vue-collection` by passing the options to `Vue.use` in `src/main.js`.
 
 ```js{}[src/main.js]
-import { Collection } from '@eloqjs/collection'
+import vue from 'vue'
+import Collection from '@eloqjs/vue-collection'
 
-Collection.config = {
+Vue.use(Collection, {
   // My custom configuration
-}
+})
 ```
 
 

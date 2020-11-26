@@ -46,13 +46,28 @@ const collection = this.$collect(posts)
 ### Vue
 
 The plugin globally injects `$collect` instance, meaning that you can access it anywhere
-using `this.$collect`.
+using `this.$collect`. You can also access it from `Vue.collect`.
 
-```js 
-const collection = this.$collect(posts)
-  .where('status', 'published')
-  .sortBy('-publishedAt')
-```
+<code-group>
+  <code-block label="this.$collect()" active>
+
+  ```js 
+  const collection = this.$collect(posts)
+    .where('status', 'published')
+    .sortBy('-publishedAt')
+  ```
+
+  </code-block>
+  <code-block label="Vue.collect()">
+
+  ```js 
+  const collection = Vue.collect(posts)
+    .where('status', 'published')
+    .sortBy('-publishedAt')
+  ```
+
+  </code-block>
+</code-group>
 
 ## Methods
 

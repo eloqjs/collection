@@ -92,20 +92,20 @@ Add the types to your "types" array in tsconfig.json after the `@nuxt/types` (Nu
 
 ### Vue
 
-Add `@eloqjs/collection` dependency to your project:
+Add `@eloqjs/vue-collection` dependency to your project:
 
 <code-group>
   <code-block label="Yarn" active>
 
   ```bash
-  yarn add @eloqjs/collection
+  yarn add @eloqjs/vue-collection
   ```
 
   </code-block>
   <code-block label="NPM">
 
   ```bash
-  npm install @eloqjs/collection
+  npm install @eloqjs/vue-collection
   ```
 
   </code-block>
@@ -115,11 +115,9 @@ Set up on `src/main.js`
 
 ```js{}[src/main.js]
 import vue from 'vue'
-import { collect, Collection } from '@eloqjs/collection'
+import Collection from '@eloqjs/vue-collection'
 
-Collection.config = {
+Vue.use(Collection, {
   // Options
-}
-
-Vue.use('collect', collect)
+})
 ```
