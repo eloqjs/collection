@@ -37,11 +37,26 @@ position: 4
 The module globally injects `$collect` instance, meaning that you can access it anywhere
 using `this.$collect`. For plugins, asyncData, nuxtServerInit and Middleware, you can access it from `context.$collect`.
 
-```js 
-const collection = this.$collect(posts)
-  .where('status', 'published')
-  .sortBy('-publishedAt')
-```
+<code-group>
+  <code-block label="this.$collect()" active>
+
+  ```js 
+  const collection = this.$collect(posts)
+    .where('status', 'published')
+    .sortBy('-publishedAt')
+  ```
+
+  </code-block>
+  <code-block label="context.$collect()">
+
+  ```js 
+  const collection = context.collect(posts)
+    .where('status', 'published')
+    .sortBy('-publishedAt')
+  ```
+
+  </code-block>
+</code-group>
 
 ### Vue
 
