@@ -3,13 +3,34 @@ name: Documentation
 on:
   workflow_run:
     workflows: [ "Test and Release" ]
-    branches: [ master ]
+    branches: [ dev ]
     types:
       - completed
 
 jobs:
+  pre_job:
+    name: Pre Job
+
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          github_token: ${{ github.token }}
+          paths: '["docs/**"]'
+
   deploy:
-    name: Documentation
+    name: Deploy
+
+    needs: pre_job
+
+    if: needs.pre_job.outputs.should_skip != 'true'
 
     runs-on: ${{ matrix.os }}
 
