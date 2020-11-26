@@ -31,12 +31,14 @@
 2. Install dependencies using `yarn install`
 3. Test using `yarn test`
 
-## Thanks
+## Credits
 
- - 🔥 Inspiration from [Laravel Eloquent Collections](https://laravel.com/docs/eloquent-collections).
+- 🔥 Inspiration from [Laravel Eloquent Collections](https://laravel.com/docs/eloquent-collections).
 
- - 💎 Based on [collect.js](https://github.com/ecrmnn/collect.js) by [Daniel Eckermann](https://github.com/ecrmnn).
+- 💎 Based on [collect.js](https://github.com/ecrmnn/collect.js) by [Daniel Eckermann](https://github.com/ecrmnn).
    Thank you so much for your amazing package!
+
+- ❤️ Whoever contributes to this project!
 
 ## 📑 License
 
