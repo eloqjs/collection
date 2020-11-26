@@ -13,6 +13,8 @@ features:
 - TypeScript support
 ---
 
+<alert type="warning">This documentation still in development.</alert>
+
 The collection for your resources. Made specifically to work with arrays of objects from your API Responses.
 
 ## Features

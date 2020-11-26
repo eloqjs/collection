@@ -5,6 +5,8 @@ category: Getting Started
 position: 3
 ---
 
+<alert type="warning">This documentation still in development.</alert>
+
 <alert type="info">If you are using **Nuxt** or **Vue**, please follow their configuration steps instead of this one.</alert>
 
 You can configure `@eloqjs/collection` with the `Collection.config` property in `src/main.js`.

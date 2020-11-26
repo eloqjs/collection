@@ -5,6 +5,8 @@ category: Getting Started
 position: 4
 ---
 
+<alert type="warning">This documentation still in development.</alert>
+
 <code-group>
   <code-block label="collect()" active>
 
@@ -85,6 +87,8 @@ using `this.$collect`. You can also access it from `Vue.collect`.
 </code-group>
 
 ## Methods
+
+<alert type="warning">This documentation still in development. Not all methods are yet listed.</alert>
 
 ### `average()`
 

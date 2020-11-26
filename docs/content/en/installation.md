@@ -5,6 +5,8 @@ position: 2
 category: Getting Started
 ---
 
+<alert type="warning">This documentation still in development.</alert>
+
 <alert type="info">If you are using **Nuxt** or **Vue**, please follow their installation steps instead of this one.</alert>
 
 Add `@eloqjs/collection` dependency to your project:
