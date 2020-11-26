@@ -108,8 +108,6 @@ The primary key of the items.
 If our items are Model classes with Query Builder, we can configure this option to
 convert the collection into a Query Builder.
 
-See [primaryKey()](/api/methods#primarykey) and [modelKeys()](/api/methods#modelkeys)
-
 > This example is from `vue-api-query` integration.
 
 <code-group>
