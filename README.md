@@ -5,6 +5,7 @@
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
 [![Code Climate maintainability][code-climate-maintainability-src]][code-climate-maintainability-href]
 [![Codecov][codecov-src]][codecov-href]
+[![Gitpod ready-to-code][gitpod-src]][gitpod-href]
 [![Contributions][contributions-src]][contributions-href]
 [![License][license-src]][license-href]
 
@@ -62,6 +63,9 @@ Copyright (c) João Pedro Antunes Silva
 
 [codecov-src]: https://img.shields.io/codecov/c/github/eloqjs/collection.svg?logo=codecov&style=flat-square
 [codecov-href]: https://codecov.io/gh/eloqjs/collection
+
+[gitpod-src]: https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square
+[gitpod-href]: https://gitpod.io/#https://github.com/eloqjs/collection
 
 [contributions-src]: https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square
 [contributions-href]: https://github.com/eloqjs/collection/issues

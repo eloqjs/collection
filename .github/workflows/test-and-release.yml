@@ -38,7 +38,7 @@ jobs:
         uses: fkirc/skip-duplicate-actions@master
         with:
           github_token: ${{ github.token }}
-          paths_ignore: '["**/*.md", ".codeclimate.json", ".editorconfig", ".gitignore", ".eslintignore", ".prettierignore", "docs/**", ".github/**"]'
+          paths_ignore: '["**/*.md", ".codeclimate.json", ".gitpod.yml", ".editorconfig", ".gitignore", ".eslintignore", ".prettierignore", "docs/**", ".github/**"]'
           do_not_skip: '["workflow_dispatch", "schedule"]'
 
   test:
