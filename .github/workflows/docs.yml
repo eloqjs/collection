@@ -11,8 +11,6 @@ jobs:
   pre_job:
     name: Pre Job
 
-    if: github.event_name == 'push'
-
     runs-on: ubuntu-latest
 
     outputs:
