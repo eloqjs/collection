@@ -54,7 +54,7 @@ using `this.$collect`. For plugins, asyncData, nuxtServerInit and Middleware, yo
   <code-block label="context.$collect()">
 
   ```js 
-  const collection = context.collect(posts)
+  const collection = context.$collect(posts)
     .where('status', 'published')
     .sortBy('-publishedAt')
   ```
