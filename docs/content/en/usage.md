@@ -7,6 +7,8 @@ position: 4
 
 <alert type="warning">This documentation still in development.</alert>
 
+See the [API reference](/api/methods) for a list of available methods.
+
 <code-group>
   <code-block label="collect()" active>
 
@@ -38,6 +40,8 @@ position: 4
 
 <alert type="warning">The nuxt module [@eloqjs/nuxt-collection](https://github.com/eloqjs/nuxt-collection) will be released soon.</alert>
 
+See the [API reference](/api/methods) for a list of available methods.
+
 The module globally injects `$collect` instance, meaning that you can access it anywhere
 using `this.$collect`. For plugins, asyncData, nuxtServerInit and Middleware, you can access it from `context.$collect`.
 
@@ -64,6 +68,8 @@ using `this.$collect`. For plugins, asyncData, nuxtServerInit and Middleware, yo
 
 ### Vue
 
+See the [API reference](/api/methods) for a list of available methods.
+
 The plugin globally injects `$collect` instance, meaning that you can access it anywhere
 using `this.$collect`. You can also access it from `Vue.collect`.
 
@@ -87,8 +93,3 @@ using `this.$collect`. You can also access it from `Vue.collect`.
 
   </code-block>
 </code-group>
-
-## Methods
-
-<alert type="warning">This documentation still in development. Not all methods are yet listed.</alert>
-
