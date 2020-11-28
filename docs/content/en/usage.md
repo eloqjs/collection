@@ -87,8 +87,3 @@ using `this.$collect`. You can also access it from `Vue.collect`.
 
   </code-block>
 </code-group>
-
-## Methods
-
-<alert type="warning">This documentation still in development. Not all methods are yet listed.</alert>
-
