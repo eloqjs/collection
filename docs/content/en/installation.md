@@ -43,8 +43,6 @@ Collection.config = {
 
 ### Nuxt
 
-<alert type="warning">The nuxt module [@eloqjs/nuxt-collection](https://github.com/eloqjs/nuxt-collection) will be released soon.</alert>
-
 Add `@eloqjs/nuxt-collection` dependency to your project:
 
 <code-group>
