@@ -29,7 +29,13 @@
 
 [📖 &nbsp;Read the Documentation](https://collection.eloqjs.com)
 
-## Development
+## Contributing
+
+You can contribute online with Gitpod:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-href]
+
+Or locally:
 
 1. Clone this repository
 2. Install dependencies using `yarn install`
