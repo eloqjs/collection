@@ -15,6 +15,7 @@ export type Operator =
   | '<'
   | '>='
   | '<='
+  | 'LIKE'
 export type Key = string
 export type KeyVariadic = Key | Key[]
 export type ItemData = Record<Key, unknown>

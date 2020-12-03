@@ -1,45 +1,134 @@
 import type { ItemData, KeyVariadic, Operator } from '../types'
 import getProp from './getProp'
+import { isString } from './is'
+
+/**
+ * Search for a specified pattern.
+ *
+ * @param {[Object, string} property
+ * @param {string} value
+ * @return {boolean}
+ */
+function likeOperation(property: string, value: string): boolean {
+  switch (true) {
+    case value.startsWith('%') && value.endsWith('%'): {
+      const extractValue = new RegExp('%(.*)%', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^.*${_value[1]}.*$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    case value.startsWith('_') && value.endsWith('%'): {
+      const extractValue = new RegExp('_(.*)%', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^.${_value[1]}.*$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    case value.endsWith('__%'): {
+      const extractValue = new RegExp('(.*)__%', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^${_value[1]}\\s?\\w{2}.*$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    case value.endsWith('_%'): {
+      const extractValue = new RegExp('(.*)_%', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^${_value[1]}\\s?\\w.*$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    case value.startsWith('%'): {
+      const extractValue = new RegExp('%(.*)', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^.*${_value[1]}$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    case value.endsWith('%'): {
+      const extractValue = new RegExp('(.*)%', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^${_value[1]}.*$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    case value.includes('%'): {
+      const extractValue = new RegExp('(.*)%(.*)', 'i')
+      const _value = value.match(extractValue) as RegExpExecArray
+
+      const operation = new RegExp(`^${_value[1]}.*${_value[2]}$`, 'i')
+
+      return !!property.match(operation)
+    }
+
+    default: {
+      const operation = new RegExp(`^.*${value}.*$`, 'i')
+
+      return !!property.match(operation)
+    }
+  }
+}
 
 /**
  * Compare two values using the given operator.
  *
- * @param {[Object, string|string[]]|unknown} value1
- * @param {unknown} value2
+ * @param {[Object, string|string[]]|unknown} property
+ * @param {unknown} value
  * @param {string} operator
  * @return {boolean}
  */
 export function compareValues(
-  value1: unknown,
-  value2: unknown,
+  property: unknown,
+  value: unknown,
   operator: Operator
 ): boolean {
   switch (operator) {
     case '==':
-      return value1 == value2
+      return property == value
 
     default:
     case '===':
-      return value1 === value2
+      return property === value
 
     case '!=':
     case '<>':
-      return value1 != value2
+      return property != value
 
     case '!==':
-      return value1 !== value2
+      return property !== value
 
     case '<':
-      return (value1 as never) < (value2 as never)
+      return (property as never) < (value as never)
 
     case '<=':
-      return (value1 as never) <= (value2 as never)
+      return (property as never) <= (value as never)
 
     case '>':
-      return (value1 as never) > (value2 as never)
+      return (property as never) > (value as never)
 
     case '>=':
-      return (value1 as never) >= (value2 as never)
+      return (property as never) >= (value as never)
+
+    case 'LIKE': {
+      if (!isString(property) || !isString(value)) {
+        return false
+      }
+
+      return likeOperation(property, value)
+    }
   }
 }
 
