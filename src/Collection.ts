@@ -172,11 +172,11 @@ export default class Collection<
     }
 
     if (isObject(key)) {
-      return this.findIndexBy(key as Item) !== -1
+      return this.search(key as Item) !== false
     }
 
     if (value) {
-      return this.findIndexBy(value, key) !== -1
+      return this.search(value, key) !== false
     }
 
     return false
@@ -352,25 +352,6 @@ export default class Collection<
       this.first((item) => this.getPrimaryKey(item) === key) ||
       getValue(defaultValue)
     )
-  }
-
-  /**
-   * The findIndexBy method finds an index based on value of the given key, and returns -1 when not found.
-   * The primary key will be used by default.
-   *
-   * @param {unknown} value
-   * @param {string|string[]} [key=primaryKey]
-   * @return {number}
-   */
-  public findIndexBy<V>(
-    value: Item | V,
-    key: KeyVariadic = this.primaryKey()
-  ): number {
-    return this.findIndex((item) => {
-      const _value = resolveValue(value, key)
-
-      return getProp(item, key) === _value
-    })
   }
 
   /**
@@ -916,9 +897,9 @@ export default class Collection<
     const item = this.find(primaryKey)
 
     if (item) {
-      const index = this.findIndexBy(item as Item)
+      const index = this.search(item as Item)
 
-      if (index !== -1) {
+      if (index !== false) {
         this.items.splice(index, 1)
       }
     }
@@ -933,9 +914,9 @@ export default class Collection<
    * @return {this}
    */
   public put(item: Item): this {
-    const index = this.findIndexBy(item)
+    const index = this.search(item)
 
-    if (index !== -1) {
+    if (index !== false) {
       this.items.splice(index, 1, item)
     } else {
       this.items.push(item)
@@ -979,17 +960,63 @@ export default class Collection<
   }
 
   /**
-   * The search method searches the collection for the given value and returns its key if found.
-   * If the item is not found, false is returned.
+   * The search method searches the collection for the value of the given key and returns the item's index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test
    *
    * @param {Function} callback
    * @return {number|boolean}
    */
   public search(
     callback: (item: Item, index: number) => boolean
+  ): number | false
+
+  /**
+   * The search method searches the collection for the value of the given key and returns the item's index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test.
+   *
+   * @param {unknown} value
+   * @return {number|boolean}
+   */
+  public search<V>(value: Item | V): number | false
+
+  /**
+   * The search method searches the collection for the value of the given key and returns the item's index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test.
+   *
+   * @param {unknown} value
+   * @param {string|string[]} key
+   * @return {number|boolean}
+   */
+  public search<V>(value: Item | V, key: KeyVariadic): number | false
+
+  /**
+   * The search method searches the collection for the value of the given key and returns its index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test.
+   *
+   * @param {unknown} valueOrCallback
+   * @param {string|string[]} [key=primaryKey]
+   * @return {number|boolean}
+   */
+  public search<V>(
+    valueOrCallback: Item | V | ((item: Item, index: number) => boolean),
+    key: KeyVariadic = this.primaryKey()
   ): number | false {
     const result = this.items.findIndex((item, index) => {
-      return callback(this.items[index], index)
+      if (isFunction(valueOrCallback)) {
+        return valueOrCallback(this.items[index], index)
+      }
+
+      const _value = resolveValue(valueOrCallback, key)
+
+      return getProp(item, key) === _value
     })
 
     if (result === undefined || result < 0) {
