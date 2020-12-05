@@ -1,4 +1,4 @@
-import { collect } from '../../src'
+import { collect, Collection } from '../../src'
 
 describe('mapInto()', () => {
   class Person {
@@ -17,7 +17,7 @@ describe('mapInto()', () => {
 
   it('should map into a class', () => {
     const data = collection.mapInto(Person)
-    expect(data).toBeInstanceOf(Array)
+    expect(data).toBeInstanceOf(Collection)
 
     expect(data.first()).toEqual(new Person({ name: 'Firmino' }))
     expect(data.last()).toEqual(new Person({ name: 'Mané' }))
