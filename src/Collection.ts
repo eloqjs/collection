@@ -202,7 +202,7 @@ export default class Collection<
   ): Record<string, number> {
     const group = this.groupBy(callback)
 
-    return Object.keys(group).reduce((result, key) => {
+    return Object.keys(group).reduce((result: Record<string, number>, key) => {
       result[key] = (group[key] as unknown[]).length
       return result
     }, {})
@@ -484,7 +484,7 @@ export default class Collection<
    */
   public getDictionary(collection?: Collection<Item>): Record<string, Item> {
     const items = collection || this.items
-    const dictionary = {}
+    const dictionary: Record<string, Item> = {}
 
     for (const item of items) {
       dictionary[this.getPrimaryKey(item)] = item
@@ -502,7 +502,7 @@ export default class Collection<
   public groupBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item, index: number) => Key)
   ): Record<string, unknown> {
-    const collection = {}
+    const collection: Record<string, unknown[]> = {}
 
     this.items.forEach((item, index) => {
       const resolvedKey: Key = (resolveValue(item, key, index) as Key) ?? ''
@@ -642,7 +642,7 @@ export default class Collection<
   public mapToGroups(
     callback: (item: Item, index: number) => [Key, unknown]
   ): Record<string, unknown> {
-    const collection = {}
+    const collection: Record<string, unknown[]> = {}
 
     this.items.forEach((item, index) => {
       const [key, value] = callback(item, index)
@@ -668,7 +668,7 @@ export default class Collection<
   public mapWithKeys(
     callback: (item: Item) => [Key, unknown]
   ): Record<string, unknown> {
-    const collection = {}
+    const collection: Record<string, unknown> = {}
 
     this.items.forEach((item) => {
       const [key, value] = callback(item)

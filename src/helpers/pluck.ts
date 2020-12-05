@@ -11,7 +11,7 @@ import { isArray, isObject } from './is'
 export function buildKeyPathMap(
   items: Record<string, unknown>[]
 ): unknown[] | Record<string, unknown> {
-  const keyPaths = {}
+  const keyPaths: Record<string, unknown> = {}
 
   items.forEach((item, index) => {
     function buildKeyPath(val: unknown, keyPath: string | number) {
@@ -56,7 +56,11 @@ export function matches<K extends Key>(
       const match = matchingKey[0]
 
       if (match.split('.').length === numberOfLevels) {
-        matches.push(pathMap[match])
+        matches.push(
+          (isObject(pathMap)
+            ? pathMap[match + '']
+            : pathMap[Number(match)]) as K
+        )
       }
     }
   })
@@ -96,8 +100,8 @@ export function getDictionaryFromMatches<
   Item extends ItemData,
   K extends Key,
   V
->(items: Item[], keys: K[], values: V[]): Record<string, V> {
-  const collection = {}
+>(items: Item[], keys: K[], values: V[]): Record<string, V[]> {
+  const collection: Record<string, V[]> = {}
 
   items.forEach((item, index) => {
     const key: Key = keys[index] || ''
@@ -124,7 +128,7 @@ export function getDictionaryFromKey<
   value: keyof Item | V,
   key: keyof Item | K
 ): Record<string, unknown> {
-  const collection = {}
+  const collection: Record<string, unknown> = {}
 
   items.forEach((item) => {
     const _value = getProp(item, value as V)

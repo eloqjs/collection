@@ -62,9 +62,11 @@ function getValue(holder: Record<Key, unknown>, propParts: Key[]): unknown {
 
         continue
       }
-    }
 
-    result = result[propPart]
+      result = result[propPart + '']
+    } else {
+      result = result[Number(propPart)]
+    }
   }
 
   return result
