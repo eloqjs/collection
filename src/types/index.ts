@@ -19,7 +19,8 @@ export type Operator =
 export type Key = string
 export type KeyVariadic = Key | Key[]
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ItemData = Record<Key, any>
+export type Obj<T = any> = Record<string, T>
+export type ItemData = Obj
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ExtractFunction<T> = Extract<T, Function>
 export type ItemOrDefault<Item extends ItemData = ItemData, D = null> =

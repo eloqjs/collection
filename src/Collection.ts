@@ -21,6 +21,7 @@ import type {
   ItemOrDefault,
   Key,
   KeyVariadic,
+  Obj,
   Operator,
   ValueOf
 } from './types'
@@ -198,12 +199,10 @@ export default class Collection<
    * @param {Function} callback
    * @return {Object}
    */
-  public countBy(
-    callback: (item: Item, index: number) => Key
-  ): Record<string, number> {
+  public countBy(callback: (item: Item, index: number) => Key): Obj<number> {
     const group = this.groupBy(callback)
 
-    return Object.keys(group).reduce((result: Record<string, number>, key) => {
+    return Object.keys(group).reduce((result: Obj<number>, key) => {
       result[key] = (group[key] as unknown[]).length
       return result
     }, {})
@@ -483,9 +482,9 @@ export default class Collection<
    * @param {Collection} [collection]
    * @return {Object}
    */
-  public getDictionary(collection?: Collection<Item>): Record<string, Item> {
+  public getDictionary(collection?: Collection<Item>): Obj<Item> {
     const items = collection || this.items
-    const dictionary: Record<string, Item> = {}
+    const dictionary: Obj<Item> = {}
 
     for (const item of items) {
       dictionary[this.getPrimaryKey(item)] = item
@@ -502,8 +501,8 @@ export default class Collection<
    */
   public groupBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item, index: number) => Key)
-  ): Record<string, unknown> {
-    const collection: Record<string, unknown[]> = {}
+  ): Obj<unknown> {
+    const collection: Obj<unknown[]> = {}
 
     this.items.forEach((item, index) => {
       const resolvedKey: Key = (resolveValue(item, key, index) as Key) ?? ''
@@ -642,8 +641,8 @@ export default class Collection<
    */
   public mapToGroups(
     callback: (item: Item, index: number) => [Key, unknown]
-  ): Record<string, unknown> {
-    const collection: Record<string, unknown[]> = {}
+  ): Obj<unknown> {
+    const collection: Obj<unknown[]> = {}
 
     this.items.forEach((item, index) => {
       const [key, value] = callback(item, index)
@@ -666,10 +665,8 @@ export default class Collection<
    * @param {Function} callback
    * @return {Object}
    */
-  public mapWithKeys(
-    callback: (item: Item) => [Key, unknown]
-  ): Record<string, unknown> {
-    const collection: Record<string, unknown> = {}
+  public mapWithKeys(callback: (item: Item) => [Key, unknown]): Obj<unknown> {
+    const collection: Obj<unknown> = {}
 
     this.items.forEach((item) => {
       const [key, value] = callback(item)
@@ -842,7 +839,7 @@ export default class Collection<
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key: keyof Item | K
-  ): Record<string, ValueOf<Item, V>>
+  ): Obj<ValueOf<Item, V>>
 
   /**
    * The pluck method retrieves all of the values for a given key.
@@ -854,7 +851,7 @@ export default class Collection<
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key?: keyof Item | K
-  ): ValueOf<Item, V>[] | Record<string, ValueOf<Item, V>> {
+  ): ValueOf<Item, V>[] | Obj<ValueOf<Item, V>> {
     if ((value as string).indexOf('*') !== -1) {
       const [keyMatches, valueMatches]: [K[], V[]] = getMatches(
         this.items,
@@ -867,7 +864,7 @@ export default class Collection<
             this.items,
             keyMatches,
             valueMatches
-          ) as Record<string, ValueOf<Item, V>>)
+          ) as Obj<ValueOf<Item, V>>)
         : ([valueMatches] as ValueOf<Item, V>[])
     }
 
