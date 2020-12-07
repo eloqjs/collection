@@ -21,7 +21,8 @@ import type {
   ItemOrDefault,
   Key,
   KeyVariadic,
-  Operator
+  Operator,
+  ValueOf
 } from './types'
 
 type Config = {
@@ -836,12 +837,12 @@ export default class Collection<
     return new classConstructor(this)
   }
 
-  public pluck<V extends Key>(value: keyof Item | V): unknown[]
+  public pluck<V extends Key>(value: keyof Item | V): ValueOf<Item, V>[]
 
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key: keyof Item | K
-  ): Record<string, unknown>
+  ): Record<string, ValueOf<Item, V>>
 
   /**
    * The pluck method retrieves all of the values for a given key.
@@ -853,7 +854,7 @@ export default class Collection<
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key?: keyof Item | K
-  ): unknown[] | Record<string, unknown> {
+  ): ValueOf<Item, V>[] | Record<string, ValueOf<Item, V>> {
     if ((value as string).indexOf('*') !== -1) {
       const [keyMatches, valueMatches]: [K[], V[]] = getMatches(
         this.items,
@@ -862,13 +863,22 @@ export default class Collection<
       )
 
       return key
-        ? getDictionaryFromMatches(this.items, keyMatches, valueMatches)
-        : [valueMatches]
+        ? (getDictionaryFromMatches(
+            this.items,
+            keyMatches,
+            valueMatches
+          ) as Record<string, ValueOf<Item, V>>)
+        : ([valueMatches] as ValueOf<Item, V>[])
     }
 
     return key
-      ? getDictionaryFromKey(this.items, value, key)
-      : clone(this.map((item) => getProp(item, value as K) ?? null))
+      ? (getDictionaryFromKey(this.items, value, key) as Record<
+          string,
+          ValueOf<Item, V>
+        >)
+      : (clone(
+          this.map((item) => getProp(item, value as K) ?? null)
+        ) as ValueOf<Item, V>[])
   }
 
   /**
