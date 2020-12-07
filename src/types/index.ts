@@ -27,3 +27,4 @@ export type ItemOrDefault<Item extends ItemData = ItemData, D = null> =
   | D
   | null
 export type DefaultValue<D = null> = D | (() => D) | null
+export type ValueOf<T, V extends keyof T = keyof T> = T[V]
