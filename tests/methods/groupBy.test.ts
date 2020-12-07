@@ -1,4 +1,4 @@
-import { collect } from '../../src'
+import { collect, Collection } from '../../src'
 
 describe('groupBy()', () => {
   const products = [
@@ -14,6 +14,8 @@ describe('groupBy()', () => {
     const grouped = collection.groupBy('manufacturer')
 
     expect(Object.keys(grouped)).toEqual(['IKEA', 'Herman Miller'])
+    expect(grouped['IKEA']).toBeInstanceOf(Collection)
+    expect(grouped['Herman Miller']).toBeInstanceOf(Collection)
     expect(collection).toEqual(products)
   })
 

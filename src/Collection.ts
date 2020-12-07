@@ -501,14 +501,14 @@ export default class Collection<
    */
   public groupBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item, index: number) => Key)
-  ): Obj<unknown> {
-    const collection: Obj<unknown[]> = {}
+  ): Obj<Collection<Item>> {
+    const collection: Obj<Collection<Item>> = {}
 
     this.items.forEach((item, index) => {
       const resolvedKey: Key = (resolveValue(item, key, index) as Key) ?? ''
 
       if (collection[resolvedKey] === undefined) {
-        collection[resolvedKey] = []
+        collection[resolvedKey] = this.newInstance<Item>([])
       }
 
       collection[resolvedKey].push(item)
