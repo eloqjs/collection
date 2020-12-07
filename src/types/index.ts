@@ -18,7 +18,8 @@ export type Operator =
   | 'LIKE'
 export type Key = string
 export type KeyVariadic = Key | Key[]
-export type ItemData = Record<Key, unknown>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ItemData = Record<Key, any>
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ExtractFunction<T> = Extract<T, Function>
 export type ItemOrDefault<Item extends ItemData = ItemData, D = null> =

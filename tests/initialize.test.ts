@@ -20,6 +20,21 @@ describe('Initialize Collection', () => {
       expect(collection).toEqual(array)
     })
 
+    it('should accept classes', () => {
+      class MyClass {
+        foo(): string {
+          return 'bar'
+        }
+      }
+
+      const array = [new MyClass(), new MyClass(), new MyClass()]
+      const collection = collect(array)
+
+      expect(collection).toEqual(array)
+      expect(collection.first()).toBeInstanceOf(MyClass)
+      expect(collection.first()?.foo()).toBe('bar')
+    })
+
     it('should mutate itself using items property', () => {
       const array1 = [{}, {}, {}]
       const array2 = [{}, {}, {}, {}, {}, {}]
