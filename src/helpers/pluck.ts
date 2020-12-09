@@ -1,4 +1,4 @@
-import type { ItemData, Key } from '../types'
+import type { ItemData, Key, Obj } from '../types'
 import getProp from './getProp'
 import { isArray, isObject } from './is'
 
@@ -9,9 +9,9 @@ import { isArray, isObject } from './is'
  * @return {[]|Object}
  */
 export function buildKeyPathMap(
-  items: Record<string, unknown>[]
-): unknown[] | Record<string, unknown> {
-  const keyPaths: Record<string, unknown> = {}
+  items: Obj<unknown>[]
+): unknown[] | Obj<unknown> {
+  const keyPaths: Obj<unknown> = {}
 
   items.forEach((item, index) => {
     function buildKeyPath(val: unknown, keyPath: string | number) {
@@ -43,7 +43,7 @@ export function buildKeyPathMap(
  */
 export function matches<K extends Key>(
   key: K,
-  pathMap: unknown[] | Record<string, unknown>
+  pathMap: unknown[] | Obj<unknown>
 ): K[] {
   const matches: K[] = []
   const regex = new RegExp(`0.${key}`, 'g')
@@ -100,8 +100,8 @@ export function getDictionaryFromMatches<
   Item extends ItemData,
   K extends Key,
   V
->(items: Item[], keys: K[], values: V[]): Record<string, V[]> {
-  const collection: Record<string, V[]> = {}
+>(items: Item[], keys: K[], values: V[]): Obj<V[]> {
+  const collection: Obj<V[]> = {}
 
   items.forEach((item, index) => {
     const key: Key = keys[index] || ''
@@ -123,12 +123,8 @@ export function getDictionaryFromKey<
   Item extends ItemData,
   V extends Key,
   K extends Key
->(
-  items: Item[],
-  value: keyof Item | V,
-  key: keyof Item | K
-): Record<string, unknown> {
-  const collection: Record<string, unknown> = {}
+>(items: Item[], value: keyof Item | V, key: keyof Item | K): Obj<unknown> {
+  const collection: Obj<unknown> = {}
 
   items.forEach((item) => {
     const _value = getProp(item, value as V)

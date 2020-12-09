@@ -1,4 +1,4 @@
-import type { ExtractFunction } from '../types'
+import type { ExtractFunction, Obj } from '../types'
 
 /**
  * The isArray() method determines whether the passed value is an Array.
@@ -16,7 +16,7 @@ export function isArray(value: unknown): value is Array<unknown> {
  * @param {*} value
  * @return {boolean}
  */
-export function isObject(value: unknown): value is Record<string, unknown> {
+export function isObject(value: unknown): value is Obj<unknown> {
   return (
     typeof value === 'object' &&
     Array.isArray(value) === false &&
@@ -60,6 +60,6 @@ export function isNumber(value: unknown): value is number {
  * @param {Object} value
  * @return {boolean}
  */
-export function isWrapped(value: Record<string, unknown>): boolean {
+export function isWrapped(value: Obj<unknown>): boolean {
   return !!value && 'data' in value
 }

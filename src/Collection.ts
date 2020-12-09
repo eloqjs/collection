@@ -572,8 +572,8 @@ export default class Collection<
    */
   public keyBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => Key)
-  ): Record<Key, Item> {
-    const collection: Record<Key, Item> = {}
+  ): Obj<Item> {
+    const collection: Obj<Item> = {}
 
     this.items.forEach((item) => {
       const _key: Key = (resolveValue(item, key) as Key) || ''
@@ -869,10 +869,7 @@ export default class Collection<
     }
 
     return key
-      ? (getDictionaryFromKey(this.items, value, key) as Record<
-          string,
-          ValueOf<Item, V>
-        >)
+      ? (getDictionaryFromKey(this.items, value, key) as Obj<ValueOf<Item, V>>)
       : (clone(
           this.map((item) => getProp(item, value as K) ?? null)
         ) as ValueOf<Item, V>[])

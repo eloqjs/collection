@@ -1,4 +1,4 @@
-import type { Key, KeyVariadic } from '../types'
+import type { Key, KeyVariadic, Obj } from '../types'
 import clone from './clone'
 import { isArray, isObject, isString } from './is'
 
@@ -81,7 +81,7 @@ function getValue(holder: Record<Key, unknown>, propParts: Key[]): unknown {
  * @param  {string|string[]} key - Dot notation, like `'a.b.c'` or `['a', 'b', 'c']`.
  * @return {*} - A property value.
  */
-function getProp(holder: Record<string, unknown>, key: KeyVariadic): unknown {
+function getProp(holder: Obj<unknown>, key: KeyVariadic): unknown {
   if (!key) {
     return holder
   }
