@@ -8,9 +8,7 @@ import { isArray, isObject } from './is'
  * @param {Object} items
  * @return {[]|Object}
  */
-export function buildKeyPathMap(
-  items: Obj<unknown>[]
-): unknown[] | Obj<unknown> {
+export function buildKeyPathMap(items: Obj<unknown>[]): Obj<unknown> {
   const keyPaths: Obj<unknown> = {}
 
   items.forEach((item, index) => {
@@ -41,10 +39,7 @@ export function buildKeyPathMap(
  * @param {[]|Object} pathMap
  * @return {[]}
  */
-export function matches<K extends Key>(
-  key: K,
-  pathMap: unknown[] | Obj<unknown>
-): K[] {
+export function matches<K extends Key>(key: K, pathMap: Obj<unknown>): K[] {
   const matches: K[] = []
   const regex = new RegExp(`0.${key}`, 'g')
   const numberOfLevels = `0.${key}`.split('.').length
@@ -56,11 +51,7 @@ export function matches<K extends Key>(
       const match = matchingKey[0]
 
       if (match.split('.').length === numberOfLevels) {
-        matches.push(
-          (isObject(pathMap)
-            ? pathMap[match + '']
-            : pathMap[Number(match)]) as K
-        )
+        matches.push(pathMap[match] as K)
       }
     }
   })
