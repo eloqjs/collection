@@ -1,4 +1,4 @@
-import type { ItemData, Key } from '../types'
+import type { ItemData, Key, Obj } from '../types'
 import getProp from './getProp'
 import { isArray, isObject } from './is'
 
@@ -8,10 +8,8 @@ import { isArray, isObject } from './is'
  * @param {Object} items
  * @return {[]|Object}
  */
-export function buildKeyPathMap(
-  items: Record<string, unknown>[]
-): unknown[] | Record<string, unknown> {
-  const keyPaths = {}
+export function buildKeyPathMap(items: Obj<unknown>[]): Obj<unknown> {
+  const keyPaths: Obj<unknown> = {}
 
   items.forEach((item, index) => {
     function buildKeyPath(val: unknown, keyPath: string | number) {
@@ -41,10 +39,7 @@ export function buildKeyPathMap(
  * @param {[]|Object} pathMap
  * @return {[]}
  */
-export function matches<K extends Key>(
-  key: K,
-  pathMap: unknown[] | Record<string, unknown>
-): K[] {
+export function matches<K extends Key>(key: K, pathMap: Obj<unknown>): K[] {
   const matches: K[] = []
   const regex = new RegExp(`0.${key}`, 'g')
   const numberOfLevels = `0.${key}`.split('.').length
@@ -56,7 +51,7 @@ export function matches<K extends Key>(
       const match = matchingKey[0]
 
       if (match.split('.').length === numberOfLevels) {
-        matches.push(pathMap[match])
+        matches.push(pathMap[match] as K)
       }
     }
   })
@@ -96,8 +91,8 @@ export function getDictionaryFromMatches<
   Item extends ItemData,
   K extends Key,
   V
->(items: Item[], keys: K[], values: V[]): Record<string, V> {
-  const collection = {}
+>(items: Item[], keys: K[], values: V[]): Obj<V[]> {
+  const collection: Obj<V[]> = {}
 
   items.forEach((item, index) => {
     const key: Key = keys[index] || ''
@@ -119,12 +114,8 @@ export function getDictionaryFromKey<
   Item extends ItemData,
   V extends Key,
   K extends Key
->(
-  items: Item[],
-  value: keyof Item | V,
-  key: keyof Item | K
-): Record<string, unknown> {
-  const collection = {}
+>(items: Item[], value: keyof Item | V, key: keyof Item | K): Obj<unknown> {
+  const collection: Obj<unknown> = {}
 
   items.forEach((item) => {
     const _value = getProp(item, value as V)

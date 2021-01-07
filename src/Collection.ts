@@ -21,7 +21,9 @@ import type {
   ItemOrDefault,
   Key,
   KeyVariadic,
-  Operator
+  Obj,
+  Operator,
+  ValueOf
 } from './types'
 
 type Config = {
@@ -172,11 +174,11 @@ export default class Collection<
     }
 
     if (isObject(key)) {
-      return this.findIndexBy(key as Item) !== -1
+      return this.search(key as Item) !== false
     }
 
     if (value) {
-      return this.findIndexBy(value, key) !== -1
+      return this.search(value, key) !== false
     }
 
     return false
@@ -197,12 +199,10 @@ export default class Collection<
    * @param {Function} callback
    * @return {Object}
    */
-  public countBy(
-    callback: (item: Item, index: number) => Key
-  ): Record<string, number> {
+  public countBy(callback: (item: Item, index: number) => Key): Obj<number> {
     const group = this.groupBy(callback)
 
-    return Object.keys(group).reduce((result, key) => {
+    return Object.keys(group).reduce((result: Obj<number>, key) => {
       result[key] = (group[key] as unknown[]).length
       return result
     }, {})
@@ -355,25 +355,6 @@ export default class Collection<
   }
 
   /**
-   * The findIndexBy method finds an index based on value of the given key, and returns -1 when not found.
-   * The primary key will be used by default.
-   *
-   * @param {unknown} value
-   * @param {string|string[]} [key=primaryKey]
-   * @return {number}
-   */
-  public findIndexBy<V>(
-    value: Item | V,
-    key: KeyVariadic = this.primaryKey()
-  ): number {
-    return this.findIndex((item) => {
-      const _value = resolveValue(value, key)
-
-      return getProp(item, key) === _value
-    })
-  }
-
-  /**
    * The first method returns the first element in the collection that passes a given truth test.
    *
    * @param {Function} callback
@@ -501,9 +482,9 @@ export default class Collection<
    * @param {Collection} [collection]
    * @return {Object}
    */
-  public getDictionary(collection?: Collection<Item>): Record<string, Item> {
+  public getDictionary(collection?: Collection<Item>): Obj<Item> {
     const items = collection || this.items
-    const dictionary = {}
+    const dictionary: Obj<Item> = {}
 
     for (const item of items) {
       dictionary[this.getPrimaryKey(item)] = item
@@ -520,14 +501,14 @@ export default class Collection<
    */
   public groupBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item, index: number) => Key)
-  ): Record<string, unknown> {
-    const collection = {}
+  ): Obj<Collection<Item>> {
+    const collection: Obj<Collection<Item>> = {}
 
     this.items.forEach((item, index) => {
       const resolvedKey: Key = (resolveValue(item, key, index) as Key) ?? ''
 
       if (collection[resolvedKey] === undefined) {
-        collection[resolvedKey] = []
+        collection[resolvedKey] = this.newInstance<Item>([])
       }
 
       collection[resolvedKey].push(item)
@@ -591,8 +572,8 @@ export default class Collection<
    */
   public keyBy<K extends KeyVariadic>(
     key: keyof Item | K | ((item: Item) => Key)
-  ): Record<Key, Item> {
-    const collection: Record<Key, Item> = {}
+  ): Obj<Item> {
+    const collection: Obj<Item> = {}
 
     this.items.forEach((item) => {
       const _key: Key = (resolveValue(item, key) as Key) || ''
@@ -660,8 +641,8 @@ export default class Collection<
    */
   public mapToGroups(
     callback: (item: Item, index: number) => [Key, unknown]
-  ): Record<string, unknown> {
-    const collection = {}
+  ): Obj<unknown> {
+    const collection: Obj<unknown[]> = {}
 
     this.items.forEach((item, index) => {
       const [key, value] = callback(item, index)
@@ -684,10 +665,8 @@ export default class Collection<
    * @param {Function} callback
    * @return {Object}
    */
-  public mapWithKeys(
-    callback: (item: Item) => [Key, unknown]
-  ): Record<string, unknown> {
-    const collection = {}
+  public mapWithKeys(callback: (item: Item) => [Key, unknown]): Obj<unknown> {
+    const collection: Obj<unknown> = {}
 
     this.items.forEach((item) => {
       const [key, value] = callback(item)
@@ -855,12 +834,12 @@ export default class Collection<
     return new classConstructor(this)
   }
 
-  public pluck<V extends Key>(value: keyof Item | V): unknown[]
+  public pluck<V extends Key>(value: keyof Item | V): ValueOf<Item, V>[]
 
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key: keyof Item | K
-  ): Record<string, unknown>
+  ): Obj<ValueOf<Item, V>>
 
   /**
    * The pluck method retrieves all of the values for a given key.
@@ -872,7 +851,7 @@ export default class Collection<
   public pluck<V extends Key, K extends Key>(
     value: keyof Item | V,
     key?: keyof Item | K
-  ): unknown[] | Record<string, unknown> {
+  ): ValueOf<Item, V>[] | Obj<ValueOf<Item, V>> {
     if ((value as string).indexOf('*') !== -1) {
       const [keyMatches, valueMatches]: [K[], V[]] = getMatches(
         this.items,
@@ -881,13 +860,19 @@ export default class Collection<
       )
 
       return key
-        ? getDictionaryFromMatches(this.items, keyMatches, valueMatches)
-        : [valueMatches]
+        ? (getDictionaryFromMatches(
+            this.items,
+            keyMatches,
+            valueMatches
+          ) as Obj<ValueOf<Item, V>>)
+        : ([valueMatches] as ValueOf<Item, V>[])
     }
 
     return key
-      ? getDictionaryFromKey(this.items, value, key)
-      : clone(this.map((item) => getProp(item, value as K) ?? null))
+      ? (getDictionaryFromKey(this.items, value, key) as Obj<ValueOf<Item, V>>)
+      : (clone(
+          this.map((item) => getProp(item, value as K) ?? null)
+        ) as ValueOf<Item, V>[])
   }
 
   /**
@@ -916,9 +901,9 @@ export default class Collection<
     const item = this.find(primaryKey)
 
     if (item) {
-      const index = this.findIndexBy(item as Item)
+      const index = this.search(item as Item)
 
-      if (index !== -1) {
+      if (index !== false) {
         this.items.splice(index, 1)
       }
     }
@@ -933,9 +918,9 @@ export default class Collection<
    * @return {this}
    */
   public put(item: Item): this {
-    const index = this.findIndexBy(item)
+    const index = this.search(item)
 
-    if (index !== -1) {
+    if (index !== false) {
       this.items.splice(index, 1, item)
     } else {
       this.items.push(item)
@@ -979,17 +964,63 @@ export default class Collection<
   }
 
   /**
-   * The search method searches the collection for the given value and returns its key if found.
-   * If the item is not found, false is returned.
+   * The search method searches the collection for the value of the given key and returns the item's index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test
    *
    * @param {Function} callback
    * @return {number|boolean}
    */
   public search(
     callback: (item: Item, index: number) => boolean
+  ): number | false
+
+  /**
+   * The search method searches the collection for the value of the given key and returns the item's index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test.
+   *
+   * @param {unknown} value
+   * @return {number|boolean}
+   */
+  public search<V>(value: Item | V): number | false
+
+  /**
+   * The search method searches the collection for the value of the given key and returns the item's index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test.
+   *
+   * @param {unknown} value
+   * @param {string|string[]} key
+   * @return {number|boolean}
+   */
+  public search<V>(value: Item | V, key: KeyVariadic): number | false
+
+  /**
+   * The search method searches the collection for the value of the given key and returns its index if found.
+   * If the item is not found, false is returned. The primary key will be used by default.
+   *
+   * Alternatively, a callback can be passed to search for the first item that passes the truth test.
+   *
+   * @param {unknown} valueOrCallback
+   * @param {string|string[]} [key=primaryKey]
+   * @return {number|boolean}
+   */
+  public search<V>(
+    valueOrCallback: Item | V | ((item: Item, index: number) => boolean),
+    key: KeyVariadic = this.primaryKey()
   ): number | false {
     const result = this.items.findIndex((item, index) => {
-      return callback(this.items[index], index)
+      if (isFunction(valueOrCallback)) {
+        return valueOrCallback(this.items[index], index)
+      }
+
+      const _value = resolveValue(valueOrCallback, key)
+
+      return getProp(item, key) === _value
     })
 
     if (result === undefined || result < 0) {

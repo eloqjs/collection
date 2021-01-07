@@ -5,15 +5,19 @@
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
 [![Code Climate maintainability][code-climate-maintainability-src]][code-climate-maintainability-href]
 [![Codecov][codecov-src]][codecov-href]
+[![Gitpod ready-to-code][gitpod-src]][gitpod-href]
 [![Contributions][contributions-src]][contributions-href]
 [![License][license-src]][license-href]
 
 > The collection for your resources. Made specifically to work with arrays of objects from your API Responses.
 
+**Collection** | [Vue Collection](https://github.com/eloqjs/vue-collection) | [Nuxt Collection](https://github.com/eloqjs/nuxt-collection)
+
 - [✨ &nbsp;Release Notes](https://collection.eloqjs.com/releases)
 - [📖 &nbsp;Read the Documentation](https://collection.eloqjs.com)
 
 ## Features
+
 - Made specifically to work with arrays of objects
 - JSON API specification support
 - Extends the Array class
@@ -25,18 +29,24 @@
 
 [📖 &nbsp;Read the Documentation](https://collection.eloqjs.com)
 
-## Development
+## Contributing
+
+You can contribute online with Gitpod:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][gitpod-href]
+
+Or locally:
 
 1. Clone this repository
 2. Install dependencies using `yarn install`
 3. Test using `yarn test`
 
-## Thanks
+## Credits
 
- - 🔥 Inspiration from [Laravel Eloquent Collections](https://laravel.com/docs/eloquent-collections).
-
- - 💎 Based on [collect.js](https://github.com/ecrmnn/collect.js) by [Daniel Eckermann](https://github.com/ecrmnn).
-   Thank you so much for your amazing package!
+- 🔥 Inspiration from [Laravel Eloquent Collections](https://laravel.com/docs/eloquent-collections).
+- 💎 Based on [collect.js](https://github.com/ecrmnn/collect.js) by [Daniel Eckermann](https://github.com/ecrmnn). 
+  Thank you so much for your amazing package!
+- ❤️ Whoever contributes to this project!
 
 ## 📑 License
 
@@ -60,6 +70,9 @@ Copyright (c) João Pedro Antunes Silva
 
 [codecov-src]: https://img.shields.io/codecov/c/github/eloqjs/collection.svg?logo=codecov&style=flat-square
 [codecov-href]: https://codecov.io/gh/eloqjs/collection
+
+[gitpod-src]: https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square
+[gitpod-href]: https://gitpod.io/#https://github.com/eloqjs/collection
 
 [contributions-src]: https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square
 [contributions-href]: https://github.com/eloqjs/collection/issues

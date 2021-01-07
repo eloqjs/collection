@@ -2,19 +2,10 @@
   "name": "@eloqjs/collection",
   "version": "0.0.0-development",
   "description": "The collection for your resources. Made specifically to work with arrays of objects from your API Responses.",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "files": [
-    "build"
-  ],
-  "scripts": {
-    "build": "rimraf ./build && tsc",
-    "lint": "eslint --ext .ts,.js,.json .",
-    "lint-fix": "yarn lint --fix",
-    "test": "jest"
-  },
+  "homepage": "https://collection.eloqjs.com",
   "repository": "github:eloqjs/collection",
   "keywords": [
+    "eloqjs",
     "collection",
     "collect",
     "eloquent",
@@ -26,9 +17,19 @@
   ],
   "author": "João Pedro Antunes Silva",
   "license": "MIT",
-  "homepage": "https://collection.eloqjs.com",
   "publishConfig": {
     "access": "public"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "lint": "eslint --ext .ts,.js,.json .",
+    "lint-fix": "yarn lint --fix",
+    "test": "jest"
   },
   "jest": {
     "clearMocks": true,

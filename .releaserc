@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    ["@semantic-release/release-notes-generator", {
+      "writerOpts": {
+        "headerPartial": ".github/templates/release-notes-generator/header.hbs"
+      }
+    }],
+    "@semantic-release/npm",
+    "@semantic-release/github"
+  ]
+}

@@ -100,6 +100,85 @@ describe('where()', () => {
     ])
   })
 
+  it('should accept a custom operator: LIKE; starts with (value%)', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', 'IK%')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; ends with (%value)', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', '%ler')
+
+    expect(filtered).toEqual([
+      { product: 'Chair', price: 100, manufacturer: 'Herman Miller' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; any position (%value%)', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', '%KE%')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; second position (_value%)', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', '_KE%')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; starts with and are at least 2 characters in length (value_%)', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', 'IK_%')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; starts with and are at least 3 characters in length (value__%)', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', 'IK__%')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; starts with and ends with', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', 'I%A')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
+  it('should accept a custom operator: LIKE; should use default operator (any position) when an invalid operator was provided', () => {
+    const filtered = collection.where('manufacturer', 'LIKE', 'IK')
+
+    expect(filtered).toEqual([
+      { product: 'Desk', price: 200, manufacturer: 'IKEA' },
+      { product: 'Bookcase', price: 150, manufacturer: 'IKEA' }
+    ])
+    expect(collection).toEqual(products)
+  })
+
   it('should use default operator (strictly equal) when an invalid operator was provided', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
