@@ -3,7 +3,7 @@
     "@semantic-release/commit-analyzer",
     ["@semantic-release/release-notes-generator", {
       "writerOpts": {
-        "headerPartial": ".github/templates/release-notes-generator/header.hbs"
+        "headerPartial": ""
       }
     }],
     "@semantic-release/npm",
